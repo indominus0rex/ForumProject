@@ -118,8 +118,10 @@ SAMPLES = 128
 processor = FFTProcessor(num_samples=SAMPLES)
 SAMPLE_INTERVAL_US = 20000  # 20ms = Stable 50 Hz Sample rate
 
+test_sample_count = 100
+
 try:
-    while True:
+    for j in range(test_sample_count):
         combined_buffer = [0.0] * SAMPLES
         get_vector = sensor.get_3axis_vector
         
