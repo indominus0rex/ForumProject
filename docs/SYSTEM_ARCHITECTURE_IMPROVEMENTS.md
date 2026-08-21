@@ -1,6 +1,5 @@
 # System Architecture Improvements
 
-## Overview
 This document outlines architectural improvements for the Parkinson's Tremor Monitoring System based on current codebase analysis and performance optimization research.
 
 ## Current Architecture Assessment
@@ -21,27 +20,30 @@ This document outlines architectural improvements for the Parkinson's Tremor Mon
   - I2C0 (GPIO22/21): MPU6050 sensors
   - I2C1 (GPIO23/19): Peripherals (LRA drivers, etc.)
 - **Expected gain**: 2x reduction in sensor read latency
+- **Status**: Not yet implemented (research referenced)
 
 ### Memory Management
 - **Current**: Dynamic allocation in sampling loops
 - **Improvement**: Pre-allocate buffers at startup
-```python
-# Pre-allocate at module level
-SENSOR_BUFFER = bytearray(384)  # 128 samples × 3 axes
-FFT_BUFFER = [0.0] * 128
-OUTPUT_BUFFER = [0.0] * 384
-```
+  ```python
+  # Pre-allocate at module level
+  SENSOR_BUFFER = bytearray(384)  # 128 samples × 3 axes
+  FFT_BUFFER = [0.0] * 128
+  OUTPUT_BUFFER = [0.0] * 384
+  ```
 - **Expected gain**: 30% reduction in memory fragmentation, more predictable performance
+- **Status**: Implemented in firmware files (RawDataCollection.py, collect_pilot.py, embedded_main.py) - see commit a651166
 
 ### FFT Optimization
 - **Current**: Pure Python Cooley-Tukey with on-the-fly twiddle factor computation
 - **Improvement**: Pre-compute twiddle factors, use fixed-point arithmetic
-```python
-# Pre-compute at initialization
-WINDOW = [0.5 * (1 - math.cos(2 * math.pi * i / 127)) for i in range(128)]
-TWIDDLE = [...]  # Pre-computed sine/cosine values
-```
+  ```python
+  # Pre-compute at initialization
+  WINDOW = [0.5 * (1 - math.cos(2 * math.pi * i / 127)) for i in range(128)]
+  TWIDDLE = [...]  # Pre-computed sine/cosine values
+  ```
 - **Expected gain**: 3-5x faster FFT processing
+- **Status**: Not yet implemented (research referenced)
 
 ## 2. Power Consumption Reduction
 
@@ -57,23 +59,61 @@ TWIDDLE = [...]  # Pre-computed sine/cosine values
 ## 3. Firmware Architecture Refinements
 
 ### Current Issue: Busy-wait loops
-```python
-while time.ticks_diff(time.ticks_us(), t_sample_start) < SAMPLE_INTERVAL_US:
-    pass  # Wastes CPU cycles
-```
+- **Status**: Addressed via timer-based sampling (see below)
+- **Original code**:
+  ```python
+  while time.ticks_diff(time.ticks_us(), t_sample_start) < SAMPLE_INTERVAL_US:
+      pass  # Wastes CPU cycles
+  ```
 
 ### Proposed Solution: Timer-based sampling
-```python
-from machine import Timer
+- **Status**: Implemented in firmware files (RawDataCollection.py, collect_pilot.py, embedded_main.py) - see commit a651166
+- **Implementation**:
+  ```python
+  from machine import Timer
 
-class SensorSampler:
-    def __init__(self, sample_interval_us):
-        self.timer = Timer(0)
-        self.buffer = []
-        self.timer.init(period=sample_interval_us // 1000, 
-                       mode=Timer.PERIODIC, 
-                       callback=self._sample_callback)
-```
+  # Timer-based sampling state
+  sample_buffer = [0.0] * SAMPLES
+  sample_index = 0
+  first_sample_time = None
+  last_sample_time = None
+  buffer_ready = False
+
+  def sample_callback(t):
+      global sample_index, first_sample_time, last_sample_time, buffer_ready
+      # Get sensor sample
+      sample = sensor.get_3axis_vector()
+      sample_buffer[sample_index] = sample
+      now = time.ticks_us()
+      if sample_index == 0:
+          first_sample_time = now
+      last_sample_time = now
+      sample_index += 1
+      if sample_index >= SAMPLES:
+          buffer_ready = True
+          sample_index = 0  # Reset for next buffer
+
+  # Initialize timer for periodic sampling
+  timer = Timer(0)
+  timer.init(period=SAMPLE_INTERVAL_US // 1000, mode=Timer.PERIODIC, callback=sample_callback)
+
+  # In main loop:
+  if buffer_ready:
+      # Process the filled buffer
+      buffer_ready = False
+      # Calculate actual sampling frequency from first and last sample timestamps
+      if first_sample_time is not None and last_sample_time is not None:
+          total_time_us = time.ticks_diff(last_sample_time, first_sample_time)
+          if total_time_us > 0:
+              actual_fs = SAMPLES / (total_time_us / 1000000.0)
+          else:
+              actual_fs = SAMPLES / (SAMPLE_INTERVAL_US / 1000000.0)  # fallback
+      else:
+          actual_fs = SAMPLES / (SAMPLE_INTERVAL_US / 1000000.0)  # fallback
+
+      # ... process sample_buffer ...
+  ```
+- **Expected gain**: Eliminates CPU spinning, reduces power consumption, allows other tasks to run during sampling intervals
 
 ## 4. Multi-Sensor Support
 
@@ -115,8 +155,8 @@ class SensorSampler:
 
 ## Implementation Priority
 
-1. **High**: I2C multiplexer support, memory pre-allocation
-2. **Medium**: FFT optimization, timer-based sampling
+1. **High**: I2C multiplexer support, memory pre-allocation (**DONE**), timer-based sampling (**DONE**)
+2. **Medium**: FFT optimization, timer-based sampling (**DONE**)
 3. **Low**: Deep sleep integration, automatic CSV capture
 
 ## Testing Strategy
@@ -128,8 +168,8 @@ class SensorSampler:
 
 ## Next Steps
 
-1. Update firmware files with pre-allocation patterns
+1. Implement FFT optimization with pre-computed twiddle factors
 2. Add I2C multiplexer support to sensor driver
-3. Implement timer-based sampling
+3. Implement deep sleep between sampling windows
 4. Create automated testing framework
 5. Document all architectural changes
