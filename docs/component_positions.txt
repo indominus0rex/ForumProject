@@ -1,0 +1,28 @@
+Component Placement Design for Tremor Monitoring System
+
+Recommended Locations (based on tremor analysis):
+
+1. IMU (Inertial Measurement Unit) on the dorsum of the hand, close to the wrist
+   - Position: Just proximal to the wrist joint on the dorsal side
+   - Rationale: Captures overall hand motion and wrist tremor; minimal soft tissue artifact
+
+2. IMU on the thenar eminence (muscle base of the thumb)
+   - Position: Volar surface, at the prominence of the thumb muscles
+   - Rationale: Sensitive to tremor in thumb abduction/adduction and opposition movements
+
+3. IMU on the proximal phalanx of the thumb
+   - Position: Dorsal or lateral aspect of the thumb's proximal phalanx (between CMC and MCP joints)
+   - Rationale: Directly measures tremor at the thumb IP joint, which showed the highest effect size across diagnoses in our analysis
+
+These three locations provide complementary coverage:
+- Dorsal wrist signals reflect global tremor and posture
+- Thenar eminence captures palm-side thumb base movements
+- Thumb proximal phalanx targets the most tremor-sensitive joint identified (THUMB_IP)
+
+All IMUs should be oriented consistently (e.g., Z-axis upward, X-axis radial, Y-axis proximal) to simplify data fusion.
+
+Notes:
+- Ensure secure, comfortable attachment (e.g., hypoallergenic tape, soft strap)
+- Minimize cable length or use wireless IMUs to avoid motion artifacts
+- Sampling rate: ≥100 Hz per axis (as used in dataset)
+- Coordinate system: Define a common hand-based frame for each sensor

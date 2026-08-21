@@ -1,0 +1,59 @@
+Professional technical wiring diagram of a left human hand and forearm showing a wearable Parkinson's tremor monitoring and haptic feedback system, clean white background, vector-style illustration, slight isometric view.
+
+Inertial Measurement Units (IMUs - highlighted in blue, labeled GY-521 / MPU6050) are mounted at these EXPLICIT locations:
+1. CENTER OF THE DORSUM OF THE HAND - directly over the third metacarpal bone, approximately halfway between wrist and knuckles (labeled: "IMU1 - Dorsal Hand Center")
+2. THENAR EMINENCE - volar (palmar) surface at the thick muscular base of the thumb, between wrist crease and thumb CMC joint (labeled: "IMU2 - Thenar Eminence (Palmar)")
+3. PROXIMAL PHALANX OF THE THUMB - dorsal aspect of thumb's proximal phalanx, roughly midpoint between CMC and MCP joints (labeled: "IMU3 - Thumb Proximal Phalanx (Dorsal)")
+4. FOREARM CLOSE TO WRIST - ventral (palmar) fore-arm surface, 1.5cm proximal to wrist crease on the radial side (labeled: "IMU4 - Forearm Proximal Wrist (Palmar)")
+
+Haptic Feedback Actuators (LRAs - Linear Resonant Actuators, highlighted in orange) are mounted at these EXPLICIT locations:
+1. LRA1 - Dorsum of hand, between second and third metacarpals, distal to IMU1 (labeled: "LRA1 - Dorsal Hand (Between Metacarpals 2-3)")
+2. LRA2 - Palmar side of hand, directly beneath the thenar eminence, opposite IMU2 (labeled: "LRA2 - Palmar Hand (Beneath Thenar Eminence)")
+3. LRA3 - Palmar side of hand, near hypothenar eminence (pinky base), approximately 2cm proximal to wrist crease (labeled: "LRA3 - Palmar Hand (Near Hypothenar Eminence)")
+
+All components wired to an ESP32 development board shown beside the arm:
+
+I²C BUS FOR ALL IMUs:
+- ESP32 GPIO22 (yellow wire, labeled "SCL") → TCA9548A Multiplexer SCL pin
+- ESP32 GPIO21 (green wire, labeled "SDA") → TCA9548A Multiplexer SDA pin
+- ESP32 3.3V (red wire) → TCA9548A VCC
+- ESP32 GND (black wire) → TCA9548A GND
+- TCA9548A Address Pins (A0,A1,A2) all connected to GND (sets multiplexer address to 0x70)
+- TCA9548A Channel 0 (CH0) → IMU1 SCL/SDA + 3.3V/GND (labeled "CH0 → IMU1")
+- TCA9548A Channel 1 (CH1) → IMU2 SCL/SDA + 3.3V/GND (labeled "CH1 → IMU2")
+- TCA9548A Channel 2 (CH2) → IMU3 SCL/SDA + 3.3V/GND (labeled "CH2 → IMU3")
+- TCA9548A Channel 3 (CH3) → IMU4 SCL/SDA + 3.3V/GND (labeled "CH3 → IMU4")
+- All IMU AD0 pins tied to GND (so each sees address 0x68 on its channel)
+
+HAPTIC FEEDBACK WIRING (PWM OUTPUTS):
+- ESP32 GPIO18 (purple wire, labeled "PWM1") → LRA1 + terminal, LRA1 - terminal → GND
+- ESP32 GPIO19 (pink wire, labeled "PWM2") → LRA2 + terminal, LRA2 - terminal → GND  
+- ESP32 GPIO20 (light-blue wire, labeled "PWM3") → LRA3 + terminal, LRA3 - terminal → GND
+- Each LRA connection includes implied current-limiting resistor/driver as needed
+
+STATUS INDICATOR:
+- ESP32 GPIO2 (red wire, labeled "GPIO2-LED") → LED anode, LED cathode → 220Ω resistor → GND
+
+ESP32 BOARD LABELING:
+- "3.3V", "GND", clearly marked
+- "SCL=GPIO22", "SDA=GPIO21" next to respective wires
+- "PWM1=GPIO18", "PWM2=GPIO19", "PWM3=GPIO20" next to LRA wires
+- "LED=GPIO2" next to LED wire
+
+LEGEND (place in top-right corner):
+■ BLUE = IMU (GY-521/MPU6050)
+■ ORANGE = LRA (Haptic Actuator)
+■ YELLOW = I²C SCL (GPIO22)
+■ GREEN = I²C SDA (GPIO21)
+■ RED = Power (3.3V) / LED
+■ BLACK = Ground (GND)
+■ PURPLE/PINK/LIGHT-BLUE = PWM Outputs (GPIO18/19/20)
+
+ADDITIONAL NOTES:
+- All wire colors are suggestions for clarity in diagram
+- Components shown with realistic proportions and orientations
+- Hand in relaxed position, fingers slightly apart
+- No text appears on the skin itself - only the labeled callouts pointing to components
+- Diagram suitable for insertion into a research paper or technical documentation
+
+This diagram clearly shows FOUR IMUs for sensing tremor and THREE LRAs for distributed haptic feedback, with explicit wiring to the ESP32.

@@ -1,0 +1,17 @@
+IMU Strapping Materials Recommendation
+
+Table: Recommended strapping/adhesive materials for each IMU location
+
+| Location | Primary Material | Backup Options | Key Considerations |
+|----------|------------------|----------------|---------------------|
+| Dorsum of hand (near wrist) | 3M Micropore Surgical Tape | Elastic fabric strap (nylon/spandex with silicone grip), Tegaderm transparent dressing | Breathable, allows wrist flexion/extension, low profile |
+| Thenar eminence (thumb muscle base) | Hypafix or Mefix Non-Woven Tape | Silicone gel straps, Soft Velcro straps (foam/fabric backing) | Conforms to curved, fleshy area, resists shear forces |
+| Thumb proximal phalanx | Small pieces of 3M Micropore or Hypafix (≈1 cm squares) | Double-sided medical adhesive discs, Narrow kinesiology tape strips | Secure on small bony prominence, minimal interference with thumb motion |
+
+General notes:
+- Skin preparation: clean with alcohol wipe, let dry; consider skin barrier wipes for prolonged wear.
+- Motion artifact minimization: For highest data quality, use rigid coupling (thin plastic adapter + double-sided tape); for comfort, use thin conformable materials with secure anchoring.
+- Maintenance: Replace adhesive materials daily or when soiled; clean reusable straps with mild soap and water; inspect skin regularly.
+- Alternative: 3D-printed thin TPU/silicone mounts with integrated strap anchors can provide a reusable, cleanable solution.
+
+These recommendations are based on common wearable sensor practices, hypoallergenic medical adhesives, and biomechanics literature.

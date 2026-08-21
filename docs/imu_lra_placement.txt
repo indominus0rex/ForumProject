@@ -1,0 +1,40 @@
+IMU and LRA Placement Recommendations for Tremor Monitoring and Feedback System
+
+Based on tremor analysis (Cohen's d effect sizes) and ergonomic/haptic feedback principles:
+
+IMU Placement (for sensing tremor):
+1. Dorsum of the hand, close to the wrist
+   - Why: Captures global hand motion and wrist tremor; minimal soft tissue artifact; allows wrist flexion/extension.
+   - Specific: Just proximal to the wrist joint on the dorsal side.
+
+2. Thenar eminence (muscle base of the thumb)
+   - Why: Sensitive to tremor in thumb abduction/adduction and opposition movements; conforms to curved, fleshy area.
+   - Specific: Volar surface, at the prominence of the thumb muscles.
+
+3. Proximal phalanx of the thumb
+   - Why: Directly measures tremor at the thumb IP joint, which showed the highest effect size across diagnoses (THUMB_IP: avg effect size = 0.568 vs diagnosis 0).
+   - Specific: Dorsal or lateral aspect of the thumb's proximal phalanx (between CMC and MCP joints).
+
+LRA Placement (for haptic feedback):
+- Goal: Provide perceptible vibratory feedback without inducing noise in IMU signals or interfering with hand function.
+- Recommended: Dorsum of the hand, distal to the wrist IMU (e.g., on the back of the hand between the second and third metacarpals, or proximal to the fingers).
+  - Why: 
+    - Less sensitive than palmar side, so vibrations are easily felt without being uncomfortable.
+    - Located away from the IMUs on the thenar eminence and thumb, reducing vibrational coupling.
+    - Still on the dorsum, so it does not interfere with palmar grasp or fine finger movements.
+- Alternative (if palmar feedback is desired): 
+  - Place on the palmar side, opposite the thenar eminence (e.g., near the hypothenar eminence or central palm) but ensure it is not too close to any IMU to avoid noise.
+  - Note: Palmer placement may affect grip and is more sensitive; use lower amplitude if chosen.
+
+General Guidelines:
+- Orient all IMUs consistently (e.g., Z-axis upward, X-axis radial, Y-axis proximal) to simplify data fusion.
+- Secure IMUs with hypoallergenic, breathable materials (e.g., 3M Micropore tape for initial prototypes, Hypafix or silicone straps for longer wear).
+- For the LRA, use a thin, flexible mount or adhesive that allows firm coupling to the skin without damping the vibration excessively.
+- Ensure the LRA is driven at its resonant frequency (typically around 150-250 Hz) for efficient haptic feedback.
+- Test for perceptual threshold and comfort; avoid prolonged high-amplitude vibration that could cause fatigue or skin irritation.
+
+Summary:
+- IMUs: Dorsal wrist, thenar eminence, thumb proximal phalanx.
+- LRA: Dorsum of hand (distal to wrist IMU) for optimal balance of perceptibility, minimal noise coupling, and unimpeded hand function.
+
+These placements leverage the biomechanical insights from the tremor data while respecting ergonomic and haptic design principles.

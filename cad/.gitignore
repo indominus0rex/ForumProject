@@ -1,0 +1,11 @@
+__pycache__/
+*.pyc
+*.pyo
+parts/*.step
+parts/*.stl
+parts/*.FCStd
+parts/_vendor/
+assembly/*.step
+assembly/*.FCStd
+drawings/*.SLDDRW
+*.SLDPRT.bak

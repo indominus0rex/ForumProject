@@ -1,0 +1,151 @@
+' perfboard_grid.swp
+' SolidWorks VBA macro: auto-generate perfboard hole grid.
+' Run in SolidWorks: Tools > Macro > Run... > pick this file.
+' Defaults: 30 cols x 15 rows, 2.54mm pitch, 1.0mm hole, 1.6mm thick.
+' Edit constants below to change board size.
+
+Dim swApp As SldWorks
+Dim swModel As ModelDoc2
+Dim swPart As PartDoc
+Dim swFeatMgr As FeatureManager
+Dim swSketchMgr As SketchManager
+Dim templatePath As String
+
+Const COLS As Long = 30
+Const ROWS As Long = 15
+Const PITCH_MM As Double = 0.00254
+Const HOLE_DIA_MM As Double = 0.001
+Const BOARD_THICK_MM As Double = 0.0016
+Const BOARD_WIDTH_M As Double = (COLS - 1) * PITCH_MM
+Const BOARD_HEIGHT_M As Double = (ROWS - 1) * PITCH_MM
+
+Function FindTemplate() As String
+    Dim candidates() As String
+    candidates = Split( _
+        "C:\ProgramData\SolidWorks\SOLIDWORKS 2026\templates\Part.prtdot;" & _
+        "C:\ProgramData\SolidWorks\SOLIDWORKS 2025\templates\Part.prtdot;" & _
+        "C:\ProgramData\SolidWorks\SOLIDWORKS 2024\templates\Part.prtdot;" & _
+        "C:\ProgramData\SolidWorks\SOLIDWORKS 2023\templates\Part.prtdot;" & _
+        "C:\ProgramData\SolidWorks\SOLIDWORKS 2022\templates\Part.prtdot;" & _
+        "C:\ProgramData\SolidWorks\SOLIDWORKS 2021\templates\Part.prtdot;" & _
+        "C:\ProgramData\SolidWorks\SOLIDWORKS 2020\templates\Part.prtdot", _
+        ";")
+    Dim i As Integer
+    For i = LBound(candidates) To UBound(candidates)
+        If Dir(candidates(i)) <> "" Then
+            FindTemplate = candidates(i)
+            Exit Function
+        End If
+    Next i
+    FindTemplate = ""
+End Function
+
+Sub main()
+    Set swApp = Application.SldWorks
+    templatePath = FindTemplate()
+    If templatePath = "" Then
+        MsgBox "Could not find Part.prtdot template. Check that SolidWorks is installed.", vbCritical
+        Exit Sub
+    End If
+
+    swApp.SetUserPreferenceInteger swUserPrefUnits, swUnitSystem, swUnitsMillimeters
+
+    Set swModel = swApp.NewDocument(templatePath)
+    Set swPart = swModel
+    Set swFeatMgr = swModel.FeatureManager
+    Set swSketchMgr = swModel.SketchManager
+
+    Dim halfW As Double, halfH As Double
+    halfW = BOARD_WIDTH_M / 2
+    halfH = BOARD_HEIGHT_M / 2
+
+    swModel.Extension.SelectByID2 "Front Plane", "PLANE", 0, 0, 0, False, 0, Nothing, 0
+    swSketchMgr.InsertSketch True
+    swSketchMgr.CreateLine -halfW, -halfH, 0, halfW, -halfH, 0
+    swSketchMgr.CreateLine halfW, -halfH, 0, halfW, halfH, 0
+    swSketchMgr.CreateLine halfW, halfH, 0, -halfW, halfH, 0
+    swSketchMgr.CreateLine -halfW, halfH, 0, -halfW, -halfH, 0
+    swSketchMgr.InsertSketch True
+
+    swFeatMgr.FeatureExtrusion2 True, False, False, 0, 0, BOARD_THICK_MM, 0, _
+        True, False, False, False, 0, 0, False, False, False, False, _
+        True, True, True, 0, 0, 0
+
+    swModel.Extension.SelectByID2 "Top Plane", "PLANE", 0, 0, BOARD_THICK_MM, False, 0, Nothing, 0
+    swSketchMgr.InsertSketch True
+    swSketchMgr.CreatePoint 0, 0, 0
+    swSketchMgr.InsertSketch True
+
+    Dim hwData As HoleSeriesData
+    Set hwData = swFeatMgr.CreateHoleWizardData
+    hwData.HoleDiameter = HOLE_DIA_MM
+    hwData.EndCondition = swEndCondThroughAll
+    hwData.Type = swWzdHoleSimple
+    swFeatMgr.HoleWizard 2, 1, 0, "", "", hwData
+
+    Dim featName As String
+    featName = FindLatestHoleFeature(swModel)
+    If featName = "" Then
+        MsgBox "Hole Wizard did not create a feature. Pattern step skipped.", vbExclamation
+        GoTo SavePart
+    End If
+
+    swModel.Extension.SelectByID2 featName, "BODYFEATURE", 0, 0, 0, True, 0, Nothing, 0
+    swFeatMgr.FeatureLinearPattern2 _
+        COLS - 1, PITCH_MM, 0, 0, 0, _
+        ROWS - 1, 0, PITCH_MM, 0, 0, _
+        True, True, "Global", "", 0, False
+
+SavePart:
+    Dim partsDir As String
+    partsDir = "C:\ForumProject\cad\parts"
+    If Dir(partsDir, vbDirectory) = "" Then
+        MkDir "C:\ForumProject\cad"
+        MkDir partsDir
+    End If
+
+    swModel.SetTitle "perfboard"
+    swModel.SaveAs partsDir & "\perfboard.SLDPRT"
+
+    MsgBox "Done." & vbCrLf & _
+           "Part: " & partsDir & "\perfboard.SLDPRT" & vbCrLf & _
+           "Holes: " & COLS & " x " & ROWS & " = " & COLS * ROWS & vbCrLf & _
+           "Board: " & Format(BOARD_WIDTH_M * 1000, "0.0") & " x " & _
+           Format(BOARD_HEIGHT_M * 1000, "0.0") & " x " & _
+           Format(BOARD_THICK_MM * 1000, "0.0") & " mm"
+End Sub
+
+Function FindLatestHoleFeature(model As ModelDoc2) As String
+    Dim feat As Feature
+    Dim lastMatch As String
+    Set feat = model.FirstFeature
+    Do While Not feat Is Nothing
+        If InStr(1, feat.Name, "Hole", vbTextCompare) > 0 Then
+            lastMatch = feat.Name
+        End If
+        Set feat = feat.GetNextFeature
+    Loop
+    FindLatestHoleFeature = lastMatch
+End Function
+
+Function FindLatestHoleFeature(model As ModelDoc2) As String
+    Dim feat As Feature
+    Set feat = model.FirstFeature
+    Do While Not feat Is Nothing
+        If InStr(1, feat.Name, "Hole", vbTextCompare) > 0 Then
+            FindLatestHoleFeature = feat.Name
+            ' Keep walking to get the LAST one (most recent = master before pattern)
+        End If
+        Set feat = feat.GetNextFeature
+    Loop
+    ' Return the last match
+    Dim lastMatch As String
+    Set feat = model.FirstFeature
+    Do While Not feat Is Nothing
+        If InStr(1, feat.Name, "Hole", vbTextCompare) > 0 Then
+            lastMatch = feat.Name
+        End If
+        Set feat = feat.GetNextFeature
+    Loop
+    FindLatestHoleFeature = lastMatch
+End Function
