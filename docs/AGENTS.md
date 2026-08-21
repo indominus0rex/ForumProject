@@ -58,6 +58,10 @@ MicroPython files (`fft.py`, `feature_extract.py`, `logreg.py`, `scaler.py`, `mo
 ## Conventions
 
 - MicroPython files: **4-space indent**, `from machine import I2C, Pin[, PWM]`, `time.ticks_us()` / `time.ticks_diff()` for microsecond timing (never `time.time()`), class-per-stage (`GY521`, `FFTProcessor`).
+- **Performance patterns**: Pre-compute twiddle factors for FFT, use fixed-point arithmetic where possible, leverage ESP32's dual I2C buses:
+  - I2C0: Sensors (SCL=GPIO22, SDA=GPIO21)
+  - I2C1: Peripherals (SCL=GPIO23, SDA=GPIO19)
+- **Memory management**: Pre-allocate sensor buffers at startup, reuse buffers instead of reallocation, use `bytearray` for I2C transfers
 - On-device FFT is in-place Cooley-Tukey on power-of-2 length with a Hann window and DC removal already applied. Do not pull in `numpy.fft` or `matplotlib` on-device — RAM/flash budget is tight.
 - Feature order in `feature_extract.compute()` **must** match the order in `train_classifier.extract_features()`. The 15-element list and the matching `FEATURE_MEAN`/`FEATURE_STD` length in `model.py` are coupled.
 - `model.CLASSES` order must match the row order of `WEIGHTS` and `BIAS` produced by the trainer.
