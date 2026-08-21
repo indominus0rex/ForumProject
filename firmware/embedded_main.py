@@ -44,6 +44,9 @@ HEURISTIC_MAG_THRESHOLD = 1.2
 LRA_DUTY_ON = 512            # 50% of 1023
 LRA_DUTY_OFF = 0
 
+# Pre-allocate window buffer to avoid repeated allocation
+WINDOW_BUFFER = [[0.0, 0.0, 0.0] for _ in range(SAMPLES)]
+
 
 # ---- HARDWARE ----
 
@@ -68,7 +71,7 @@ print("Model: {}".format(
 
 def capture_window():
     """Return 2D list [128][3] of x,y,z at 100 Hz."""
-    win = [[0.0, 0.0, 0.0] for _ in range(SAMPLES)]
+    win = WINDOW_BUFFER
     for i in range(SAMPLES):
         t0 = time.ticks_us()
         x, y, z = sensor.get_3axis_vector_raw() if hasattr(sensor, "get_3axis_vector_raw") else None, None, None

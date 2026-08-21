@@ -1,4 +1,4 @@
-from machine import I2C, Pin
+from machine import I2C, Pin, Timer
 import time
 import math
 import sys
@@ -19,7 +19,7 @@ class GY521:
     def get_3axis_vector(self):
         try:
             raw = self.i2c.readfrom_mem(self.addr, 0x3B, 6)
-            
+
             def combine(high, low):
                 val = (high << 8) | low
                 return val if val < 32768 else val - 65536
@@ -27,11 +27,11 @@ class GY521:
             x = combine(raw[0], raw[1]) / 16384.0
             y = combine(raw[2], raw[3]) / 16384.0
             z = combine(raw[4], raw[5]) / 16384.0
-            
+
             magnitude_vector = math.sqrt(x**2 + y**2 + z**2)
             return magnitude_vector
         except Exception:
-            return 1.0 
+            return 1.0
 
 
 # ---- 2. FFT PROCESSING CLASS ----
@@ -78,26 +78,31 @@ class FFTProcessor:
         mean_val = sum(signal_data) / len(signal_data)
         real = [(signal_data[i] - mean_val) * self.window[i] for i in range(self.num_samples)]
         imag = [0.0] * self.num_samples
-        
+
         self._in_place_fft(real, imag)
-        
+
         max_mag = 0.0
         dominant_freq = 0.0
-        NOISE_THRESHOLD = 0.35 
-        
+        NOISE_THRESHOLD = 0.35
+
         for i in range(1, self.num_samples // 2):
             magnitude = math.sqrt(real[i]**2 + imag[i]**2)
             frequency = (i * actual_fs) / self.num_samples
-                
+
             if magnitude > max_mag:
                 max_mag = magnitude
                 dominant_freq = frequency
-                
+
         if max_mag < NOISE_THRESHOLD:
             return 0.0, 0.0
-            
+
         return dominant_freq, max_mag
 
+
+# Pre-allocate buffers at module level for performance improvement
+SENSOR_BUFFER = [0.0] * 128
+FFT_REAL_BUFFER = [0.0] * 128
+FFT_IMAG_BUFFER = [0.0] * 128
 
 # ---- 3. MAIN EXECUTION ----
 
@@ -114,41 +119,91 @@ except Exception as e:
     print("Connection Failed:", e)
     sys.exit()
 
-SAMPLES = 128  
+SAMPLES = 128
 processor = FFTProcessor(num_samples=SAMPLES)
 SAMPLE_INTERVAL_US = 20000  # 20ms = Stable 50 Hz Sample rate
 
+# Timer-based sampling state
+sample_buffer = SENSOR_BUFFER  # Reuse pre-allocated buffer
+sample_index = 0
+first_sample_time = None
+last_sample_time = None
+buffer_ready = False
+
+def sample_callback(t):
+    global sample_index, first_sample_time, last_sample_time, buffer_ready
+    # Get sensor sample
+    sample = sensor.get_3axis_vector()
+    sample_buffer[sample_index] = sample
+    now = time.ticks_us()
+    if sample_index == 0:
+        first_sample_time = now
+    last_sample_time = now
+    sample_index += 1
+    if sample_index >= SAMPLES:
+        buffer_ready = True
+        sample_index = 0  # Reset for next buffer (will overwrite)
+
+# Initialize timer for periodic sampling
+try:
+    timer = Timer(0)
+    timer.init(period=SAMPLE_INTERVAL_US // 1000, mode=Timer.PERIODIC, callback=sample_callback)
+except Exception as e:
+    print("Timer init failed:", e)
+    sys.exit()
+
 try:
     while True:
-        combined_buffer = [0.0] * SAMPLES
-        get_vector = sensor.get_3axis_vector
-        
-        t_start = time.ticks_us()
-        for i in range(SAMPLES):
-            t_sample_start = time.ticks_us()
-            
-            combined_buffer[i] = get_vector()
-            
-            while time.ticks_diff(time.ticks_us(), t_sample_start) < SAMPLE_INTERVAL_US:
-                pass
-        t_end = time.ticks_us()
-        
-        total_duration_seconds = time.ticks_diff(t_end, t_start) / 1000000.0
-        
-        # FIXED: Placed inside the running execution window so variables exist
-        if total_duration_seconds > 0:
-            actual_fs = SAMPLES / total_duration_seconds
-            freq, mag = processor.process_data(combined_buffer, actual_fs)
-            
+        if buffer_ready:
+            # Process the filled buffer
+            buffer_ready = False
+            # Calculate actual sampling frequency from first and last sample timestamps
+            if first_sample_time is not None and last_sample_time is not None:
+                total_time_us = time.ticks_diff(last_sample_time, first_sample_time)
+                if total_time_us > 0:
+                    actual_fs = SAMPLES / (total_time_us / 1000000.0)
+                else:
+                    actual_fs = SAMPLES / (SAMPLE_INTERVAL_US / 1000000.0)  # fallback
+            else:
+                actual_fs = SAMPLES / (SAMPLE_INTERVAL_US / 1000000.0)  # fallback
+
+            # Use pre-allocated FFT buffers
+            for i in range(SAMPLES):
+                FFT_REAL_BUFFER[i] = (sample_buffer[i] - sum(sample_buffer)/len(sample_buffer)) * processor.window[i]
+                FFT_IMAG_BUFFER[i] = 0.0
+
+            processor._in_place_fft(FFT_REAL_BUFFER, FFT_IMAG_BUFFER)
+
+            max_mag = 0.0
+            dominant_freq = 0.0
+            NOISE_THRESHOLD = 0.35
+
+            for i in range(1, SAMPLES // 2):
+                magnitude = math.sqrt(FFT_REAL_BUFFER[i]**2 + FFT_IMAG_BUFFER[i]**2)
+                frequency = (i * actual_fs) / SAMPLES
+
+                if magnitude > max_mag:
+                    max_mag = magnitude
+                    dominant_freq = frequency
+
+            if max_mag < NOISE_THRESHOLD:
+                freq, mag = 0.0, 0.0
+            else:
+                freq, mag = dominant_freq, max_mag
+
             led.value(1 if mag > 1.2 else 0)
-            
+
             # FORMATTED FOR CSV LOGGING:
-            # Flushes the 128 magnitude float values to the Thonny shell line
-            raw_data_string = ",".join(["{:.4f}".format(x) for x in combined_buffer])
+            raw_data_string = ",".join(["{:.4f}".format(x) for x in sample_buffer])
             print(f"{LABEL},{raw_data_string}")
-                
-        time.sleep(0.05)
+
+            # Reset timing for next buffer
+            first_sample_time = None
+            last_sample_time = None
+
+        time.sleep(0.001)  # Short sleep to prevent busy-wait in main loop
 
 except KeyboardInterrupt:
+    timer.deinit()
     led.value(0)
     print("\nLoop stopped.")

@@ -42,6 +42,8 @@ SAMPLE_INTERVAL_US = 10000  # 10ms = 100 Hz
 SESSION_SECONDS = 30        # auto-stop
 SESSIONS_TOTAL = 1          # bump to capture multiple sessions per flash
 REST_BETWEEN_S = 0          # set 60 for back-to-back with rest
+# Pre-allocate buffer for 3-axis data to avoid repeated allocation
+RAW_DATA_BUFFER = [0.0] * (SAMPLES * 3)
 
 led = Pin(2, Pin.OUT)
 i2c = I2C(0, scl=Pin(22), sda=Pin(21), freq=400000)
@@ -71,7 +73,7 @@ try:
         window_idx = 0
 
         while time.ticks_diff(t_end_us, time.ticks_us()) > 0:
-            buf = [0.0] * (SAMPLES * 3)
+            buf = RAW_DATA_BUFFER
             t_window_start = time.ticks_us()
 
             for i in range(SAMPLES):
