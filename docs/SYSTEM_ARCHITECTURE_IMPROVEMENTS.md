@@ -153,11 +153,122 @@ This document outlines architectural improvements for the Parkinson's Tremor Mon
 - A/B testing framework for model comparison
 - Automatic rollback on performance degradation
 
+## 7. Differentiated but Feasible Architecture Direction
+
+The next architecture should not simply copy common research patterns such as
+"more IMUs + generic sensor fusion + LRA array." Those are useful building
+blocks, but the project needs a design that is visibly different while staying
+implementable on ESP32 + MicroPython.
+
+### Proposed Direction: Context-Aware Edge Tremor Coach
+
+Instead of acting only as a tremor detector or suppression glove, structure the
+system as a lightweight real-time coach:
+
+```text
+IMU window
+  -> signal-quality gate
+  -> tremor-state classifier
+  -> context state machine
+  -> confidence-gated haptic policy
+  -> short event log for offline personalization
+```
+
+This keeps the current 128-sample @ 100 Hz pipeline, but adds decision layers
+around it rather than requiring unrealistic hardware or a large neural model.
+
+### What Makes This Different from Typical Prior Work
+
+1. **Signal-quality-first architecture**
+   - Many systems classify every window directly.
+   - This system should first detect invalid windows: loose strap, gravity-only
+     fallback, I2C read failure patterns, saturation, or excessive motion
+     artifact.
+   - Benefit: safer feedback and cleaner training data.
+   - Feasibility: uses simple thresholds already available from accelerometer
+     values and timestamp jitter.
+
+2. **Context state machine, not one-shot prediction**
+   - Research prototypes often report per-window accuracy.
+   - This system should maintain a small state machine:
+     `idle -> observing -> tremor_candidate -> confirmed_tremor -> feedback -> cooldown`.
+   - Benefit: reduces false LRA activation from a single noisy window.
+   - Feasibility: a few integer states and counters in `embedded_main.py`.
+
+3. **Personalized baseline profile**
+   - Instead of using the same threshold/model behavior for every user, store a
+     small baseline profile: rest RMS, dominant tremor band, preferred LRA duty,
+     and recent false-positive count.
+   - Benefit: more original than a fixed classifier and more practical than
+     on-device retraining.
+   - Feasibility: persist a small dictionary or constants block; update offline
+     from captured sessions.
+
+4. **Confidence-gated haptic feedback**
+   - Do not vibrate only because the class is `kinetic` or `postural`.
+   - Gate feedback by class confidence, signal quality, state duration, and
+     cooldown time.
+   - Benefit: creates a safer assistive device behavior and avoids annoying or
+     misleading stimulation.
+   - Feasibility: no extra hardware; only policy logic.
+
+5. **Event-based data logging instead of full streaming**
+   - Full BLE/SD logging is heavier and currently out of scope.
+   - Log only compact events: timestamp, predicted class, confidence, dominant
+     frequency, tremor-band power, signal-quality flag, and feedback action.
+   - Benefit: supports research analysis and personalization without continuous
+     raw-data storage.
+   - Feasibility: print compact CSV lines to Thonny now; later route over serial
+     or BLE.
+
+6. **Feedback as cueing, not claimed mechanical suppression**
+   - Prior suppression-glove research often implies direct tremor reduction.
+   - This project should position LRAs as adaptive sensory cueing and motor
+     awareness support unless clinical suppression is validated.
+   - Benefit: scientifically safer and still novel for a student prototype.
+   - Feasibility: uses current PWM LRA output and existing feedback map.
+
+### Minimum Viable Implementation
+
+1. Add `quality.py` firmware module:
+   - checks fallback ratio, per-axis variance, saturation, sample timing jitter
+   - returns `quality_ok`, `quality_reason`, and compact metrics
+2. Add `state_machine.py` firmware module:
+   - debounces predictions across 2-3 windows
+   - enforces feedback cooldown
+   - emits final action: `none`, `observe`, `cue_low`, `cue_high`
+3. Update `embedded_main.py`:
+   - run quality gate before classifier output is trusted
+   - feed `(label, conf, quality_ok)` into the state machine
+   - call `apply_feedback()` only from the state machine action
+4. Update host scripts:
+   - include quality metrics in analysis reports
+   - compare raw classifier accuracy vs. state-machine event accuracy
+
+### Why This Is Not Impossible
+
+- No new processor is required.
+- No cloud inference is required.
+- No large neural network is required.
+- No invasive or medical-grade actuator control is required.
+- It builds directly on the existing 15-feature classifier and PWM feedback.
+- The hardest parts are software policy and validation, not unavailable hardware.
+
+### Success Criteria
+
+- False haptic activations decrease versus direct per-window feedback.
+- Invalid/loose-sensor windows are flagged instead of classified as tremor.
+- End-to-end decision latency stays within 2-3 windows.
+- Event logs show when the system refused to act and why.
+- Architecture can be explained as an edge tremor coach, not just another
+  IMU-classifier-plus-vibrator design.
+
 ## Implementation Priority
 
-1. **High**: I2C multiplexer support, memory pre-allocation (**DONE**), timer-based sampling (**DONE**)
-2. **Medium**: FFT optimization, timer-based sampling (**DONE**)
-3. **Low**: Deep sleep integration, automatic CSV capture
+1. **High**: signal-quality gate, confidence/state-machine feedback gating,
+   memory pre-allocation (**DONE**), timer-based sampling (**DONE**)
+2. **Medium**: event logging, FFT optimization, I2C multiplexer support
+3. **Low**: deep sleep integration, automatic CSV capture, BLE telemetry
 
 ## Testing Strategy
 
@@ -168,8 +279,10 @@ This document outlines architectural improvements for the Parkinson's Tremor Mon
 
 ## Next Steps
 
-1. Implement FFT optimization with pre-computed twiddle factors
-2. Add I2C multiplexer support to sensor driver
-3. Implement deep sleep between sampling windows
-4. Create automated testing framework
-5. Document all architectural changes
+1. Add a signal-quality gate before trusting classifier output
+2. Add a small feedback state machine with confidence and cooldown gating
+3. Emit compact event logs for offline personalization
+4. Implement FFT optimization with pre-computed twiddle factors
+5. Add I2C multiplexer support only after the single-IMU architecture is stable
+6. Create automated testing framework
+7. Document all architectural changes
