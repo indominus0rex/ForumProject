@@ -1,4 +1,4 @@
-from machine import I2C, Pin
+from machine import I2C, Pin, Timer
 import time
 import sys
 
@@ -61,6 +61,37 @@ except Exception as e:
 
 # ---- 3. CAPTURE LOOP ----
 
+# Timer-based sampling state for one window
+sample_buffer = RAW_DATA_BUFFER  # Reuse pre-allocated buffer
+sample_index = 0
+first_sample_time = None
+last_sample_time = None
+window_ready = False
+
+def sample_callback(t):
+    global sample_index, first_sample_time, last_sample_time, window_ready
+    # Get sensor sample
+    x, y, z = sensor.read_3axis()
+    sample_buffer[sample_index * 3 + 0] = x
+    sample_buffer[sample_index * 3 + 1] = y
+    sample_buffer[sample_index * 3 + 2] = z
+    now = time.ticks_us()
+    if sample_index == 0:
+        first_sample_time = now
+    last_sample_time = now
+    sample_index += 1
+    if sample_index >= SAMPLES:
+        window_ready = True
+        sample_index = 0  # Reset for next window (will overwrite)
+
+# Initialize timer for periodic sampling
+try:
+    timer = Timer(0)
+    timer.init(period=SAMPLE_INTERVAL_US // 1000, mode=Timer.PERIODIC, callback=sample_callback)
+except Exception as e:
+    print("Timer init failed:", e)
+    sys.exit()
+
 try:
     for sess in range(SESSIONS_TOTAL):
         print("\n=== SESSION {}/{} ===".format(sess + 1, SESSIONS_TOTAL))
@@ -72,28 +103,40 @@ try:
         t_end_us = time.ticks_add(t_session_start, SESSION_SECONDS * 1_000_000)
         window_idx = 0
 
+        # Reset window state for this session
+        sample_index = 0
+        first_sample_time = None
+        last_sample_time = None
+        window_ready = False
+
         while time.ticks_diff(t_end_us, time.ticks_us()) > 0:
-            buf = RAW_DATA_BUFFER
-            t_window_start = time.ticks_us()
+            if window_ready:
+                # Process the filled window
+                window_ready = False
+                # Calculate actual sampling frequency from first and last sample timestamps
+                if first_sample_time is not None and last_sample_time is not None:
+                    total_time_us = time.ticks_diff(last_sample_time, first_sample_time)
+                    if total_time_us > 0:
+                        actual_fs = SAMPLES / (total_time_us / 1000000.0)
+                    else:
+                        actual_fs = SAMPLES / (SAMPLE_INTERVAL_US / 1000000.0)  # fallback
+                else:
+                    actual_fs = SAMPLES / (SAMPLE_INTERVAL_US / 1000000.0)  # fallback
 
-            for i in range(SAMPLES):
-                t_sample = time.ticks_us()
-                x, y, z = sensor.read_3axis()
-                buf[i * 3 + 0] = x
-                buf[i * 3 + 1] = y
-                buf[i * 3 + 2] = z
-                while time.ticks_diff(time.ticks_us(), t_sample) < SAMPLE_INTERVAL_US:
-                    pass
+                row = LABEL + "," + ",".join("{:.4f}".format(v) for v in sample_buffer)
+                print(row)
+                window_idx += 1
 
-            actual_fs = SAMPLES / (time.ticks_diff(time.ticks_us(), t_window_start) / 1_000_000)
-            row = LABEL + "," + ",".join("{:.4f}".format(v) for v in buf)
-            print(row)
-            window_idx += 1
+                # tiny blink to show life
+                led.value(0)
+                time.sleep_ms(20)
+                led.value(1)
 
-            # tiny blink to show life
-            led.value(0)
-            time.sleep_ms(20)
-            led.value(1)
+                # Reset timing for next window
+                first_sample_time = None
+                last_sample_time = None
+
+            time.sleep(0.001)  # Short sleep to prevent busy-wait in main loop
 
         led.value(0)
         elapsed = time.ticks_diff(time.ticks_us(), t_session_start) / 1_000_000
@@ -108,5 +151,6 @@ try:
     led.value(0)
 
 except KeyboardInterrupt:
+    timer.deinit()
     led.value(0)
     print("\nLoop stopped.")

@@ -5,6 +5,16 @@ import sys
 
 # ---- 1. HARDWARE & SENSOR CLASS ----
 
+class TCA9548A:
+    def __init__(self, i2c, addr=0x70):
+        self.i2c = i2c
+        self.addr = addr
+
+    def select_channel(self, channel):
+        if channel < 0 or channel > 7:
+            raise ValueError("Channel must be 0-7")
+        self.i2c.writeto(self.addr, bytes([1 << channel]))
+
 class GY521:
     def __init__(self, i2c, addr=0x68):
         self.i2c = i2c
@@ -111,10 +121,16 @@ LABEL = "healthy"  # Manually change to "tremor" when you want to simulate shaki
 
 led = Pin(2, Pin.OUT)
 i2c = I2C(0, scl=Pin(22), sda=Pin(21), freq=400000)
+mux = TCA9548A(i2c)  # TCA9548A multiplexer at address 0x70
 
 try:
-    sensor = GY521(i2c)
-    print("GY-521 3-Axis True Tremor Tracking Enabled!")
+    # Initialize 4 IMUs on different multiplexer channels
+    sensors = []
+    for channel in range(4):
+        mux.select_channel(channel)
+        sensor = GY521(i2c)
+        sensors.append(sensor)
+    print("4 IMUs initialized on TCA9548A multiplexer!")
 except Exception as e:
     print("Connection Failed:", e)
     sys.exit()
@@ -123,8 +139,9 @@ SAMPLES = 128
 processor = FFTProcessor(num_samples=SAMPLES)
 SAMPLE_INTERVAL_US = 20000  # 20ms = Stable 50 Hz Sample rate
 
-# Timer-based sampling state
-sample_buffer = SENSOR_BUFFER  # Reuse pre-allocated buffer
+# Timer-based sampling state - store samples from all 4 sensors
+# Format: [imu0_x1, imu0_y1, imu0_z1, imu1_x1, imu1_y1, imu1_z1, ...] for each sample
+sample_buffer = [0.0] * (128 * 4 * 3)  # 128 samples * 4 sensors * 3 axes
 sample_index = 0
 first_sample_time = None
 last_sample_time = None
@@ -132,9 +149,21 @@ buffer_ready = False
 
 def sample_callback(t):
     global sample_index, first_sample_time, last_sample_time, buffer_ready
-    # Get sensor sample
-    sample = sensor.get_3axis_vector()
-    sample_buffer[sample_index] = sample
+    # Get samples from all 4 IMUs
+    imu_samples = []
+    for channel in range(4):
+        mux.select_channel(channel)
+        sample = sensors[channel].get_3axis_vector()
+        imu_samples.append(sample)
+
+    # Store 3-axis data for each IMU (we're storing magnitude only for now)
+    # In future, we could store x,y,z separately for each IMU
+    base_idx = sample_index * 12  # 4 sensors * 3 axes each
+    for i in range(4):
+        sample_buffer[base_idx + i*3] = imu_samples[i]  # x
+        sample_buffer[base_idx + i*3 + 1] = imu_samples[i]  # y (same for magnitude approach)
+        sample_buffer[base_idx + i*3 + 2] = imu_samples[i]  # z (same for magnitude approach)
+
     now = time.ticks_us()
     if sample_index == 0:
         first_sample_time = now
@@ -167,9 +196,13 @@ try:
             else:
                 actual_fs = SAMPLES / (SAMPLE_INTERVAL_US / 1000000.0)  # fallback
 
-            # Use pre-allocated FFT buffers
+            # Use pre-allocated FFT buffers for first IMU (for now)
+            # TODO: Process all 4 IMUs separately or fuse data
             for i in range(SAMPLES):
-                FFT_REAL_BUFFER[i] = (sample_buffer[i] - sum(sample_buffer)/len(sample_buffer)) * processor.window[i]
+                # Extract data for IMU 0 (first sensor)
+                base_idx = i * 12  # 4 sensors * 3 axes
+                imu0_mag = sample_buffer[base_idx]  # Using x-axis as magnitude placeholder
+                FFT_REAL_BUFFER[i] = (imu0_mag - sum(sample_buffer[::12][:SAMPLES])/SAMPLES) * processor.window[i]
                 FFT_IMAG_BUFFER[i] = 0.0
 
             processor._in_place_fft(FFT_REAL_BUFFER, FFT_IMAG_BUFFER)
@@ -194,7 +227,9 @@ try:
             led.value(1 if mag > 1.2 else 0)
 
             # FORMATTED FOR CSV LOGGING:
-            raw_data_string = ",".join(["{:.4f}".format(x) for x in sample_buffer])
+            # For now, output data from first IMU only to maintain compatibility
+            # Format: LABEL,imu0_sample1,imu0_sample2,...,imu0_sample128
+            raw_data_string = ",".join(["{:.4f}".format(sample_buffer[i*12]) for i in range(SAMPLES)])
             print(f"{LABEL},{raw_data_string}")
 
             # Reset timing for next buffer

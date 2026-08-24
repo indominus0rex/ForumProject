@@ -13,7 +13,7 @@ If model.WEIGHTS is None, falls back to the heuristic from fft.py
 (peak-in-band 3-12 Hz, magnitude > threshold).
 """
 
-from machine import I2C, Pin, PWM
+from machine import I2C, Pin, PWM, Timer
 import time
 import math
 import sys
@@ -69,51 +69,38 @@ print("Model: {}".format(
 
 # ---- HELPERS ----
 
-def capture_window():
-    """Return 2D list [128][3] of x,y,z at 100 Hz."""
-    win = WINDOW_BUFFER
-    for i in range(SAMPLES):
-        t0 = time.ticks_us()
-        x, y, z = sensor.get_3axis_vector_raw() if hasattr(sensor, "get_3axis_vector_raw") else None, None, None
-        if x is None:
-            raw = sensor.i2c.readfrom_mem(sensor.addr, 0x3B, 6)
-            def combine(h, l):
-                v = (h << 8) | l
-                return v if v < 32768 else v - 65536
-            x = combine(raw[0], raw[1]) / 16384.0
-            y = combine(raw[2], raw[3]) / 16384.0
-            z = combine(raw[4], raw[5]) / 16384.0
-        win[i][0] = x
-        win[i][1] = y
-        win[i][2] = z
-        while time.ticks_diff(time.ticks_us(), t0) < SAMPLE_INTERVAL_US:
-            pass
-    return win
+# Timer-based sampling state
+window_index = 0
+first_sample_time = None
+last_sample_time = None
+window_ready = False
 
+def sample_callback(t):
+    global window_index, first_sample_time, last_sample_time, window_ready
+    # Get sensor sample
+    try:
+        raw = sensor.i2c.readfrom_mem(sensor.addr, 0x3B, 6)
+        def combine(h, l):
+            v = (h << 8) | l
+            return v if v < 32768 else v - 65536
+        x = combine(raw[0], raw[1]) / 16384.0
+        y = combine(raw[2], raw[3]) / 16384.0
+        z = combine(raw[4], raw[5]) / 16384.0
+    except Exception:
+        x, y, z = 0.0, 0.0, 1.0  # gravity fallback
 
-def classify_logreg(window):
-    feats = feature_extract.compute(window, fs=100.0, n=SAMPLES)
-    x = scaler.apply(feats, model.FEATURE_MEAN, model.FEATURE_STD)
-    _, probs = logreg.forward(x, model.WEIGHTS, model.BIAS)
-    idx = logreg.argmax(probs)
-    return model.CLASSES[idx], probs[idx], probs
-
-
-def classify_heuristic(window):
-    # flatten to magnitude then reuse FFTProcessor.process_data
-    flat = []
-    for r in window:
-        flat.extend(r)
-    signal = [math.sqrt(window[i][0] ** 2 + window[i][1] ** 2 + window[i][2] ** 2)
-              for i in range(SAMPLES)]
-    freq, mag = fft_proc.process_data(signal, 100.0)
-    if mag == 0.0:
-        return "rest", 0.0, None
-    if HEURISTIC_LO_HZ <= freq <= HEURISTIC_HI_HZ and mag >= HEURISTIC_MAG_THRESHOLD:
-        return "kinetic", mag, None
-    if freq < HEURISTIC_LO_HZ and mag >= 0.5:
-        return "postural", mag, None
-    return "rest", mag, None
+    # Store sample
+    WINDOW_BUFFER[window_index][0] = x
+    WINDOW_BUFFER[window_index][1] = y
+    WINDOW_BUFFER[window_index][2] = z
+    now = time.ticks_us()
+    if window_index == 0:
+        first_sample_time = now
+    last_sample_time = now
+    window_index += 1
+    if window_index >= SAMPLES:
+        window_ready = True
+        timer.deinit()  # Stop timer to prevent overwriting while processing
 
 
 # ---- FEEDBACK POLICY ----
@@ -152,28 +139,56 @@ def apply_feedback(label, conf):
 use_model = model.WEIGHTS is not None
 last_log = time.ticks_ms()
 try:
+    # Initialize timer for periodic sampling
+    timer = Timer(0)
+    timer.init(period=SAMPLE_INTERVAL_US // 1000, mode=Timer.PERIODIC, callback=sample_callback)
+
     while True:
-        t0 = time.ticks_ms()
-        window = capture_window()
-        if use_model:
-            label, conf, probs = classify_logreg(window)
-        else:
-            label, conf, _ = classify_heuristic(window)
-            probs = None
-
-        apply_feedback(label, conf)
-
-        now = time.ticks_ms()
-        if time.ticks_diff(now, last_log) >= 500:
-            if probs is not None:
-                pstr = "[" + ", ".join("{:.2f}".format(p) for p in probs) + "]"
+        if window_ready:
+            # Process the filled window
+            window_ready = False
+            # Calculate actual sampling frequency from first and last sample timestamps (for potential future use)
+            # Note: current processing functions use fixed 100.0 Hz, but we compute actual_fs for reference/metrics
+            if first_sample_time is not None and last_sample_time is not None:
+                total_time_us = time.ticks_diff(last_sample_time, first_sample_time)
+                if total_time_us > 0:
+                    actual_fs = SAMPLES / (total_time_us / 1000000.0)
+                else:
+                    actual_fs = SAMPLES / (SAMPLE_INTERVAL_US / 1000000.0)  # fallback
             else:
-                pstr = "n/a"
-            print("pred={:>8s} conf={:.2f} probs={} dt={}ms".format(
-                label, conf, pstr, time.ticks_diff(now, t0)))
-            last_log = now
+                actual_fs = SAMPLES / (SAMPLE_INTERVAL_US / 1000000.0)  # fallback
+
+            # For now, we use fixed 100.0 Hz in processing functions as before
+            window = WINDOW_BUFFER
+            if use_model:
+                label, conf, probs = classify_logreg(window)
+            else:
+                label, conf, _ = classify_heuristic(window)
+                probs = None
+
+            apply_feedback(label, conf)
+
+            now = time.ticks_ms()
+            if time.ticks_diff(now, last_log) >= 500:
+                if probs is not None:
+                    pstr = "[" + ", ".join("{:.2f}".format(p) for p in probs) + "]"
+                else:
+                    pstr = "n/a"
+                print("pred={:>8s} conf={:.2f} probs={} dt={}ms".format(
+                    label, conf, pstr, time.ticks_diff(now, t0)))
+                last_log = now
+
+            # Reset state and restart timer for next window
+            window_index = 0
+            first_sample_time = None
+            last_sample_time = None
+            window_ready = False
+            timer.init(period=SAMPLE_INTERVAL_US // 1000, mode=Timer.PERIODIC, callback=sample_callback)
+
+        time.sleep(0.001)  # Short sleep to prevent busy-wait in main loop
 
 except KeyboardInterrupt:
+    timer.deinit()
     led.value(0)
     lra.duty(LRA_DUTY_OFF)
     print("\nStopped.")

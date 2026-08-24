@@ -1,0 +1,14 @@
+Minimalist technical diagram of a wearable Parkinson's tremor monitoring system on a human hand and forearm. Clean white background. Flat vector style.
+
+Show only essential components:
+- ESP32 development board on forearm with labeled ports: GPIO22 (SCL), GPIO21 (SDA), GND, 3.3V, GPIO18 (PWM1), GPIO19 (PWM2), GPIO20 (PWM3), GPIO2 (LED)
+- 4 IMU sensors (simple blue circles) at key locations: dorsal hand center, thenar eminence, thumb CMC joint, forearm proximal wrist
+- 3 LRA actuators (simple orange rectangles) at locations: dorsal hand (between MC2-3), palmar hand (beneath thenar), palmar hand (near hypothenar)
+- Simple black lines showing I2C connections from ESP32 to all IMUs (via imaginary bus)
+- Simple black lines showing PWM connections from ESP32 to each LRA
+- Simple red line showing ESP32 GPIO2 to LED
+- Minimal labels: "ESP32", "IMU", "LRA", "LED", "I2C", "PWM"
+- No anatomical details, no wire color specifications, no connector details
+- No legend, no additional notes
+- Focus on clarity: components clearly separated, connections easy to trace
+- Suitable for quick understanding in presentations or documentation
