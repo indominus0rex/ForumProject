@@ -1,32 +1,40 @@
-"""feature_extract.py — MicroPython 15-feature extractor for 128x3 window.
+"""common/feature_extract.py — MicroPython 15-feature extractor for 128x3 IMU window.
 
-Input:  window = list of 128 * 3 floats, axis-major [x0,y0,z0,x1,y1,z1,...]
-        OR    2D list [[x0,y0,z0], [x1,y1,z1], ...]
+Input: window = list of 128 samples, either:
+  - 2D: [[x0, y0, z0], [x1, y1, z1], ...]  (axis-major, preferred)
+  - 1D: [x0, y0, z0, x1, y1, z1, ...]      (interleaved flat)
+
 Output: list of 15 floats in fixed order. Order MUST match train_classifier.py.
 
-Order:
-  0  rms_all
-  1  std_all
-  2  mean_crossing_rate
-  3  dominant_freq_hz
-  4  band_3_6
-  5  band_6_9
-  6  band_9_12
-  7  band_12_25
-  8  spectral_entropy
-  9  dominant_axis   (0=x, 1=y, 2=z)
- 10  rms_x
- 11  rms_y
- 12  rms_z
- 13  xy_ratio        (rms_x / max(rms_y, 1e-6))
- 14  peak_prominence (peak / max(median_mag, 1e-6))
+Feature order:
+  0  rms_all            — RMS of all axes concatenated
+  1  std_all            — Std dev of all axes concatenated
+  2  mean_crossing_rate — Zero-mean crossing rate of all axes
+  3  dominant_freq_hz   — Peak frequency (Hz) from magnitude FFT
+  4  band_3_6           — RMS band power 3-6 Hz
+  5  band_6_9           — RMS band power 6-9 Hz
+  6  band_9_12          — RMS band power 9-12 Hz
+  7  band_12_25         — RMS band power 12-25 Hz
+  8  spectral_entropy   — Normalized spectral entropy (0-1)
+  9  dominant_axis      — Axis with highest variance (0=x, 1=y, 2=z)
+  10 rms_x              — RMS of x-axis
+  11 rms_y              — RMS of y-axis
+  12 rms_z              — RMS of z-axis
+  13 xy_ratio           — rms_x / max(rms_y, 1e-6)
+  14 peak_prominence    — peak_mag / max(median_mag, 1e-6)
 """
 
 import math
+from typing import List, Tuple, Union
 
 
-def _flatten_axis_major(window_2d):
-    """Return three lists x, y, z each length N."""
+Window2D = List[List[float]]
+WindowFlat = List[float]
+Window = Union[Window2D, WindowFlat]
+
+
+def _flatten_axis_major(window_2d: Window2D) -> Tuple[List[float], List[float], List[float]]:
+    """Split 2D window into separate x, y, z lists."""
     n = len(window_2d)
     x = [0.0] * n
     y = [0.0] * n
@@ -38,8 +46,8 @@ def _flatten_axis_major(window_2d):
     return x, y, z
 
 
-def _flatten_interleaved(window_flat):
-    """window_flat = [x0,y0,z0,x1,y1,z1,...]"""
+def _flatten_interleaved(window_flat: WindowFlat) -> Tuple[List[float], List[float], List[float]]:
+    """Split interleaved flat window into separate x, y, z lists."""
     n = len(window_flat) // 3
     x = [window_flat[i * 3 + 0] for i in range(n)]
     y = [window_flat[i * 3 + 1] for i in range(n)]
@@ -47,11 +55,11 @@ def _flatten_interleaved(window_flat):
     return x, y, z
 
 
-def _mean(xs):
+def _mean(xs: List[float]) -> float:
     return sum(xs) / len(xs) if xs else 0.0
 
 
-def _std(xs, mu=None):
+def _std(xs: List[float], mu: float = None) -> float:
     if mu is None:
         mu = _mean(xs)
     if not xs:
@@ -63,7 +71,7 @@ def _std(xs, mu=None):
     return math.sqrt(s / len(xs))
 
 
-def _rms(xs):
+def _rms(xs: List[float]) -> float:
     if not xs:
         return 0.0
     s = 0.0
@@ -72,7 +80,8 @@ def _rms(xs):
     return math.sqrt(s / len(xs))
 
 
-def _mean_crossing_rate(xs, mu):
+def _mean_crossing_rate(xs: List[float], mu: float) -> float:
+    """Zero-mean crossing rate."""
     cnt = 0
     prev = xs[0] - mu
     for v in xs[1:]:
@@ -83,7 +92,8 @@ def _mean_crossing_rate(xs, mu):
     return cnt / len(xs) if xs else 0.0
 
 
-def _in_place_fft(real, imag):
+def _in_place_fft(real: List[float], imag: List[float]) -> None:
+    """In-place iterative Cooley-Tukey FFT."""
     n = len(real)
     if n <= 1:
         return
@@ -118,8 +128,16 @@ def _in_place_fft(real, imag):
         size *= 2
 
 
-def _fft_mag_sum(window_2d, fs=100.0, n=128):
-    """Return (peak_freq_hz, mag_spectrum_sum[1..n//2], mag_spectrum_sum_full[0..n//2])."""
+def _fft_mag_sum(
+    window_2d: Window2D,
+    fs: float = 100.0,
+    n: int = 128
+) -> Tuple[float, List[float], List[float]]:
+    """Compute magnitude spectrum from 3-axis window.
+
+    Returns:
+        (peak_freq_hz, magnitude_spectrum[0..n//2], magnitude_spectrum_full)
+    """
     mean_x = _mean([r[0] for r in window_2d])
     mean_y = _mean([r[1] for r in window_2d])
     mean_z = _mean([r[2] for r in window_2d])
@@ -128,7 +146,6 @@ def _fft_mag_sum(window_2d, fs=100.0, n=128):
         mag = math.sqrt((r[0] - mean_x) ** 2 + (r[1] - mean_y) ** 2 + (r[2] - mean_z) ** 2)
         real[i] = mag
     imag = [0.0] * n
-    hann_scale = 2.0 / (n - 1)
     for i in range(n):
         w = 0.5 * (1 - math.cos(2 * math.pi * i / (n - 1)))
         real[i] *= w
@@ -148,7 +165,8 @@ def _fft_mag_sum(window_2d, fs=100.0, n=128):
     return (peak_idx * fs) / n, mag, mag
 
 
-def _band_power(mag, fs, n, lo, hi):
+def _band_power(mag: List[float], fs: float, n: int, lo: float, hi: float) -> float:
+    """RMS band power in [lo, hi] Hz."""
     half = n // 2
     df = fs / n
     lo_i = max(1, int(lo / df))
@@ -161,7 +179,8 @@ def _band_power(mag, fs, n, lo, hi):
     return math.sqrt(s / (hi_i - lo_i + 1))
 
 
-def _spectral_entropy(mag):
+def _spectral_entropy(mag: List[float]) -> float:
+    """Normalized spectral entropy (0-1)."""
     s = sum(m * m for m in mag)
     if s <= 1e-12:
         return 0.0
@@ -173,7 +192,7 @@ def _spectral_entropy(mag):
     return h / math.log(len(mag)) if len(mag) > 1 else 0.0
 
 
-def _median(xs):
+def _median(xs: List[float]) -> float:
     s = sorted(xs)
     n = len(s)
     if n == 0:
@@ -183,12 +202,21 @@ def _median(xs):
     return 0.5 * (s[n // 2 - 1] + s[n // 2])
 
 
-def compute(window, fs=100.0, n=128):
-    """window: either [128, 3] or interleaved flat list. Returns 15 floats."""
+def compute(window: Window, fs: float = 100.0, n: int = 128) -> List[float]:
+    """Extract 15 features from 128-sample 3-axis window.
+
+    Args:
+        window: 128 samples, either 2D [[x,y,z],...] or flat [x,y,z,x,y,z,...].
+        fs: Sampling frequency in Hz.
+        n: Number of samples (must be 128).
+
+    Returns:
+        List of 15 feature floats in fixed order.
+    """
     if isinstance(window[0], (list, tuple)):
-        x, y, z = _flatten_axis_major(window)
+        x, y, z = _flatten_axis_major(window)  # type: ignore
     else:
-        x, y, z = _flatten_interleaved(window)
+        x, y, z = _flatten_interleaved(window)  # type: ignore
 
     all_vals = x + y + z
     rms_all = _rms(all_vals)
