@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1100" height="760" viewBox="0 0 1100 760" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <marker id="ar" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#c0392b"/>
+    </marker>
+    <marker id="arNew" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#27ae60"/>
+    </marker>
+    <linearGradient id="skin" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ecc7a2"/><stop offset="1" stop-color="#e3b68c"/>
+    </linearGradient>
+    <linearGradient id="strap" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#2f3640"/><stop offset="0.5" stop-color="#485460"/><stop offset="1" stop-color="#2f3640"/>
+    </linearGradient>
+    <linearGradient id="pcb" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#16632c"/><stop offset="1" stop-color="#0b3d1a"/>
+    </linearGradient>
+    <linearGradient id="imu" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#2c6fb0"/><stop offset="1" stop-color="#1a4a7a"/>
+    </linearGradient>
+    <linearGradient id="lra" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#e8c25a"/><stop offset="1" stop-color="#c99a2e"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="2" stdDeviation="2" flood-opacity="0.18"/>
+    </filter>
+    <filter id="shadowLift" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="3" stdDeviation="3" flood-opacity="0.25"/>
+    </filter>
+  </defs>
+
+  <rect width="1100" height="760" fill="#eef1f5"/>
+
+  <!-- header band -->
+  <rect x="0" y="0" width="1100" height="70" fill="#2c3e50"/>
+  <text x="550" y="30" text-anchor="middle" font-family="Segoe UI, Arial" font-size="22" font-weight="bold" fill="#ffffff">Assembled Wearable — IMU + LRA Haptic Tremor Monitor</text>
+  <text x="550" y="54" text-anchor="middle" font-family="Segoe UI, Arial" font-size="13" fill="#bdc3c7">4× IMU (TCA9548A mux · I2C0) · 3× LRA array (GPIO 18/19/20) · ESP32 · 100 Hz · 128-sample window</text>
+
+  <!-- ===== DORSAL PANEL ===== -->
+  <rect x="25" y="88" width="515" height="470" rx="12" fill="#ffffff" filter="url(#shadow)"/>
+  <rect x="25" y="88" width="515" height="40" rx="12" fill="#34495e"/>
+  <rect x="25" y="112" width="515" height="17" fill="#34495e"/>
+  <text x="282" y="113" text-anchor="middle" font-family="Segoe UI, Arial" font-size="15" font-weight="bold" fill="#fff">Dorsal view (back of hand)</text>
+
+  <!-- hand -->
+  <g>
+    <path d="M 120 545 L 72 375 L 104 345 L 136 315 L 176 315 L 208 345 L 240 375 L 268 545 Z" fill="url(#skin)" stroke="#b98a5e" stroke-width="2.5"/>
+    <path d="M 136 315 L 104 250 L 112 190 L 128 145 L 168 128 L 208 145 L 224 190 L 232 250 L 208 315 Z" fill="url(#skin)" stroke="#b98a5e" stroke-width="2.5"/>
+    <path d="M 128 145 L 116 60 L 127 55 L 141 128" fill="none" stroke="#b98a5e" stroke-width="5" stroke-linecap="round"/>
+    <path d="M 152 138 L 150 46 L 163 42 L 167 136" fill="none" stroke="#b98a5e" stroke-width="5" stroke-linecap="round"/>
+    <path d="M 180 138 L 186 46 L 199 42 L 194 136" fill="none" stroke="#b98a5e" stroke-width="5" stroke-linecap="round"/>
+    <path d="M 204 145 L 223 58 L 235 56 L 216 145" fill="none" stroke="#b98a5e" stroke-width="5" stroke-linecap="round"/>
+    <path d="M 224 190 L 276 184 L 283 196 L 232 206" fill="url(#skin)" stroke="#b98a5e" stroke-width="2.5"/>
+  </g>
+
+  <!-- strap dorsal -->
+  <rect x="72" y="325" width="194" height="52" rx="8" fill="url(#strap)" stroke="#1e272e" stroke-width="2" filter="url(#shadowLift)"/>
+  <line x1="74" y1="340" x2="264" y2="340" stroke="#7f8c8d" stroke-width="1.5" stroke-dasharray="5 3"/>
+  <line x1="74" y1="364" x2="264" y2="364" stroke="#7f8c8d" stroke-width="1.5" stroke-dasharray="5 3"/>
+
+  <!-- ESP32 -->
+  <g filter="url(#shadowLift)">
+    <rect x="102" y="330" width="112" height="42" rx="7" fill="url(#pcb)" stroke="#0a2a12" stroke-width="2"/>
+    <rect x="110" y="336" width="40" height="30" rx="3" fill="#d5d8dc" stroke="#7f8c8d"/>
+    <text x="130" y="354" text-anchor="middle" font-family="Arial" font-size="6.5" fill="#333">ESP32</text>
+    <rect x="202" y="342" width="9" height="18" rx="2" fill="#555"/>
+    <text x="164" y="352" text-anchor="middle" font-family="Segoe UI" font-size="9" font-weight="bold" fill="#aef0bd">ESP32</text>
+    <text x="164" y="363" text-anchor="middle" font-family="Segoe UI" font-size="7" fill="#8ad098">DEV BOARD</text>
+  </g>
+
+  <!-- IMU1 dorsal wrist -->
+  <g filter="url(#shadow)">
+    <rect x="110" y="252" width="26" height="26" rx="5" fill="url(#imu)" stroke="#0b2742" stroke-width="2"/>
+    <text x="123" y="263" text-anchor="middle" font-family="Arial" font-size="7" fill="#d6e8f7">IMU</text>
+    <text x="123" y="273" text-anchor="middle" font-family="Arial" font-size="7" font-weight="bold" fill="#fff">1</text>
+  </g>
+  <!-- IMU3 CMC -->
+  <g filter="url(#shadow)">
+    <rect x="238" y="186" width="24" height="24" rx="5" fill="url(#imu)" stroke="#0b2742" stroke-width="2"/>
+    <text x="250" y="197" text-anchor="middle" font-family="Arial" font-size="6.5" fill="#d6e8f7">IMU</text>
+    <text x="250" y="206" text-anchor="middle" font-family="Arial" font-size="6.5" font-weight="bold" fill="#fff">3</text>
+  </g>
+  <!-- IMU4 forearm -->
+  <g filter="url(#shadow)">
+    <rect x="84" y="470" width="26" height="26" rx="5" fill="url(#imu)" stroke="#0b2742" stroke-width="2"/>
+    <text x="97" y="481" text-anchor="middle" font-family="Arial" font-size="7" fill="#d6e8f7">IMU</text>
+    <text x="97" y="491" text-anchor="middle" font-family="Arial" font-size="7" font-weight="bold" fill="#fff">4</text>
+  </g>
+  <!-- NEW: IMU5 MCP (design improvement, green) -->
+  <g filter="url(#shadow)">
+    <rect x="262" y="160" width="24" height="24" rx="5" fill="#27ae60" stroke="#1e8449" stroke-width="2" stroke-dasharray="3 2"/>
+    <text x="274" y="171" text-anchor="middle" font-family="Arial" font-size="6.5" fill="#eafaf1">IMU</text>
+    <text x="274" y="180" text-anchor="middle" font-family="Arial" font-size="6.5" font-weight="bold" fill="#fff">5</text>
+  </g>
+
+  <!-- LRA dorsal MC2-MC3 -->
+  <g filter="url(#shadow)">
+    <rect x="140" y="150" width="28" height="28" rx="6" fill="url(#lra)" stroke="#8a6d1f" stroke-width="2"/>
+    <circle cx="154" cy="164" r="8" fill="#f6df8a" stroke="#8a6d1f"/>
+    <text x="154" y="192" text-anchor="middle" font-family="Arial" font-size="7" font-weight="bold" fill="#6b5314">LRA</text>
+  </g>
+
+  <!-- wiring -->
+  <g stroke="#c22" stroke-width="2" fill="none">
+    <path d="M 154 150 C 154 240 150 300 150 330"/>
+  </g>
+  <g stroke="#2a6fd6" stroke-width="1.5" stroke-dasharray="5 3" fill="none">
+    <path d="M 123 252 C 130 290 140 310 148 330"/>
+    <path d="M 250 200 C 252 260 180 310 150 330"/>
+    <path d="M 97 470 C 104 435 120 390 130 372"/>
+    <path d="M 274 170 C 276 200 270 250 260 290"/>
+  </g>
+
+  <!-- ===== PALMAR PANEL ===== -->
+  <rect x="560" y="88" width="515" height="470" rx="12" fill="#ffffff" filter="url(#shadow)"/>
+  <rect x="560" y="88" width="515" height="40" rx="12" fill="#34495e"/>
+  <rect x="560" y="112" width="515" height="17" fill="#34495e"/>
+  <text x="817" y="113" text-anchor="middle" font-family="Segoe UI, Arial" font-size="15" font-weight="bold" fill="#fff">Palmar view (palm)</text>
+
+  <g>
+    <path d="M 650 545 L 602 375 L 634 345 L 666 315 L 706 315 L 738 345 L 770 375 L 798 545 Z" fill="url(#skin)" stroke="#b98a5e" stroke-width="2.5"/>
+    <path d="M 666 315 L 634 250 L 642 190 L 658 145 L 698 128 L 738 145 L 754 190 L 762 250 L 738 315 Z" fill="url(#skin)" stroke="#b98a5e" stroke-width="2.5"/>
+    <path d="M 658 145 L 646 60 L 657 55 L 671 128" fill="none" stroke="#b98a5e" stroke-width="5" stroke-linecap="round"/>
+    <path d="M 682 138 L 680 46 L 693 42 L 697 136" fill="none" stroke="#b98a5e" stroke-width="5" stroke-linecap="round"/>
+    <path d="M 710 138 L 716 46 L 729 42 L 724 136" fill="none" stroke="#b98a5e" stroke-width="5" stroke-linecap="round"/>
+    <path d="M 734 145 L 753 58 L 765 56 L 746 145" fill="none" stroke="#b98a5e" stroke-width="5" stroke-linecap="round"/>
+    <path d="M 642 190 L 590 178 L 584 191 L 636 206" fill="url(#skin)" stroke="#b98a5e" stroke-width="2.5"/>
+  </g>
+
+  <rect x="602" y="325" width="194" height="52" rx="8" fill="url(#strap)" stroke="#1e272e" stroke-width="2" opacity="0.9"/>
+
+  <!-- IMU2 thenar -->
+  <g filter="url(#shadow)">
+    <rect x="588" y="250" width="26" height="26" rx="5" fill="url(#imu)" stroke="#0b2742" stroke-width="2"/>
+    <text x="601" y="261" text-anchor="middle" font-family="Arial" font-size="7" fill="#d6e8f7">IMU</text>
+    <text x="601" y="271" text-anchor="middle" font-family="Arial" font-size="7" font-weight="bold" fill="#fff">2</text>
+  </g>
+
+  <!-- LRA thenar -->
+  <g filter="url(#shadow)">
+    <rect x="612" y="206" width="28" height="28" rx="6" fill="url(#lra)" stroke="#8a6d1f" stroke-width="2"/>
+    <circle cx="626" cy="220" r="8" fill="#f6df8a" stroke="#8a6d1f"/>
+    <text x="626" y="248" text-anchor="middle" font-family="Arial" font-size="7" font-weight="bold" fill="#6b5314">LRA</text>
+  </g>
+  <!-- LRA hypothenar -->
+  <g filter="url(#shadow)">
+    <rect x="726" y="250" width="28" height="28" rx="6" fill="url(#lra)" stroke="#8a6d1f" stroke-width="2"/>
+    <circle cx="740" cy="264" r="8" fill="#f6df8a" stroke="#8a6d1f"/>
+    <text x="740" y="292" text-anchor="middle" font-family="Arial" font-size="7" font-weight="bold" fill="#6b5314">LRA</text>
+  </g>
+
+  <g stroke="#c22" stroke-width="2" fill="none" opacity="0.7">
+    <path d="M 626 206 C 626 270 660 300 668 325"/>
+    <path d="M 754 250 C 754 290 730 310 700 325"/>
+  </g>
+  <g stroke="#2a6fd6" stroke-width="1.5" stroke-dasharray="5 3" fill="none" opacity="0.7">
+    <path d="M 601 250 C 602 290 620 310 640 325"/>
+  </g>
+
+  <!-- ===== LEGENDS ===== -->
+  <!-- IMU map -->
+  <rect x="25" y="578" width="520" height="170" rx="10" fill="#ffffff" stroke="#dcdde1" stroke-width="1.5" filter="url(#shadow)"/>
+  <text x="40" y="602" font-family="Segoe UI, Arial" font-size="14" font-weight="bold" fill="#2c3e50">IMU Placement (I2C0 · TCA9548A mux @ 0x70 · NUM_IMUS = 4)</text>
+
+  <rect x="40" y="614" width="13" height="13" rx="3" fill="#2c6fb0"/>
+  <text x="60" y="625" font-family="Arial" font-size="11" fill="#333">IMU1 — Dorsal wrist (proximal to wrist joint)</text>
+  <rect x="40" y="634" width="13" height="13" rx="3" fill="#2c6fb0"/>
+  <text x="60" y="645" font-family="Arial" font-size="11" fill="#333">IMU2 — Thenar eminence (palmar thumb base)</text>
+  <rect x="40" y="654" width="13" height="13" rx="3" fill="#2c6fb0"/>
+  <text x="60" y="665" font-family="Arial" font-size="11" fill="#333">IMU3 — Thumb CMC joint (dorsal)</text>
+  <rect x="40" y="674" width="13" height="13" rx="3" fill="#2c6fb0"/>
+  <text x="60" y="685" font-family="Arial" font-size="11" fill="#333">IMU4 — Forearm proximal wrist (1.5 cm)</text>
+  <rect x="40" y="694" width="13" height="13" rx="3" fill="#27ae60" stroke="#1e8449" stroke-dasharray="3 2"/>
+  <text x="60" y="705" font-family="Arial" font-size="11" fill="#1e8449">IMU5 — Thumb MCP joint (NEW · +15–25% pinch/grasp accuracy)</text>
+
+  <rect x="300" y="614" width="13" height="13" rx="3" fill="#c99a2e"/>
+  <text x="320" y="625" font-family="Arial" font-size="11" fill="#333">LRA-dorsal — MC2–MC3 · GPIO 20</text>
+  <rect x="300" y="634" width="13" height="13" rx="3" fill="#c99a2e"/>
+  <text x="320" y="645" font-family="Arial" font-size="11" fill="#333">LRA-thenar — palmar · GPIO 19</text>
+  <rect x="300" y="654" width="13" height="13" rx="3" fill="#c99a2e"/>
+  <text x="320" y="665" font-family="Arial" font-size="11" fill="#333">LRA-hypothenar — palmar · GPIO 18</text>
+  <line x1="300" y1="684" x2="325" y2="684" stroke="#c22" stroke-width="3"/>
+  <text x="333" y="688" font-family="Arial" font-size="11" fill="#333">LRA PWM · 200 Hz · 50% duty</text>
+  <line x1="300" y1="704" x2="325" y2="704" stroke="#2a6fd6" stroke-width="2" stroke-dasharray="5 3"/>
+  <text x="333" y="708" font-family="Arial" font-size="11" fill="#333">I2C SCL/SDA · GPIO 22/21</text>
+
+  <text x="40" y="730" font-family="Arial" font-size="10" fill="#555">LRA_PINS = [18,19,20] → [hypothenar, thenar, dorsal] · LRA_PIN = 25 (single fallback)</text>
+
+  <!-- design improvements -->
+  <rect x="565" y="578" width="510" height="170" rx="10" fill="#fefef5" stroke="#d4e6c8" stroke-width="1.5" filter="url(#shadow)"/>
+  <text x="580" y="602" font-family="Segoe UI, Arial" font-size="14" font-weight="bold" fill="#1e8449">Recommended Design Improvements (evidence-based)</text>
+
+  <text x="580" y="624" font-family="Arial" font-size="11" fill="#333">▸ Add <tspan font-weight="bold">IMU5</tspan> at thumb MCP joint — finer grasp-modulation detection</text>
+  <text x="580" y="644" font-family="Arial" font-size="11" fill="#333">▸ Add <tspan font-weight="bold">LRA4 dorsal array</tspan> (2–3 × 8 mm mini-LRAs, 5 mm pitch) for directional cues</text>
+  <text x="580" y="664" font-family="Arial" font-size="11" fill="#333">▸ <tspan font-weight="bold">0.1 µF decoupling caps</tspan> near each IMU VCC pin</text>
+  <text x="580" y="684" font-family="Arial" font-size="11" fill="#333">▸ <tspan font-weight="bold">Twisted-pair I2C</tspan> + <tspan font-weight="bold">ferrite beads</tspan> on power lines (noise)</text>
+  <text x="580" y="704" font-family="Arial" font-size="11" fill="#333">▸ <tspan font-weight="bold">Biocompatible silicone</tspan> (Shore A 10–20) encapsulation for skin comfort</text>
+  <text x="580" y="724" font-family="Arial" font-size="11" fill="#1e8449">▸ Variable haptic encoding: rest 20 Hz / postural 5 Hz / kinetic 10 Hz, adaptive intensity</text>
+
+  <text x="580" y="742" font-family="Arial" font-size="10" fill="#777">Source: docs/refined_hardware_design.md · docs/imu_lra_placement.txt</text>
+
+</svg>

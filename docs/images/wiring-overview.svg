@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="600" height="500" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="600" height="500" fill="white"/>
+  
+  <!-- Title -->
+  <text x="300" y="30" text-anchor="middle" font-family="Arial" font-size="16" font-weight="black">LRA Wiring Overview Diagram</text>
+  
+  <!-- Strap outline (simplified) -->
+  <path d="M50,100 Q100,150 150,100 T250,100 T350,100 T450,100 T550,100" 
+        stroke="black" stroke-width="2" fill="none"/>
+  
+  <!-- Strap center line -->
+  <path d="M50,100 Q100,150 150,100 T250,100 T350,100 T450,100 T550,100" 
+        stroke="gray" stroke-width="1" stroke-dasharray="5,5" fill="none"/>
+  
+  <!-- LRA Pocket (on strap, left side) -->
+  <rect x="100" y="70" width="40" height="40" fill="lightyellow" stroke="orange" stroke-width="2"/>
+  <!-- Pocket opening (top side) -->
+  <line x1="100" y1="70" x2="140" y2="70" stroke="black" stroke-width="2"/>
+  <!-- Flap (closed) -->
+  <rect x="100" y="30" width="40" height="40" fill="lightyellow" stroke="orange" stroke-width="2"/>
+  <!-- Velcro on flap (hook side) -->
+  <rect x="110" y="30" width="20" height="20" fill="red"/>
+  <!-- Velcro on pocket (loop side) -->
+  <rect x="100" y="70" width="20" height="20" fill="blue"/>
+  
+  <!-- LRA inside pocket (represented as a rectangle) -->
+  <rect x="110" y="80" width="20" height="20" fill="lightgreen" stroke="green" stroke-width="1"/>
+  
+  <!-- Wires exiting pocket -->
+  <!-- Wire 1 (signal) -->
+  <line x1="140" y1="90" x2="180" y2="90" stroke="red" stroke-width="2"/>
+  <!-- Wire 2 (ground) -->
+  <line x1="140" y1="110" x2="180" y2="110" stroke="black" stroke-width="2"/>
+  
+  <!-- Strain relief loop at pocket entry -->
+  <path d="M180,90 Q190,70 200,90" stroke="red" stroke-width="2" fill="none"/>
+  <path d="M180,110 Q190,130 200,110" stroke="black" stroke-width="2" fill="none"/>
+  
+  <!-- Wire securing points (every 15mm) -->
+  <circle cx="200" cy="90" r="3" fill="red"/>
+  <circle cx="215" cy="90" r="3" fill="red"/>
+  <circle cx="230" cy="90" r="3" fill="red"/>
+  <circle cx="245" cy="90" r="3" fill="red"/>
+  <circle cx="260" cy="90" r="3" fill="red"/>
+  
+  <circle cx="200" cy="110" r="3" fill="black"/>
+  <circle cx="215" cy="110" r="3" fill="black"/>
+  <circle cx="230" cy="110" r="3" fill="black"/>
+  <circle cx="245" cy="110" r="3" fill="black"/>
+  <circle cx="260" cy="110" r="3" fill="black"/>
+  
+  <!-- Strain relief loop at strap exit -->
+  <path d="M260,90 Q270,70 280,90" stroke="red" stroke-width="2" fill="none"/>
+  <path d="M260,110 Q270,130 280,110" stroke="black" stroke-width="2" fill="none"/>
+  
+  <!-- ESP32 representation -->
+  <rect x="280" y="50" width="60" height="80" fill="lightgray" stroke="gray" stroke-width="2"/>
+  <!-- ESP32 label -->
+  <text x="310" y="90" text-anchor="middle" font-family="Arial" font-size="10">ESP32</text>
+  
+  <!-- GPIO labels on ESP32 -->
+  <!-- LRA Pin (for single) or Array pins -->
+  <line x1="280" y1="100" x2="290" y2="100" stroke="red" stroke-width="2"/>
+  <text x="295" y="105" font-family="Arial" font-size="9">GPIO 25</text>
+  <text x="295" y="115" font-family="Arial" font-size="8">(LRA_PIN)</text>
+  
+  <line x1="280" y1="120" x2="290" y2="120" stroke="black" stroke-width="2"/>
+  <text x="295" y="125" font-family="Arial" font-size="9">GND</text>
+  
+  <!-- Optional: Array mode labels -->
+  <text x="300" y="140" font-family="Arial" font-size="9" fill="gray">Array Mode:</text>
+  <line x1="300" y1="150" x2="310" y2="150" stroke="red" stroke-width="2"/>
+  <text x="315" y="155" font-family="Arial" font-size="8">GPIO 18</text>
+  <line x1="300" y1="165" x2="310" y2="165" stroke="red" stroke-width="2"/>
+  <text x="315" y="170" font-family="Arial" font-size="8">GPIO 19</text>
+  <line x1="300" y1="180" x2="310" y2="180" stroke="red" stroke-width="2"/>
+  <text x="315" y="185" font-family="Arial" font-size="8">GPIO 20</text>
+  <line x1="300" y1="195" x2="310" y2="195" stroke="black" stroke-width="2"/>
+  <text x="315" y="200" font-family="Arial" font-size="8">GND</text>
+  
+  <!-- I2C connections for IMU (for reference) -->
+  <line x1="300" y1="60" x2="310" y2="60" stroke="green" stroke-width="2"/>
+  <text x="315" y="65" font-family="Arial" font-size="9">SCL (22)</text>
+  <line x1="300" y1="75" x2="310" y2="75" stroke="green" stroke-width="2"/>
+  <text x="315" y="80" font-family="Arial" font-size="9">SDA (21)</text>
+  
+  <!-- IMU placement on strap (for reference) -->
+  <circle cx="400" cy="100" r="15" fill="lightblue" stroke="blue" stroke-width="2"/>
+  <text x="400" y="105" text-anchor="middle" font-family="Arial" font-size="10">IMU</text>
+  
+  <!-- Wire from ESP32 to IMU (dashed) -->
+  <line x1="340" y1="90" x2="385" y2="100" stroke="green" stroke-width="1" stroke-dasharray="3,3"/>
+  <line x1="340" y1="100" x2="385" y2="100" stroke="green" stroke-width="1" stroke-dasharray="3,3"/>
+  
+  <!-- Legend -->
+  <rect x="420" y="50" width="160" height="400" fill="whitesmoke" stroke="black" stroke-width="1"/>
+  <text x="500" y="70" text-anchor="middle" font-family="Arial" font-size="12" font-weight="bold">Legend</text>
+  
+  <!-- Wire colors -->
+  <line x1="430" y1="90" x2="450" y2="90" stroke="red" stroke-width="2"/>
+  <text x="460" y="95" font-family="Arial" font-size="10">Signal Wire (Red)</text>
+  <line x1="430" y1="110" x2="450" y2="110" stroke="black" stroke-width="2"/>
+  <text x="460" y="115" font-family="Arial" font-size="10">Ground Wire (Black)</text>
+  
+  <!-- Strain relief -->
+  <path d="M430,130 Q440,110 450,130" stroke="gray" stroke-width="2" fill="none"/>
+  <text x="460" y="135" font-family="Arial" font-size="10">Strain-Relief Loop</text>
+  
+  <!-- Wire securing -->
+  <circle cx="440" cy="150" r="3" fill="gray"/>
+  <text x="460" y="155" font-family="Arial" font-size="10">Wire Securing Point</text>
+  
+  <!-- Component representations -->
+  <rect x="430" y="170" width="20" height="20" fill="lightyellow" stroke="orange" stroke-width="2"/>
+  <text x="460" y="185" font-family="Arial" font-size="9">LRA Pocket</text>
+  <rect x="430" y="190" width="20" height="20" fill="lightgreen" stroke="green" stroke-width="1"/>
+  <text x="460" y="205" font-family="Arial" font-size="9">LRA</text>
+  <rect x="430" y="210" width="60" height="40" fill="lightgray" stroke="gray" stroke-width="2"/>
+  <text x="460" y="235" font-family="Arial" font-size="9">ESP32</text>
+  <circle cx="440" cy="250" r="15" fill="lightblue" stroke="blue" stroke-width="2"/>
+  <text x="460" y="260" font-family="Arial" font-size="9">IMU</text>
+  
+  <!-- Notes -->
+  <text x="430" y="280" font-family="Arial" font-size="10" font-weight="bold">Notes:</text>
+  <text x="440" y="300" font-family="Arial" font-size="9">• Use 30AWG silicone-insulated stranded wire</text>
+  <text x="440" y="315" font-family="Arial" font-size="9">• Create 3mm diameter strain-relief loops</text>
+  <text x="440" y="330" font-family="Arial" font-size="9">• Secure wires every 15mm along strap</text>
+  <text x="440" y="345" font-family="Arial" font-size="9">• Verify continuity before final assembly</text>
+  <text x="440" y="360" font-family="Arial" font-size="9">• Check firmware/config.py for pin assignments</text>
+  <text x="440" y="375" font-family="Arial" font-size="9">• LRA frequency: 200Hz, duty: 50%</text>
+  
+  <!-- Arrow showing direction of wear -->
+  <polygon points="550,100 560,90 570,100" fill="black"/>
+  <text x="580" y="105" font-family="Arial" font-size="10">Direction of Wear</text>
+</svg>
