@@ -1,5 +1,7 @@
 # Refined Hardware Design for Parkinson's Tremor Monitoring System
 
+> **Superseded by 2026-08-27 lock:** IMU placement is locked at thumb proximal phalanx 20° + index proximal phalanx (not CMC), and LRAs are deferred. See `imu_lra_placement.txt:40` and `PIN_ASSIGNMENTS.md:45`. The research references below remain valid context.
+
 Based on research (2024-2025), we recommend the following improvements to the hardware design for the tremor monitoring and haptic feedback system.
 
 ## **IMU Placement Updates (Evidence-Based)**

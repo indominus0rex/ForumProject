@@ -70,19 +70,28 @@ print("Model: {}".format(
 # ---- HELPERS ----
 
 def capture_window():
-    """Return 2D list [128][3] of x,y,z at 100 Hz."""
+    """Return 2D list [128][3] of x,y,z at 100 Hz (legacy busy-wait).
+
+    NOTE: Prefer embedded_main_hsp.py timer-based pipeline. This path kept for
+    backwards compat but fixed to avoid broken tuple-unpacking.
+    """
     win = WINDOW_BUFFER
     for i in range(SAMPLES):
         t0 = time.ticks_us()
-        x, y, z = sensor.get_3axis_vector_raw() if hasattr(sensor, "get_3axis_vector_raw") else None, None, None
-        if x is None:
-            raw = sensor.i2c.readfrom_mem(sensor.addr, 0x3B, 6)
-            def combine(h, l):
-                v = (h << 8) | l
-                return v if v < 32768 else v - 65536
-            x = combine(raw[0], raw[1]) / 16384.0
-            y = combine(raw[2], raw[3]) / 16384.0
-            z = combine(raw[4], raw[5]) / 16384.0
+        try:
+            # Prefer driver method if present; fallback to raw I2C
+            if hasattr(sensor, "read_3axis"):
+                x, y, z = sensor.read_3axis()
+            else:
+                raw = sensor.i2c.readfrom_mem(sensor.addr, 0x3B, 6)
+                def combine(h, l):
+                    v = (h << 8) | l
+                    return v if v < 32768 else v - 65536
+                x = combine(raw[0], raw[1]) / 16384.0
+                y = combine(raw[2], raw[3]) / 16384.0
+                z = combine(raw[4], raw[5]) / 16384.0
+        except Exception:
+            x, y, z = 0.0, 0.0, 1.0
         win[i][0] = x
         win[i][1] = y
         win[i][2] = z

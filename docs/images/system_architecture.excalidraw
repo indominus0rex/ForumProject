@@ -1,0 +1,88 @@
+{
+  "type": "excalidraw",
+  "version": 2,
+  "source": "hermes-agent",
+  "elements": [
+    { "type": "rectangle", "id": "bg_power", "x": 50, "y": 50, "width": 300, "height": 400, "strokeColor": "#e9ecef", "backgroundColor": "#f8f9fa", "fillStyle": "solid", "strokeWidth": 1, "roughness": 0, "opacity": 100, "roundness": { "type": 3 }, "boundElements": [{ "id": "t_bg_power", "type": "text" }] },
+    { "type": "text", "id": "t_bg_power", "x": 60, "y": 60, "width": 100, "height": 20, "text": "POWER", "fontSize": 14, "fontFamily": 1, "strokeColor": "#868e96", "textAlign": "left", "verticalAlign": "top", "containerId": null, "originalText": "POWER", "autoResize": true },
+
+    { "type": "rectangle", "id": "bg_mcu", "x": 400, "y": 50, "width": 350, "height": 400, "strokeColor": "#a5d8ff", "backgroundColor": "#e7f5ff", "fillStyle": "solid", "strokeWidth": 1, "roughness": 0, "opacity": 100, "roundness": { "type": 3 }, "boundElements": [{ "id": "t_bg_mcu", "type": "text" }] },
+    { "type": "text", "id": "t_bg_mcu", "x": 410, "y": 60, "width": 100, "height": 20, "text": "MCU", "fontSize": 14, "fontFamily": 1, "strokeColor": "#1971c2", "textAlign": "left", "verticalAlign": "top", "containerId": null, "originalText": "MCU", "autoResize": true },
+
+    { "type": "rectangle", "id": "bg_sensors", "x": 800, "y": 50, "width": 350, "height": 400, "strokeColor": "#b2f2bb", "backgroundColor": "#ebfbee", "fillStyle": "solid", "strokeWidth": 1, "roughness": 0, "opacity": 100, "roundness": { "type": 3 }, "boundElements": [{ "id": "t_bg_sensors", "type": "text" }] },
+    { "type": "text", "id": "t_bg_sensors", "x": 810, "y": 60, "width": 100, "height": 20, "text": "SENSORS", "fontSize": 14, "fontFamily": 1, "strokeColor": "#2f9e44", "textAlign": "left", "verticalAlign": "top", "containerId": null, "originalText": "SENSORS", "autoResize": true },
+
+    { "type": "rectangle", "id": "j1", "x": 80, "y": 100, "width": 120, "height": 60, "strokeColor": "#1e1e1e", "backgroundColor": "#ffd8a8", "fillStyle": "solid", "strokeWidth": 2, "roughness": 1, "opacity": 100, "roundness": { "type": 3 }, "boundElements": [{ "id": "t_j1", "type": "text" }] },
+    { "type": "text", "id": "t_j1", "x": 85, "y": 110, "width": 110, "height": 40, "text": "J1\nMicro-USB\n(Charging)", "fontSize": 16, "fontFamily": 1, "strokeColor": "#1e1e1e", "textAlign": "center", "verticalAlign": "middle", "containerId": "j1", "originalText": "J1\nMicro-USB\n(Charging)", "autoResize": true },
+
+    { "type": "rectangle", "id": "u7", "x": 80, "y": 200, "width": 120, "height": 60, "strokeColor": "#1e1e1e", "backgroundColor": "#ffd8a8", "fillStyle": "solid", "strokeWidth": 2, "roughness": 1, "opacity": 100, "roundness": { "type": 3 }, "boundElements": [{ "id": "t_u7", "type": "text" }] },
+    { "type": "text", "id": "t_u7", "x": 85, "y": 210, "width": 110, "height": 40, "text": "U7\nMCP73831\nLiPo Charger", "fontSize": 16, "fontFamily": 1, "strokeColor": "#1e1e1e", "textAlign": "center", "verticalAlign": "middle", "containerId": "u7", "originalText": "U7\nMCP73831\nLiPo Charger", "autoResize": true },
+
+    { "type": "rectangle", "id": "bt1", "x": 80, "y": 300, "width": 120, "height": 60, "strokeColor": "#1e1e1e", "backgroundColor": "#ffd8a8", "fillStyle": "solid", "strokeWidth": 2, "roughness": 1, "opacity": 100, "roundness": { "type": 3 }, "boundElements": [{ "id": "t_bt1", "type": "text" }] },
+    { "type": "text", "id": "t_bt1", "x": 85, "y": 310, "width": 110, "height": 40, "text": "BT1\nLiPo 3.7V\n500mAh+", "fontSize": 16, "fontFamily": 1, "strokeColor": "#1e1e1e", "textAlign": "center", "verticalAlign": "middle", "containerId": "bt1", "originalText": "BT1\nLiPo 3.7V\n500mAh+", "autoResize": true },
+
+    { "type": "rectangle", "id": "u8", "x": 230, "y": 200, "width": 100, "height": 60, "strokeColor": "#1e1e1e", "backgroundColor": "#ffd8a8", "fillStyle": "solid", "strokeWidth": 2, "roughness": 1, "opacity": 100, "roundness": { "type": 3 }, "boundElements": [{ "id": "t_u8", "type": "text" }] },
+    { "type": "text", "id": "t_u8", "x": 235, "y": 210, "width": 90, "height": 40, "text": "U8\nAP2112K\n3.3V LDO", "fontSize": 16, "fontFamily": 1, "strokeColor": "#1e1e1e", "textAlign": "center", "verticalAlign": "middle", "containerId": "u8", "originalText": "U8\nAP2112K\n3.3V LDO", "autoResize": true },
+
+    { "type": "rectangle", "id": "c1", "x": 230, "y": 290, "width": 40, "height": 30, "strokeColor": "#1e1e1e", "backgroundColor": "#ffd8a8", "fillStyle": "solid", "strokeWidth": 2, "roughness": 1, "opacity": 100, "roundness": { "type": 3 }, "boundElements": [{ "id": "t_c1", "type": "text" }] },
+    { "type": "text", "id": "t_c1", "x": 235, "y": 295, "width": 30, "height": 20, "text": "C1", "fontSize": 14, "fontFamily": 1, "strokeColor": "#1e1e1e", "textAlign": "center", "verticalAlign": "middle", "containerId": "c1", "originalText": "C1", "autoResize": true },
+
+    { "type": "rectangle", "id": "c2", "x": 280, "y": 290, "width": 40, "height": 30, "strokeColor": "#1e1e1e", "backgroundColor": "#ffd8a8", "fillStyle": "solid", "strokeWidth": 2, "roughness": 1, "opacity": 100, "roundness": { "type": 3 }, "boundElements": [{ "id": "t_c2", "type": "text" }] },
+    { "type": "text", "id": "t_c2", "x": 285, "y": 295, "width": 30, "height": 20, "text": "C2", "fontSize": 14, "fontFamily": 1, "strokeColor": "#1e1e1e", "textAlign": "center", "verticalAlign": "middle", "containerId": "c2", "originalText": "C2", "autoResize": true },
+
+    { "type": "rectangle", "id": "u1", "x": 480, "y": 100, "width": 180, "height": 100, "strokeColor": "#1e1e1e", "backgroundColor": "#a5d8ff", "fillStyle": "solid", "strokeWidth": 2, "roughness": 1, "opacity": 100, "roundness": { "type": 3 }, "boundElements": [{ "id": "t_u1", "type": "text" }] },
+    { "type": "text", "id": "t_u1", "x": 485, "y": 110, "width": 170, "height": 80, "text": "U1\nESP32-DevKitC\nI2C0 @400kHz\n100Hz sampling\n128-sample window", "fontSize": 16, "fontFamily": 1, "strokeColor": "#1e1e1e", "textAlign": "center", "verticalAlign": "middle", "containerId": "u1", "originalText": "U1\nESP32-DevKitC\nI2C0 @400kHz\n100Hz sampling\n128-sample window", "autoResize": true },
+
+    { "type": "rectangle", "id": "u2", "x": 480, "y": 250, "width": 180, "height": 80, "strokeColor": "#1e1e1e", "backgroundColor": "#a5d8ff", "fillStyle": "solid", "strokeWidth": 2, "roughness": 1, "opacity": 100, "roundness": { "type": 3 }, "boundElements": [{ "id": "t_u2", "type": "text" }] },
+    { "type": "text", "id": "t_u2", "x": 485, "y": 260, "width": 170, "height": 60, "text": "U2\nTCA9548A\nI2C Multiplexer\n@0x70", "fontSize": 16, "fontFamily": 1, "strokeColor": "#1e1e1e", "textAlign": "center", "verticalAlign": "middle", "containerId": "u2", "originalText": "U2\nTCA9548A\nI2C Multiplexer\n@0x70", "autoResize": true },
+
+    { "type": "rectangle", "id": "d1", "x": 480, "y": 370, "width": 180, "height": 50, "strokeColor": "#1e1e1e", "backgroundColor": "#fff3bf", "fillStyle": "solid", "strokeWidth": 2, "roughness": 1, "opacity": 100, "roundness": { "type": 3 }, "boundElements": [{ "id": "t_d1", "type": "text" }] },
+    { "type": "text", "id": "t_d1", "x": 485, "y": 380, "width": 170, "height": 30, "text": "D1 LED (GPIO2)\n220Ω → GND", "fontSize": 16, "fontFamily": 1, "strokeColor": "#1e1e1e", "textAlign": "center", "verticalAlign": "middle", "containerId": "d1", "originalText": "D1 LED (GPIO2)\n220Ω → GND", "autoResize": true },
+
+    { "type": "rectangle", "id": "u3", "x": 830, "y": 100, "width": 140, "height": 60, "strokeColor": "#1e1e1e", "backgroundColor": "#b2f2bb", "fillStyle": "solid", "strokeWidth": 2, "roughness": 1, "opacity": 100, "roundness": { "type": 3 }, "boundElements": [{ "id": "t_u3", "type": "text" }] },
+    { "type": "text", "id": "t_u3", "x": 835, "y": 110, "width": 130, "height": 40, "text": "U3 GY-521\nCH0 @0x68\nDorsal Wrist", "fontSize": 16, "fontFamily": 1, "strokeColor": "#1e1e1e", "textAlign": "center", "verticalAlign": "middle", "containerId": "u3", "originalText": "U3 GY-521\nCH0 @0x68\nDorsal Wrist", "autoResize": true },
+
+    { "type": "rectangle", "id": "u4", "x": 1000, "y": 100, "width": 140, "height": 60, "strokeColor": "#1e1e1e", "backgroundColor": "#b2f2bb", "fillStyle": "solid", "strokeWidth": 2, "roughness": 1, "opacity": 100, "roundness": { "type": 3 }, "boundElements": [{ "id": "t_u4", "type": "text" }] },
+    { "type": "text", "id": "t_u4", "x": 1005, "y": 110, "width": 130, "height": 40, "text": "U4 GY-521\nCH1 @0x68\nThenar Volar", "fontSize": 16, "fontFamily": 1, "strokeColor": "#1e1e1e", "textAlign": "center", "verticalAlign": "middle", "containerId": "u4", "originalText": "U4 GY-521\nCH1 @0x68\nThenar Volar", "autoResize": true },
+
+    { "type": "rectangle", "id": "u5", "x": 830, "y": 200, "width": 140, "height": 60, "strokeColor": "#1e1e1e", "backgroundColor": "#b2f2bb", "fillStyle": "solid", "strokeWidth": 2, "roughness": 1, "opacity": 100, "roundness": { "type": 3 }, "boundElements": [{ "id": "t_u5", "type": "text" }] },
+    { "type": "text", "id": "t_u5", "x": 835, "y": 210, "width": 130, "height": 40, "text": "U5 GY-521\nCH2 @0x68\nThumb Phalanx", "fontSize": 16, "fontFamily": 1, "strokeColor": "#1e1e1e", "textAlign": "center", "verticalAlign": "middle", "containerId": "u5", "originalText": "U5 GY-521\nCH2 @0x68\nThumb Phalanx", "autoResize": true },
+
+    { "type": "rectangle", "id": "u6", "x": 1000, "y": 200, "width": 140, "height": 60, "strokeColor": "#1e1e1e", "backgroundColor": "#b2f2bb", "fillStyle": "solid", "strokeWidth": 2, "roughness": 1, "opacity": 100, "roundness": { "type": 3 }, "boundElements": [{ "id": "t_u6", "type": "text" }] },
+    { "type": "text", "id": "t_u6", "x": 1005, "y": 210, "width": 130, "height": 40, "text": "U6 GY-521\nCH3 @0x68\nIndex Phalanx", "fontSize": 16, "fontFamily": 1, "strokeColor": "#1e1e1e", "textAlign": "center", "verticalAlign": "middle", "containerId": "u6", "originalText": "U6 GY-521\nCH3 @0x68\nIndex Phalanx", "autoResize": true },
+
+    { "type": "arrow", "id": "a_usb_chg", "x": 140, "y": 160, "width": 0, "height": 40, "strokeColor": "#1e1e1e", "strokeWidth": 2, "roughness": 1, "opacity": 100, "points": [[0,0],[0,40]], "endArrowhead": "arrow", "startBinding": { "elementId": "j1", "fixedPoint": [0.5,1] }, "endBinding": { "elementId": "u7", "fixedPoint": [0.5,0] } },
+
+    { "type": "arrow", "id": "a_chg_bat", "x": 140, "y": 260, "width": 0, "height": 40, "strokeColor": "#1e1e1e", "strokeWidth": 2, "roughness": 1, "opacity": 100, "points": [[0,0],[0,40]], "endArrowhead": "arrow", "startBinding": { "elementId": "u7", "fixedPoint": [0.5,1] }, "endBinding": { "elementId": "bt1", "fixedPoint": [0.5,0] } },
+
+    { "type": "arrow", "id": "a_bat_ldo", "x": 200, "y": 230, "width": 30, "height": 0, "strokeColor": "#1e1e1e", "strokeWidth": 2, "roughness": 1, "opacity": 100, "points": [[0,0],[30,0]], "endArrowhead": "arrow", "startBinding": { "elementId": "u7", "fixedPoint": [1,0.5] }, "endBinding": { "elementId": "u8", "fixedPoint": [0,0.5] } },
+
+    { "type": "arrow", "id": "a_ldo_esp", "x": 330, "y": 230, "width": 150, "height": 0, "strokeColor": "#e03131", "strokeWidth": 3, "roughness": 1, "opacity": 100, "points": [[0,0],[150,0]], "endArrowhead": "arrow", "startBinding": { "elementId": "u8", "fixedPoint": [1,0.5] }, "endBinding": { "elementId": "u1", "fixedPoint": [0,0.5] }, "boundElements": [{ "id": "t_a_ldo_esp", "type": "text" }] },
+    { "type": "text", "id": "t_a_ldo_esp", "x": 380, "y": 215, "width": 50, "height": 15, "text": "3.3V", "fontSize": 14, "fontFamily": 1, "strokeColor": "#e03131", "textAlign": "center", "verticalAlign": "middle", "containerId": "a_ldo_esp", "originalText": "3.3V", "autoResize": true },
+
+    { "type": "arrow", "id": "a_esp_mux", "x": 570, "y": 200, "width": 0, "height": 50, "strokeColor": "#1971c2", "strokeWidth": 2, "roughness": 1, "opacity": 100, "points": [[0,0],[0,50]], "endArrowhead": "arrow", "startBinding": { "elementId": "u1", "fixedPoint": [0.5,1] }, "endBinding": { "elementId": "u2", "fixedPoint": [0.5,0] }, "boundElements": [{ "id": "t_a_esp_mux", "type": "text" }] },
+    { "type": "text", "id": "t_a_esp_mux", "x": 575, "y": 220, "width": 60, "height": 15, "text": "I2C0", "fontSize": 14, "fontFamily": 1, "strokeColor": "#1971c2", "textAlign": "left", "verticalAlign": "middle", "containerId": "a_esp_mux", "originalText": "I2C0", "autoResize": true },
+
+    { "type": "arrow", "id": "a_mux_u3", "x": 660, "y": 270, "width": 170, "height": 0, "strokeColor": "#1971c2", "strokeWidth": 2, "roughness": 1, "opacity": 100, "points": [[0,0],[170,0]], "endArrowhead": "arrow", "startBinding": { "elementId": "u2", "fixedPoint": [1,0.3] }, "endBinding": { "elementId": "u3", "fixedPoint": [0,0.5] }, "boundElements": [{ "id": "t_a_mux_u3", "type": "text" }] },
+    { "type": "text", "id": "t_a_mux_u3", "x": 720, "y": 255, "width": 30, "height": 15, "text": "CH0", "fontSize": 14, "fontFamily": 1, "strokeColor": "#1971c2", "textAlign": "center", "verticalAlign": "middle", "containerId": "a_mux_u3", "originalText": "CH0", "autoResize": true },
+
+    { "type": "arrow", "id": "a_mux_u4", "x": 660, "y": 280, "width": 340, "height": 0, "strokeColor": "#1971c2", "strokeWidth": 2, "roughness": 1, "opacity": 100, "points": [[0,0],[340,0]], "endArrowhead": "arrow", "startBinding": { "elementId": "u2", "fixedPoint": [1,0.4] }, "endBinding": { "elementId": "u4", "fixedPoint": [0,0.5] }, "boundElements": [{ "id": "t_a_mux_u4", "type": "text" }] },
+    { "type": "text", "id": "t_a_mux_u4", "x": 800, "y": 265, "width": 30, "height": 15, "text": "CH1", "fontSize": 14, "fontFamily": 1, "strokeColor": "#1971c2", "textAlign": "center", "verticalAlign": "middle", "containerId": "a_mux_u4", "originalText": "CH1", "autoResize": true },
+
+    { "type": "arrow", "id": "a_mux_u5", "x": 660, "y": 290, "width": 170, "height": 60, "strokeColor": "#1971c2", "strokeWidth": 2, "roughness": 1, "opacity": 100, "points": [[0,0],[170,60]], "endArrowhead": "arrow", "startBinding": { "elementId": "u2", "fixedPoint": [1,0.6] }, "endBinding": { "elementId": "u5", "fixedPoint": [0,0.5] }, "boundElements": [{ "id": "t_a_mux_u5", "type": "text" }] },
+    { "type": "text", "id": "t_a_mux_u5", "x": 720, "y": 310, "width": 30, "height": 15, "text": "CH2", "fontSize": 14, "fontFamily": 1, "strokeColor": "#1971c2", "textAlign": "center", "verticalAlign": "middle", "containerId": "a_mux_u5", "originalText": "CH2", "autoResize": true },
+
+    { "type": "arrow", "id": "a_mux_u6", "x": 660, "y": 300, "width": 340, "height": 60, "strokeColor": "#1971c2", "strokeWidth": 2, "roughness": 1, "opacity": 100, "points": [[0,0],[340,60]], "endArrowhead": "arrow", "startBinding": { "elementId": "u2", "fixedPoint": [1,0.7] }, "endBinding": { "elementId": "u6", "fixedPoint": [0,0.5] }, "boundElements": [{ "id": "t_a_mux_u6", "type": "text" }] },
+    { "type": "text", "id": "t_a_mux_u6", "x": 800, "y": 320, "width": 30, "height": 15, "text": "CH3", "fontSize": 14, "fontFamily": 1, "strokeColor": "#1971c2", "textAlign": "center", "verticalAlign": "middle", "containerId": "a_mux_u6", "originalText": "CH3", "autoResize": true },
+
+    { "type": "arrow", "id": "a_esp_led", "x": 570, "y": 200, "width": 0, "height": 170, "strokeColor": "#1e1e1e", "strokeWidth": 2, "roughness": 1, "opacity": 100, "points": [[0,0],[0,170]], "endArrowhead": "arrow", "startBinding": { "elementId": "u1", "fixedPoint": [0.5,1] }, "endBinding": { "elementId": "d1", "fixedPoint": [0.5,0] }, "boundElements": [{ "id": "t_a_esp_led", "type": "text" }] },
+    { "type": "text", "id": "t_a_esp_led", "x": 575, "y": 290, "width": 50, "height": 15, "text": "GPIO2", "fontSize": 14, "fontFamily": 1, "strokeColor": "#1e1e1e", "textAlign": "left", "verticalAlign": "middle", "containerId": "a_esp_led", "originalText": "GPIO2", "autoResize": true },
+
+    { "type": "text", "id": "title", "x": 400, "y": 10, "width": 400, "height": 30, "text": "4-IMU ESP32 Tremor Monitor — System Architecture", "fontSize": 24, "fontFamily": 1, "strokeColor": "#1e1e1e", "textAlign": "center", "verticalAlign": "top", "containerId": null, "originalText": "4-IMU ESP32 Tremor Monitor — System Architecture", "autoResize": true },
+
+    { "type": "text", "id": "legend", "x": 850, "y": 400, "width": 280, "height": 80, "text": "Legend:\n● I2C Bus (SDA/SCL)\n● Power (3.3V)\n● GPIO Signal\n● AD0 → GND (all IMUs = 0x68)", "fontSize": 14, "fontFamily": 1, "strokeColor": "#495057", "textAlign": "left", "verticalAlign": "top", "containerId": null, "originalText": "Legend:\n● I2C Bus (SDA/SCL)\n● Power (3.3V)\n● GPIO Signal\n● AD0 → GND (all IMUs = 0x68)", "autoResize": true }
+  ],
+  "appState": {
+    "viewBackgroundColor": "#ffffff"
+  }
+}

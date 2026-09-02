@@ -77,6 +77,45 @@ This document compiles key research sources (2024-2025) that informed the refine
 - **Systematic Evaluation of IMU Sensors for Application in Smart Glove ...**  
   https://www.semanticscholar.org/paper/Systematic-Evaluation-of-IMU-Sensors-for-in-Smart-Harrison-Jester/d3da08bdaad24ccea98ad39369e025245390b01a
 
+## 2026 Web Expansion — Wrist Placement, Multiplexer & Multi-IMU Fusion
+
+### Wrist Placement Validated at 100 Hz
+- **Assessing Parkinson's Rest Tremor from the Wrist with Accelerometry and Gyroscope Signals in Patients with Deep Brain Stimulation: An Observational Study — Keba et al. 2025, J. Clin. Med. 14:2073**  
+  https://www.mdpi.com/2077-0383/14/6/2073 + PMC https://pmc.ncbi.nlm.nih.gov/articles/PMC11942689/ : Axivity 6-DoF IMU in rubber wristband **proximal to wrist joint**, 100 Hz, MDS-UPDRS + DBS on/off. Mirrors `firmware/common/config.py:5`.
+
+- **Body placement of IMUs differentially affects physical activity assessment accuracy in drug-naïve PD — Scientific Reports 2026**  
+  https://www.nature.com/articles/s41598-026-55099-3 : n=25, 8494 epochs, wrist vs lower back vs ankle. **Wrist+back comparable, ankle 20-25% worse**; in tremor-positive subgroup wrist slightly worse, lower back slightly better — justifies IMU0 wrist + IMU3 forearm redundancy.
+
+### Multiplexer for 4× MPU6050 on ESP32
+- **TCA9548A I2C Multiplexer: ESP32, ESP8266, Arduino — RandomNerd Tutorials**  
+  https://randomnerdtutorials.com/tca9548a-i2c-multiplexer-esp32-esp8266-arduino/ : Single byte to `0x70` bit `1<<ch` selects 1 of 8 buses.
+
+- **TCA9548A I2C Multiplexer with ESP32 — MicrocontrollersLab**  
+  https://microcontrollerslab.com/tca9548a-i2c-multiplexer-esp32-multiple-devices/ : 3-device example on default `SDA21/SCL22` `@400kHz`.
+
+- **TCA9548A Guide — componentindex.net**  
+  https://componentindex.net/components/tca9548a/ : TI 8-channel mux explanation.
+
+- **TCA9548A Library — tuxmountain/TCA9548A**  
+  https://github.com/tuxmountain/TCA9548A : `multiplexer.selectChannel(0..7)` → normal Wire; maps to MicroPython `i2c.writeto(0x70, bytes([1<<ch]))` as in `firmware/RawDataCollection.py:48`.
+
+- **MPU6050 Complete Tutorial — Zbotic.in**  
+  https://zbotic.in/mpu6050-imu-sensor-complete-tutorial-with-arduino-python : AD0 `GND=0x68 / 3.3V=0x69` gives only 2 addresses → mux required for 4. Pullups on GY-521 onboard.
+
+### Multi-IMU Virtual Sensor
+- **Sensor Fusion for Distributed IMUs — schoi355/multi_imu_fusion (AAS 2025)**  
+  https://github.com/schoi355/multi_imu_fusion : 5-18 IMUs to virtual IMU via Allan variance, significant drift reduction vs single.
+
+- **Multi-IMU Sensor Fusion for Legged Robots — Cerberus 2.0, arXiv:2507.11447**  
+  https://arxiv.org/abs/2507.11447 : Multi-IMU PO CRLB much smaller, <0.5% drift over 500m.
+
+### Soft-Mount Artifact Suppression
+- **Developments and challenges of advanced flexible electronic materials — Adv. Compos. Hybrid Mater. 2024**  
+  https://link.springer.com/article/10.1007/s42114-024-00949-9 : Flexible materials + rigid coupling reduce motion artifacts.
+
+- **Source-level motion artifact suppression in wearable — SciDirect 2026**  
+  https://www.sciencedirect.com/science/article/pii/S2590006426004850 : Dynamically stable skin contact via foam/silicone.
+
 ## Integration and System Design
 
 - **Comparison of Haptic Feedback in Upper-Limb Prostheses for Hand-Wrist ...**  
@@ -85,5 +124,5 @@ This document compiles key research sources (2024-2025) that informed the refine
 
 ---
 
-*Last updated: 2026-08-21*  
-*Sources compiled for Forum Project hardware design refinement*
+*Last updated: 2026-08-27*  
+*Sources compiled for Forum Project hardware design refinement — added 2026-08-27 web search (wrist 100Hz, multiplexer, virtual IMU)*

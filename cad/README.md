@@ -48,12 +48,19 @@ SolidWorks + FreeCAD source for the tremor-detection wiring diagram 3D model.
 | Component | X (mm) | Y (mm) | Rotation |
 |---|---|---|---|
 | ESP32-DevKitC | -25 | -8 | 0° |
-| GY-521 | 22 | 8 | 0° |
+| GY-521 (CH0, dorsal wrist) | 22 | 8 | 0° |
+| GY-521 (CH1, thenar volar) | 28 | 12 | 0° |
+| GY-521 (CH2, thumb proximal phalanx) | 34 | 6 | 20° |
+| GY-521 (CH3, index proximal phalanx) | 40 | 10 | 0° |
 | RES_220 | -10 | -10 | 30° |
 | RES_10K | -5 | 10 | 60° |
 | LED_5MM | -15 | 12 | 90° |
 | 2N7000 | 8 | -5 | 0° |
 | 1N4148 | 5 | 5 | 45° |
+
+### Deferred (not this build)
+| Component | X (mm) | Y (mm) | Rotation |
+|---|---|---|---|
 | LRA_COIN | 15 | -10 | 0° |
 
 Adjust positions in `COMPONENT_POSITIONS` dict in `build_assembly.py` if your real build differs.
@@ -67,7 +74,7 @@ Adjust positions in `COMPONENT_POSITIONS` dict in `build_assembly.py` if your re
 
 ## Pitfalls
 
-- Vendor parts (ESP32, GY-521) not auto-generated — need real STEPs from GrabCAD.
+- Vendor parts (ESP32, 4× GY-521) not auto-generated — need real STEPs from GrabCAD.
 - FreeCAD wires render as lines (not 3D tubes). SolidWorks sweep gives real 3D wires.
 - ESP32-DevKitC has two form factors (30-pin and 36-pin DevKitC v4). Match your real board.
 - LRA dimensions vary by manufacturer — current model assumes Ø10mm × 2.7mm coin.

@@ -15,13 +15,13 @@ For the SLDDRW (SolidWorks) or technical drawing (FreeCAD TechDraw):
   - [ ] Scale: 1:1
 - [ ] Component balloons (numbered callouts):
   - [ ] ESP32-DevKitC
-  - [ ] GY-521 (MPU6050)
+  - [ ] GY-521 (MPU6050) ×4
   - [ ] 2N7000
   - [ ] 1N4148
   - [ ] RES 220Ω
   - [ ] RES 10kΩ
   - [ ] LED (red, 5mm)
-  - [ ] LRA (coin)
+  - [ ] LRA (coin) — **deferred, not this build**
   - [ ] Perfboard
 - [ ] Wire color legend (red, black, yellow, blue)
 - [ ] Notes:
@@ -40,11 +40,11 @@ For the SLDDRW (SolidWorks) or technical drawing (FreeCAD TechDraw):
 
 - [ ] Part number, description, quantity, vendor
 - [ ] ESP32-DevKitC x1
-- [ ] GY-521 x1
+- [ ] GY-521 x4
 - [ ] 2N7000 x1
 - [ ] 1N4148 x1
 - [ ] RES 220Ω x1
 - [ ] RES 10kΩ x1
 - [ ] LED 5mm red x1
-- [ ] LRA coin (model-specific) x1
+- [ ] LRA coin (model-specific) — **deferred, not this build**
 - [ ] Perfboard 30x15 holes x1

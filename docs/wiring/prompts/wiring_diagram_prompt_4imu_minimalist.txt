@@ -1,0 +1,23 @@
+Minimalist pure box schematic + hand inset, white background, vector style, 16:9 landscape, orthogonal wiring, no LRA. Main 85% + inset 12% top-right.
+
+BOX LAYOUT (grid, non-crossing):
+  Power (X15) — red 3.3V bus + black GND bus horizontal X15->X80 with 0.1uF per IC and 10-100uF bulk.
+  ESP32 (X30) — ports: 21 SDA green, 22 SCL blue, 2 LED yellow, 3.3V red, GND black, 25/18/19/20 grey NC dashed box "DEFERRED no LRA this build".
+  TCA9548A @0x70 (X50) — A0/A1/A2->GND, EN->3.3V.
+  Four GY-521 @0x68 stacked at X75: IMU0 CH0 blue "dorsal wrist proximal (primary)", IMU1 CH1 green "thenar volar", IMU2 CH2 yellow "thumb proximal phalanx 20° tilt [PILL-ROLLING]", IMU3 CH3 orange "index proximal phalanx dorsal [ET 6-8Hz]".
+  LED top-right at X75 Y10: GPIO2 -> 220R -> GND yellow wire.
+
+WIRES (color-coded per cad/connections_4imu.csv):
+  Blue SCL 22 ESP32->TCA9548A SCL, green SDA 21 -> SDA bundled pair.
+  Per-channel pairs TCA->IMU horizontal rows non-crossing: CH0 blue SD0/SC0, CH1 green SD1/SC1, CH2 yellow SD2/SC2, CH3 orange SD3/SC3.
+  All GY-521 AD0->GND (0x68 each channel via mux select i2c.writeto(0x70, 1<<ch)).
+
+LEGEND top-right (8 swatches): Blue CH0, Green CH1, Yellow CH2, Orange CH3, Red 3.3V, Black GND, Yellow-grey LED, Grey NC.
+
+HAND INSET (12% top-right, dashed border "Anatomical Reference — Not Wiring"):
+  Solid grey dorsal hand+forearm outline + dashed translucent volar thenar ghost fill (rgba 200,230,200,0.15).
+  Four 4px dots color-matched to main wires: DOT0 blue dorsal wrist proximal, DOT1 green on volar ghost thenar, DOT2 yellow thumb proximal phalanx 20° tilt [pill 4-6Hz], DOT3 orange index proximal phalanx dorsal [ET 6-8Hz]. Each with outside 0-3 label and leader line; NO wires inside inset.
+
+STYLE: Thin 2px black box strokes, sans-serif 9-12pt labels outside skin with leader arrows, orthogonal wires. Negative: no LRA, no MOSFET, no battery, no photorealistic skin, no shadows, no clutter.
+
+Ref: PIN_ASSIGNMENTS.md:48 CH map, cad/connections_4imu.csv, firmware/common/config.py (SDA21/SCL22, 0x70, NUM_IMUS 4, IMU_CHANNELS [0,1,2,3], SAMPLES 128 @100Hz), knowledge.md:5a + docs/research_web_2026-08-27.md.

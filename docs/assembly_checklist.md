@@ -3,10 +3,10 @@
 Use this checklist to build a practical first prototype for the Forum Project wearable. It separates the **current firmware-safe build** from later multi-actuator / multi-IMU upgrades so you do not wire hardware that the code cannot read yet.
 
 Current repo baseline:
-- IMU: one GY-521 / MPU6050 on I2C0, SDA=GPIO21, SCL=GPIO22.
+- IMU: four GY-521 / MPU6050 via TCA9548A I2C multiplexer on I2C0, SDA=GPIO21, SCL=GPIO22.
 - Status LED: GPIO2.
-- Haptic output: single LRA / vibration motor driver on GPIO25.
-- Optional multi-LRA array code may use GPIO18/19/20, but check your ESP32 board first: many classic ESP32 DevKit boards do **not** expose GPIO20.
+- Haptic output: **deferred — no LRA this build.** GPIO25/18/19/20 left unpopulated.
+- 0.1 µF decoupling capacitors near each IMU's VCC pin (×4).
 
 Materials note: this checklist keeps the existing material choices unchanged: elastic nylon/spandex, breathable mesh / 3D spacer mesh, sew-on Velcro, flexible silicone wire, and polyester/nylon thread.
 
@@ -16,9 +16,9 @@ Materials note: this checklist keeps the existing material choices unchanged: el
 
 | ☐ | Decision |
 |---|---|
-| ☐ | **Recommended first build:** 1 ESP32 + 1 MPU6050 + 1 haptic actuator on GPIO25 |
-| ☐ | Multi-LRA build only if your board exposes safe PWM GPIOs and `USE_LRA_ARRAY = True` is tested |
-| ☐ | Multi-IMU build only after adding firmware support for multiple addresses or an I2C multiplexer |
+| ☐ | **Recommended first build:** 4 IMUs via TCA9548A I2C multiplexer, no LRA (matching `connections_4imu.csv`) |
+| ☐ | Minimal smoke-test only: 1 ESP32 + 1 MPU6050 (no multiplexer) — for verifying basic IMU readout before committing to 4-IMU build |
+| ☐ | Multi-LRA build **deferred** — only if actuators are later procured and `USE_LRA_ARRAY = True` is tested |
 
 Notes:
 - Do **not** connect 3 MPU6050 boards all with AD0 tied to GND. They will all use address `0x68` and conflict on the same I2C bus.
@@ -32,24 +32,19 @@ Notes:
 | ☐ | Item |
 |---|---|
 | ☐ | ESP32-DevKitC or compatible ESP32 board |
-| ☐ | 1 × MPU6050 / GY-521 for first prototype |
-| ☐ | Optional spare MPU6050 modules for later multi-IMU work |
-| ☐ | 1 × LRA coin actuator, or ERM phone vibration motor if LRA is unavailable |
-| ☐ | 1 × logic-level MOSFET for first actuator channel |
-| ☐ | 1 × flyback diode, e.g. 1N4001 / 1N4148, for motor/LRA protection |
-| ☐ | Optional 100 Ω gate resistor |
-| ☐ | Optional 10 kΩ gate pulldown resistor from MOSFET gate to GND |
+| ☐ | 4 × MPU6050 / GY-521 (one per IMU channel) |
+| ☐ | 1 × TCA9548A I2C multiplexer breakout board |
+| ☐ | 0.1 µF ceramic capacitors ×4 (one per IMU VCC) |
 | ☐ | 4.7 kΩ I2C pull-up resistors for SDA/SCL if your GY-521 board does not already include them |
-| ☐ | 0.1 µF ceramic capacitor near ESP32 power pins |
-| ☐ | 10-100 µF bulk capacitor near actuator supply rail, recommended |
+| ☐ | 10-100 µF bulk capacitor near ESP32 power rail, recommended |
 | ☐ | 30 AWG flexible silicone wire |
 | ☐ | Elastic nylon/spandex fabric |
 | ☐ | Breathable mesh / 3D spacer mesh |
 | ☐ | Sew-on Velcro hook and loop |
 | ☐ | Polyester/nylon thread |
 | ☐ | Heat-shrink tubing or electrical insulation |
-| ☐ | Optional JST-PH connectors for detachable actuators |
 | ☐ | Power source: USB power bank for first test, or LiPo + proper charger + boost/regulator for wearable use |
+| ☐ | **Deferred (not this build):** LRA coin actuator or ERM motor, logic-level MOSFET, flyback diode, gate resistor, gate pulldown, JST-PH connectors |
 
 Power warning:
 - A single 3.7 V LiPo into ESP32 `VIN` is often not reliable because many dev boards expect ~5 V on VIN/5V.
@@ -74,12 +69,19 @@ Power warning:
 
 ## Phase 4 — Sew Removable Pockets
 
-Recommended first prototype pockets:
+Recommended pockets (4 IMU build):
 
 | Pocket | Location | Cut size | Internal cavity |
 |---|---|---:|---:|
-| IMU | Dorsal hand or wrist/hand back | 26 mm × 26 mm | ~22 mm × 22 mm |
-| LRA/ERM | Thenar, hypothenar, or dorsal hand test position | 14-18 mm square depending on actuator | fit actual actuator |
+| IMU (CH0) | Dorsal hand or wrist/hand back | 26 mm × 26 mm | ~22 mm × 22 mm |
+| IMU (CH1) | Thenar eminence (palmar base of thumb) | 26 mm × 26 mm | ~22 mm × 22 mm |
+| IMU (CH2) | Thumb proximal phalanx (dorsal-radial 20° tilt) | 26 mm × 26 mm | ~22 mm × 22 mm |
+| IMU (CH3) | Index proximal phalanx (dorsal) | 26 mm × 26 mm | ~22 mm × 22 mm |
+
+### Deferred (not this build)
+| Pocket | Location | Cut size | Internal cavity |
+|---|---|---:|---:|
+| LRA/ERM | Thenar, hypothenar, or dorsal hand | 14-18 mm square | fit actual actuator |
 
 | ☐ | Step |
 |---|---|
@@ -93,19 +95,33 @@ Recommended first prototype pockets:
 
 ---
 
-## Phase 5 — Wire the IMU
+## Phase 5 — Wire the IMUs (TCA9548A)
 
-For the current firmware-safe build:
+Wire the TCA9548A I2C multiplexer first, then connect each IMU to its channel. Reference `connections_4imu.csv`.
+
+**TCA9548A wiring:**
 
 | ☐ | Connection |
 |---|---|
-| ☐ | ESP32 3V3 -> GY-521 VCC |
-| ☐ | ESP32 GND -> GY-521 GND |
-| ☐ | ESP32 GPIO21 -> GY-521 SDA |
-| ☐ | ESP32 GPIO22 -> GY-521 SCL |
-| ☐ | Keep AD0 at default GND / `0x68` for one IMU |
+| ☐ | ESP32 3V3 -> TCA9548A VCC |
+| ☐ | ESP32 GND -> TCA9548A GND |
+| ☐ | ESP32 GPIO21 -> TCA9548A SDA |
+| ☐ | ESP32 GPIO22 -> TCA9548A SCL |
+| ☐ | TCA9548A A0, A1, A2 -> GND (address 0x70) |
+| ☐ | TCA9548A EN -> 3.3V (enable) |
+
+**Per-channel IMU wiring (×4, one per TCA9548A channel SD0–SD7):**
+
+| ☐ | Connection |
+|---|---|
+| ☐ | TCA9548A VCC -> IMU VCC (all 4 IMUs) |
+| ☐ | TCA9548A GND -> IMU GND (all 4 IMUs) |
+| ☐ | TCA9548A SDn -> IMU SDA (one IMU per channel) |
+| ☐ | TCA9548A SCn -> IMU SCL (one IMU per channel) |
+| ☐ | Add 0.1 µF ceramic capacitor near each IMU's VCC pin |
+| ☐ | Keep AD0 at default GND / `0x68` for all IMUs (channels isolate them) |
 | ☐ | Keep wires short and flexible; stitch wire down every ~15 mm |
-| ☐ | Add strain relief loop near the IMU pocket |
+| ☐ | Add strain relief loop near each IMU pocket |
 
 Before continuing:
 - In Thonny, confirm the IMU can be initialized.
@@ -114,6 +130,8 @@ Before continuing:
 ---
 
 ## Phase 6 — Build One Haptic Driver Channel
+
+> **DEFERRED — no LRA this build.** Retain for when actuators are procured.
 
 Use this for either a true LRA or the ERM phone vibration motor you found. A true LRA gives cleaner haptic pulses; an ERM works for simpler buzzing but needs longer pulse timing.
 
@@ -252,19 +270,9 @@ Note: the earlier GPIO18/19/20 mapping is conceptual. GPIO20 is not available on
 
 ---
 
-## Phase 13 — Optional Multi-IMU Upgrade
+## Phase 13 — Multi-IMU Build (Current Config)
 
-Only do this after firmware is updated.
-
-| ☐ | Step |
-|---|---|
-| ☐ | Decide method: two addresses (`0x68`, `0x69`) or TCA9548A I2C multiplexer |
-| ☐ | Update firmware to initialize and read each IMU separately |
-| ☐ | Update data format before collecting training CSVs |
-| ☐ | Update host-side feature extraction/training to match the new data format |
-| ☐ | Re-check feature order coupling between firmware and trainer |
-
-Do not wire 3 MPU6050 modules all in parallel with the same address.
+**Already baseline — see Phase 1.** This phase is the current locked configuration (4 IMUs via TCA9548A), not an upgrade. No additional steps needed here.
 
 ---
 

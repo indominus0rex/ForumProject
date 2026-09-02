@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Wiring Diagram — 4-IMU ESP32 Tremor Monitor (Build Guide)</title>
+  <style>
+    :root {
+      --wire-pwr: #e03131;
+      --wire-gnd: #1a1a1a;
+      --wire-sda: #2f9e44;
+      --wire-scl: #1971c2;
+      --wire-led: #f08c00;
+      --wire-gpio: #5c7cfa;
+    }
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 24px;
+      color: #1a1a1a;
+      font-size: 13px;
+      background: #fafafa;
+    }
+    .title-block {
+      border-bottom: 3px solid #1a1a1a;
+      padding-bottom: 12px;
+      margin-bottom: 20px;
+    }
+    .title-block h1 {
+      margin: 0 0 4px 0;
+      font-size: 22px;
+      font-weight: 700;
+    }
+    .title-block .meta {
+      font-size: 12px;
+      color: #666;
+      font-family: 'JetBrains Mono', 'Consolas', monospace;
+    }
+    .diagram-container {
+      background: white;
+      border: 2px solid #ddd;
+      border-radius: 8px;
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 8px rgba(0,0,0,.08);
+    }
+    svg { width: 100%; height: auto; display: block; }
+
+    /* Wire styles */
+    .wire-pwr { stroke: var(--wire-pwr); stroke-width: 3; fill: none; }
+    .wire-gnd { stroke: var(--wire-gnd); stroke-width: 3; fill: none; }
+    .wire-sda { stroke: var(--wire-sda); stroke-width: 2.5; fill: none; }
+    .wire-scl { stroke: var(--wire-scl); stroke-width: 2.5; fill: none; }
+    .wire-led { stroke: var(--wire-led); stroke-width: 2.5; fill: none; }
+    .wire-gpio { stroke: var(--wire-gpio); stroke-width: 2.5; fill: none; }
+
+    /* Component boxes */
+    .comp-box {
+      fill: white;
+      stroke: #1a1a1a;
+      stroke-width: 2;
+      rx: 4;
+    }
+    .comp-box-pwr { fill: #fff3e0; stroke: #e03131; stroke-width: 2; rx: 4; }
+    .comp-box-mcu { fill: #e7f5ff; stroke: #1971c2; stroke-width: 2; rx: 4; }
+    .comp-box-mux { fill: #e3fcef; stroke: #2f9e44; stroke-width: 2; rx: 4; }
+    .comp-box-imu { fill: #f3f0ff; stroke: #5c7cfa; stroke-width: 2; rx: 4; }
+
+    /* Labels */
+    .label { font-size: 10px; fill: #1a1a1a; font-family: 'Segoe UI', sans-serif; }
+    .label-bold { font-size: 11px; font-weight: 700; fill: #1a1a1a; }
+    .label-pin { font-family: 'JetBrains Mono', 'Consolas', monospace; font-size: 8.5px; fill: #555; }
+    .label-wire { font-family: 'JetBrains Mono', 'Consolas', monospace; font-size: 8px; font-weight: 600; }
+    .label-title { font-size: 13px; font-weight: 700; fill: #1a1a1a; }
+
+    /* Legend */
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      padding: 12px 16px;
+      background: #f8f9fa;
+      border: 1px solid #dee2e6;
+      border-radius: 6px;
+      font-size: 12px;
+      margin-bottom: 16px;
+    }
+    .legend-item { display: flex; align-items: center; gap: 6px; }
+    .legend-line { width: 24px; height: 0; border-top: 3px solid; }
+
+    /* Build notes */
+    .build-note {
+      background: #fff9db;
+      border-left: 4px solid #fcc419;
+      padding: 12px 16px;
+      margin: 12px 0;
+      border-radius: 4px;
+      font-size: 12px;
+    }
+    .build-note h4 { margin: 0 0 6px 0; font-size: 13px; }
+    .build-note ul { margin: 0; padding-left: 20px; }
+    .build-note li { margin: 3px 0; }
+
+    /* Connection table */
+    .conn-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 16px 0;
+      font-size: 11px;
+    }
+    .conn-table th, .conn-table td {
+      border: 1px solid #dee2e6;
+      padding: 6px 10px;
+      text-align: left;
+    }
+    .conn-table th { background: #f1f3f5; font-weight: 600; }
+    .conn-table td { font-family: 'JetBrains Mono', 'Consolas', monospace; }
+    .conn-table .wire-cell { display: flex; align-items: center; gap: 6px; }
+    .conn-table .wire-swatch { width: 16px; height: 0; border-top: 3px solid; }
+
+    /* BOM */
+    .bom-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 16px 0;
+      font-size: 11px;
+    }
+    .bom-table th, .bom-table td {
+      border: 1px solid #dee2e6;
+      padding: 6px 10px;
+      text-align: left;
+    }
+    .bom-table th { background: #f1f3f5; font-weight: 600; }
+    .bom-table td { font-family: 'JetBrains Mono', 'Consolas', monospace; }
+  </style>
+</head>
+<body>
+  <div class="title-block">
+    <h1>Wiring Diagram — 4-IMU ESP32 Tremor Monitor</h1>
+    <div class="meta">
+      Build Guide · ESP32-DevKitC · TCA9548A · 4× GY-521 · LiPo Power · Rev 2026-09-01
+    </div>
+  </div>
+
+  <div class="legend">
+    <div class="legend-item"><span class="legend-line" style="border-color:#e03131;"></span> 3.3V Power</div>
+    <div class="legend-item"><span class="legend-line" style="border-color:#1a1a1a;"></span> Ground</div>
+    <div class="legend-item"><span class="legend-line" style="border-color:#2f9e44;"></span> I²C SDA</div>
+    <div class="legend-item"><span class="legend-line" style="border-color:#1971c2;"></span> I²C SCL</div>
+    <div class="legend-item"><span class="legend-line" style="border-color:#f08c00;"></span> LED Signal</div>
+    <div class="legend-item"><span class="legend-line" style="border-color:#5c7cfa;"></span> GPIO</div>
+  </div>
+
+  <div class="diagram-container">
+    <svg viewBox="0 0 1400 900" xmlns="http://www.w3.org/2000/svg">
+      <!-- Title -->
+      <text x="700" y="30" text-anchor="middle" class="label-title">Physical Wiring Diagram — Color-Coded Build Guide</text>
+
+      <!-- ==================== POWER SECTION ==================== -->
+      <rect x="40" y="60" width="320" height="340" fill="#fff3e0" stroke="#e03131" stroke-width="1.5" rx="6" opacity="0.3"/>
+      <text x="60" y="85" class="label-bold" style="fill:#e03131;">POWER SECTION</text>
+
+      <!-- Micro-USB J1 -->
+      <g transform="translate(60,110)">
+        <rect x="0" y="0" width="80" height="50" class="comp-box-pwr"/>
+        <text x="40" y="18" text-anchor="middle" class="label-bold">J1</text>
+        <text x="40" y="32" text-anchor="middle" class="label">Micro-USB</text>
+        <text x="40" y="44" text-anchor="middle" class="label-pin">Charging</text>
+        <!-- Pins -->
+        <circle cx="0" cy="10" r="3" fill="#e03131"/>
+        <circle cx="0" cy="25" r="3" fill="#1a1a1a"/>
+        <text x="-8" y="13" text-anchor="end" class="label-pin">VBUS</text>
+        <text x="-8" y="28" text-anchor="end" class="label-pin">GND</text>
+      </g>
+
+      <!-- MCP73831 U7 -->
+      <g transform="translate(180,100)">
+        <rect x="0" y="0" width="100" height="70" class="comp-box-pwr"/>
+        <text x="50" y="16" text-anchor="middle" class="label-bold">U7</text>
+        <text x="50" y="30" text-anchor="middle" class="label">MCP73831</text>
+        <text x="50" y="42" text-anchor="middle" class="label">LiPo Charger</text>
+        <text x="50" y="58" text-anchor="middle" class="label-pin">SOT-23-5</text>
+        <!-- Pins -->
+        <circle cx="0" cy="10" r="2.5" fill="#e03131"/>
+        <circle cx="0" cy="25" r="2.5" fill="#1a1a1a"/>
+        <circle cx="100" cy="10" r="2.5" fill="#e03131"/>
+        <circle cx="100" cy="25" r="2.5" fill="#e03131"/>
+        <circle cx="100" cy="40" r="2.5" fill="#f08c00"/>
+        <text x="-6" y="13" text-anchor="end" class="label-pin">VBUS</text>
+        <text x="-6" y="28" text-anchor="end" class="label-pin">GND</text>
+        <text x="106" y="13" class="label-pin">VBAT</text>
+        <text x="106" y="28" class="label-pin">PROG</text>
+        <text x="106" y="43" class="label-pin">STAT</text>
+      </g>
+
+      <!-- LiPo Battery BT1 -->
+      <g transform="translate(60,210)">
+        <rect x="0" y="0" width="120" height="60" class="comp-box-pwr"/>
+        <text x="60" y="18" text-anchor="middle" class="label-bold">BT1</text>
+        <text x="60" y="32" text-anchor="middle" class="label">LiPo Battery</text>
+        <text x="60" y="46" text-anchor="middle" class="label">3.7V 500mAh+</text>
+        <text x="60" y="56" text-anchor="middle" class="label-pin">JST-PH 2.0</text>
+        <!-- Pins -->
+        <circle cx="0" cy="15" r="3" fill="#e03131"/>
+        <circle cx="0" cy="35" r="3" fill="#1a1a1a"/>
+        <text x="-8" y="18" text-anchor="end" class="label-pin">+</text>
+        <text x="-8" y="38" text-anchor="end" class="label-pin">-</text>
+      </g>
+
+      <!-- AP2112K-3.3 U8 -->
+      <g transform="translate(220,200)">
+        <rect x="0" y="0" width="100" height="70" class="comp-box-pwr"/>
+        <text x="50" y="16" text-anchor="middle" class="label-bold">U8</text>
+        <text x="50" y="30" text-anchor="middle" class="label">AP2112K-3.3</text>
+        <text x="50" y="42" text-anchor="middle" class="label">LDO 3.3V</text>
+        <text x="50" y="58" text-anchor="middle" class="label-pin">SOT-23-5</text>
+        <!-- Pins -->
+        <circle cx="0" cy="10" r="2.5" fill="#e03131"/>
+        <circle cx="0" cy="25" r="2.5" fill="#1a1a1a"/>
+        <circle cx="100" cy="10" r="2.5" fill="#e03131"/>
+        <text x="-6" y="13" text-anchor="end" class="label-pin">VIN</text>
+        <text x="-6" y="28" text-anchor="end" class="label-pin">GND</text>
+        <text x="106" y="13" class="label-pin">VOUT</text>
+      </g>
+
+      <!-- Capacitors -->
+      <g transform="translate(60,300)">
+        <rect x="0" y="0" width="50" height="35" class="comp-box-pwr"/>
+        <text x="25" y="14" text-anchor="middle" class="label-bold" style="font-size:9px;">C1</text>
+        <text x="25" y="26" text-anchor="middle" class="label-pin">4.7µF</text>
+        <circle cx="0" cy="10" r="2" fill="#e03131"/>
+        <circle cx="50" cy="10" r="2" fill="#1a1a1a"/>
+      </g>
+      <g transform="translate(130,300)">
+        <rect x="0" y="0" width="50" height="35" class="comp-box-pwr"/>
+        <text x="25" y="14" text-anchor="middle" class="label-bold" style="font-size9px;">C2</text>
+        <text x="25" y="26" text-anchor="middle" class="label-pin">4.7µF</text>
+        <circle cx="0" cy="10" r="2" fill="#e03131"/>
+        <circle cx="50" cy="10" r="2" fill="#1a1a1a"/>
+      </g>
+      <text x="105" y="350" text-anchor="middle" class="label-pin">Decoupling caps (input/output)</text>
+
+      <!-- Power wires -->
+      <!-- USB VBUS → Charger VBUS -->
+      <path d="M 140 120 L 180 110" class="wire-pwr"/>
+      <text x="155" y="108" class="label-wire" fill="#e03131">USB_5V</text>
+      <!-- USB GND → Charger GND -->
+      <path d="M 140 135 L 180 125" class="wire-gnd"/>
+      <!-- Charger VBAT → Battery + -->
+      <path d="M 280 110 L 320 110 L 320 225 L 180 225" class="wire-pwr"/>
+      <text x="300" y="108" class="label-wire" fill="#e03131">VBAT</text>
+      <!-- Charger VBAT → LDO VIN -->
+      <path d="M 280 110 L 340 110 L 340 210 L 220 210" class="wire-pwr"/>
+      <!-- Battery - → GND -->
+      <path d="M 60 245 L 40 245 L 40 135 L 140 135" class="wire-gnd"/>
+      <!-- LDO GND → GND bus -->
+      <path d="M 220 225 L 40 225" class="wire-gnd"/>
+      <!-- LDO VOUT → 3.3V rail -->
+      <path d="M 320 210 L 380 210" class="wire-pwr" stroke-width="3.5"/>
+      <text x="340" y="205" class="label-wire" fill="#e03131">3.3V</text>
+
+      <!-- ==================== MCU SECTION ==================== -->
+      <rect x="420" y="60" width="380" height="340" fill="#e7f5ff" stroke="#1971c2" stroke-width="1.5" rx="6" opacity="0.3"/>
+      <text x="440" y="85" class="label-bold" style="fill:#1971c2;">MCU SECTION</text>
+
+      <!-- ESP32 U1 -->
+      <g transform="translate(440,110)">
+        <rect x="0" y="0" width="200" height="160" class="comp-box-mcu"/>
+        <text x="100" y="18" text-anchor="middle" class="label-bold">U1 · ESP32-DevKitC</text>
+        <text x="100" y="32" text-anchor="middle" class="label">I²C0 @400kHz · 100Hz</text>
+        <text x="100" y="46" text-anchor="middle" class="label">128-sample window</text>
+        <!-- Pin labels -->
+        <text x="10" y="70" class="label-pin">GPIO21 (SDA) →</text>
+        <text x="10" y="85" class="label-pin">GPIO22 (SCL) →</text>
+        <text x="10" y="100" class="label-pin">GPIO2 (LED) →</text>
+        <text x="10" y="115" class="label-pin">3.3V ←</text>
+        <text x="10" y="130" class="label-pin">GND ←</text>
+        <text x="10" y="145" class="label-pin">25/18/19/20 NC (LRA)</text>
+        <!-- Pin circles -->
+        <circle cx="0" cy="67" r="3" fill="#2f9e44"/>
+        <circle cx="0" cy="82" r="3" fill="#1971c2"/>
+        <circle cx="0" cy="97" r="3" fill="#f08c00"/>
+        <circle cx="0" cy="112" r="3" fill="#e03131"/>
+        <circle cx="0" cy="127" r="3" fill="#1a1a1a"/>
+        <!-- NC box -->
+        <rect x="120" y="135" width="70" height="18" fill="#fafafa" stroke="#ccc" stroke-width="1" stroke-dasharray="3 2" rx="3"/>
+        <text x="155" y="148" text-anchor="middle" class="label-pin" style="font-size:7px;">NC (DEFERRED)</text>
+      </g>
+
+      <!-- TCA9548A U2 -->
+      <g transform="translate(440,300)">
+        <rect x="0" y="0" width="200" height="100" class="comp-box-mux"/>
+        <text x="100" y="16" text-anchor="middle" class="label-bold">U2 · TCA9548A</text>
+        <text x="100" y="30" text-anchor="middle" class="label">I²C Multiplexer @0x70</text>
+        <text x="100" y="44" text-anchor="middle" class="label">A0/A1/A2→GND · EN→3.3V</text>
+        <!-- Pin labels -->
+        <text x="10" y="65" class="label-pin">SDA ←</text>
+        <text x="10" y="78" class="label-pin">SCL ←</text>
+        <text x="10" y="91" class="label-pin">VIN ← 3.3V</text>
+        <text x="150" y="65" class="label-pin">SD0/SC0 → CH0</text>
+        <text x="150" y="78" class="label-pin">SD1/SC1 → CH1</text>
+        <text x="150" y="91" class="label-pin">SD2/SC2 → CH2</text>
+        <!-- Pin circles -->
+        <circle cx="0" cy="62" r="2.5" fill="#2f9e44"/>
+        <circle cx="0" cy="75" r="2.5" fill="#1971c2"/>
+        <circle cx="0" cy="88" r="2.5" fill="#e03131"/>
+        <circle cx="200" cy="62" r="2.5" fill="#2f9e44"/>
+        <circle cx="200" cy="75" r="2.5" fill="#1971c2"/>
+        <circle cx="200" cy="88" r="2.5" fill="#2f9e44"/>
+      </g>
+
+      <!-- I²C wires ESP32 → TCA -->
+      <path d="M 440 177 L 380 177 L 380 362 L 440 362" class="wire-sda"/>
+      <text x="395" y="172" class="label-wire" fill="#2f9e44">SDA21</text>
+      <path d="M 440 192 L 370 192 L 370 375 L 440 375" class="wire-scl"/>
+      <text x="395" y="200" class="label-wire" fill="#1971c2">SCL22</text>
+      <!-- 3.3V → TCA VIN -->
+      <path d="M 440 222 L 420 222 L 420 388 L 440 388" class="wire-pwr"/>
+      <!-- GND → TCA GND -->
+      <path d="M 440 237 L 410 237 L 410 395 L 440 395" class="wire-gnd"/>
+
+      <!-- LED D1 -->
+      <g transform="translate(440,420)">
+        <rect x="0" y="0" width="120" height="40" class="comp-box-mcu"/>
+        <text x="60" y="16" text-anchor="middle" class="label-bold">D1 · LED</text>
+        <text x="60" y="30" text-anchor="middle" class="label-pin">GPIO2 → 220Ω → GND</text>
+        <circle cx="0" cy="15" r="2.5" fill="#f08c00"/>
+        <circle cx="120" cy="15" r="2.5" fill="#1a1a1a"/>
+      </g>
+      <!-- LED wire -->
+      <path d="M 440 207 L 400 207 L 400 435 L 440 435" class="wire-led"/>
+      <text x="405" y="215" class="label-wire" fill="#f08c00">GPIO2</text>
+
+      <!-- ==================== SENSOR SECTION ==================== -->
+      <rect x="860" y="60" width="500" height="520" fill="#f3f0ff" stroke="#5c7cfa" stroke-width="1.5" rx="6" opacity="0.3"/>
+      <text x="880" y="85" class="label-bold" style="fill:#5c7cfa;">SENSOR SECTION (4× GY-521)</text>
+
+      <!-- IMU0 CH0 -->
+      <g transform="translate(880,110)">
+        <rect x="0" y="0" width="160" height="90" class="comp-box-imu"/>
+        <text x="80" y="16" text-anchor="middle" class="label-bold">U3 · GY-521 CH0</text>
+        <text x="80" y="30" text-anchor="middle" class="label">@0x68 · AD0→GND</text>
+        <text x="80" y="44" text-anchor="middle" class="label">Dorsal Wrist Proximal</text>
+        <text x="80" y="58" text-anchor="middle" class="label-pin">Primary sensor</text>
+        <text x="10" y="78" class="label-pin">SDA · SCL · VCC · GND</text>
+        <circle cx="0" cy="70" r="2.5" fill="#2f9e44"/>
+        <circle cx="15" cy="70" r="2.5" fill="#1971c2"/>
+        <circle cx="30" cy="70" r="2.5" fill="#e03131"/>
+        <circle cx="45" cy="70" r="2.5" fill="#1a1a1a"/>
+      </g>
+
+      <!-- IMU1 CH1 -->
+      <g transform="translate(1080,110)">
+        <rect x="0" y="0" width="160" height="90" class="comp-box-imu"/>
+        <text x="80" y="16" text-anchor="middle" class="label-bold">U4 · GY-521 CH1</text>
+        <text x="80" y="30" text-anchor="middle" class="label">@0x68 · AD0→GND</text>
+        <text x="80" y="44" text-anchor="middle" class="label">Thenar Volar</text>
+        <text x="80" y="58" text-anchor="middle" class="label-pin">Thumb base flesh</text>
+        <text x="10" y="78" class="label-pin">SDA · SCL · VCC · GND</text>
+        <circle cx="0" cy="70" r="2.5" fill="#2f9e44"/>
+        <circle cx="15" cy="70" r="2.5" fill="#1971c2"/>
+        <circle cx="30" cy="70" r="2.5" fill="#e03131"/>
+        <circle cx="45" cy="70" r="2.5" fill="#1a1a1a"/>
+      </g>
+
+      <!-- IMU2 CH2 -->
+      <g transform="translate(880,230)">
+        <rect x="0" y="0" width="160" height="90" class="comp-box-imu"/>
+        <text x="80" y="16" text-anchor="middle" class="label-bold">U5 · GY-521 CH2</text>
+        <text x="80" y="30" text-anchor="middle" class="label">@0x68 · AD0→GND</text>
+        <text x="80" y="44" text-anchor="middle" class="label">Thumb Proximal Phalanx</text>
+        <text x="80" y="58" text-anchor="middle" class="label-pin">20° tilt · pill 4-6Hz</text>
+        <text x="10" y="78" class="label-pin">SDA · SCL · VCC · GND</text>
+        <circle cx="0" cy="70" r="2.5" fill="#2f9e44"/>
+        <circle cx="15" cy="70" r="2.5" fill="#1971c2"/>
+        <circle cx="30" cy="70" r="2.5" fill="#e03131"/>
+        <circle cx="45" cy="70" r="2.5" fill="#1a1a1a"/>
+      </g>
+
+      <!-- IMU3 CH3 -->
+      <g transform="translate(1080,230)">
+        <rect x="0" y="0" width="160" height="90" class="comp-box-imu"/>
+        <text x="80" y="16" text-anchor="middle" class="label-bold">U6 · GY-521 CH3</text>
+        <text x="80" y="30" text-anchor="middle" class="label">@0x68 · AD0→GND</text>
+        <text x="80" y="44" text-anchor="middle" class="label">Index Proximal Phalanx</text>
+        <text x="80" y="58" text-anchor="middle" class="label-pin">ET 6-8Hz postural</text>
+        <text x="10" y="78" class="label-pin">SDA · SCL · VCC · GND</text>
+        <circle cx="0" cy="70" r="2.5" fill="#2f9e44"/>
+        <circle cx="15" cy="70" r="2.5" fill="#1971c2"/>
+        <circle cx="30" cy="70" r="2.5" fill="#e03131"/>
+        <circle cx="45" cy="70" r="2.5" fill="#1a1a1a"/>
+      </g>
+
+      <!-- I²C wires from TCA to IMUs -->
+      <!-- CH0 -->
+      <path d="M 640 362 L 700 362 L 700 180 L 880 180" class="wire-sda"/>
+      <path d="M 640 375 L 710 375 L 710 190 L 895 190" class="wire-scl"/>
+      <text x="720" y="175" class="label-wire" fill="#2f9e44">CH0 SDA</text>
+      <text x="720" y="200" class="label-wire" fill="#1971c2">CH0 SCL</text>
+      <!-- CH1 -->
+      <path d="M 640 375 L 720 375 L 720 195 L 1080 195" class="wire-sda"/>
+      <path d="M 640 388 L 730 388 L 730 205 L 1095 205" class="wire-scl"/>
+      <text x="740" y="190" class="label-wire" fill="#2f9e44">CH1 SDA</text>
+      <text x="740" y="215" class="label-wire" fill="#1971c2">CH1 SCL</text>
+      <!-- CH2 -->
+      <path d="M 640 388 L 700 388 L 700 300 L 880 300" class="wire-sda"/>
+      <path d="M 640 400 L 710 400 L 710 310 L 895 310" class="wire-scl"/>
+      <text x="720" y="295" class="label-wire" fill="#2f9e44">CH2 SDA</text>
+      <text x="720" y="320" class="label-wire" fill="#1971c2">CH2 SCL</text>
+      <!-- CH3 -->
+      <path d="M 640 400 L 720 400 L 720 310 L 1080 310" class="wire-sda"/>
+      <path d="M 640 410 L 730 410 L 730 320 L 1095 320" class="wire-scl"/>
+      <text x="740" y="305" class="label-wire" fill="#2f9e44">CH3 SDA</text>
+      <text x="740" y="330" class="label-wire" fill="#1971c2">CH3 SCL</text>
+
+      <!-- Power to IMUs -->
+      <path d="M 380 210 L 850 210" class="wire-pwr" stroke-width="2"/>
+      <path d="M 380 225 L 850 225" class="wire-gnd" stroke-width="2"/>
+      <text x="860" y="205" class="label-wire" fill="#e03131">3.3V rail</text>
+      <text x="860" y="238" class="label-wire" fill="#1a1a1a">GND rail</text>
+
+      <!-- ==================== PIN TABLE ==================== -->
+      <rect x="40" y="440" width="320" height="200" fill="#f8f9fa" stroke="#dee2e6" stroke-width="1" rx="6"/>
+      <text x="60" y="465" class="label-bold">ESP32 PIN ASSIGNMENTS</text>
+      <text x="60" y="485" class="label-pin">GPIO21 → I²C0 SDA (to TCA9548A)</text>
+      <text x="60" y="500" class="label-pin">GPIO22 → I²C0 SCL (to TCA9548A)</text>
+      <text x="60" y="515" class="label-pin">GPIO2 → LED indicator (active high)</text>
+      <text x="60" y="530" class="label-pin">3.3V → Power rail (from LDO)</text>
+      <text x="60" y="545" class="label-pin">GND → Ground rail</text>
+      <text x="60" y="560" class="label-pin">GPIO25/18/19/20 → NC (LRA deferred)</text>
+      <text x="60" y="585" class="label-bold" style="fill:#e03131;">⚠ BYPASS ONBOARD REGULATOR</text>
+      <text x="60" y="600" class="label-pin">Power ESP32 3.3V pin directly</text>
+      <text x="60" y="615" class="label-pin">Do NOT use VIN pin (5V)</text>
+      <text x="60" y="630" class="label-pin">Remove AMS1117 jumper if present</text>
+
+      <!-- ==================== BUILD NOTES ==================== -->
+      <rect x="420" y="480" width="380" height="160" fill="#fff9db" stroke="#fcc419" stroke-width="1.5" rx="6"/>
+      <text x="440" y="505" class="label-bold" style="fill:#e67700;">BUILD NOTES</text>
+      <text x="440" y="525" class="label-pin">1. Wire power section first (USB → charger → battery → LDO)</text>
+      <text x="440" y="540" class="label-pin">2. Verify 3.3V output with multimeter before connecting ESP32</text>
+      <text x="440" y="555" class="label-pin">3. Connect I²C bus: ESP32 → TCA9548A → IMUs (star topology)</text>
+      <text x="440" y="570" class="label-pin">4. Add 4.7kΩ pull-up resistors on SDA/SCL if not on breakout</text>
+      <text x="440" y="585" class="label-pin">5. Keep I²C wires &lt;15cm for reliable 400kHz communication</text>
+      <text x="440" y="600" class="label-pin">6. Use 30AWG silicone wire for flexibility</text>
+      <text x="440" y="615" class="label-pin">7. Add strain relief loops at connector entry points</text>
+      <text x="440" y="630" class="label-pin">8. Test each IMU channel individually before full assembly</text>
+
+      <!-- ==================== SPECIFICATIONS ==================== -->
+      <rect x="860" y="350" width="500" height="230" fill="#f8f9fa" stroke="#dee2e6" stroke-width="1" rx="6"/>
+      <text x="880" y="375" class="label-bold">OPERATING SPECIFICATIONS</text>
+      <text x="880" y="395" class="label-pin">VCC: 3.3V ±5% (from AP2112K-3.3 LDO)</text>
+      <text x="880" y="410" class="label-pin">I²C: 400kHz (Fast Mode)</text>
+      <text x="880" y="425" class="label-pin">Sampling: 100Hz (SAMPLE_INTERVAL_US = 10000)</text>
+      <text x="880" y="440" class="label-pin">Window: 128 samples (1.28 seconds)</text>
+      <text x="880" y="455" class="label-pin">TCA9548A Address: 0x70 (A0/A1/A2→GND)</text>
+      <text x="880" y="470" class="label-pin">GY-521 Address: 0x68 (AD0→GND, via mux)</text>
+      <text x="880" y="485" class="label-pin">Channel Select: i2c.writeto(0x70, 1&lt;&lt;ch)</text>
+      <text x="880" y="500" class="label-pin">IMU Read: i2c.readfrom_mem(0x68, 0x3B, 14)</text>
+      <text x="880" y="525" class="label-bold" style="fill:#2f9e44;">Tremor Frequency Bands</text>
+      <text x="880" y="545" class="label-pin">Pill-rolling: 4-6Hz (CH2 thumb phalanx)</text>
+      <text x="880" y="560" class="label-pin">Postural (ET): 6-8Hz (CH3 index phalanx)</text>
+      <text x="880" y="575" class="label-pin">Physiological: &lt;4Hz (CH0 dorsal wrist)</text>
+
+      <!-- ==================== FOOTER ==================== -->
+      <text x="700" y="870" text-anchor="middle" class="label-pin">Forum Project · 4-IMU ESP32 Tremor Monitor · Wiring Diagram · Rev 2026-09-01</text>
+    </svg>
+  </div>
+
+  <div class="build-note">
+    <h4>⚠ Critical Build Notes</h4>
+    <ul>
+      <li><b>Bypass ESP32 onboard regulator:</b> Power the 3.3V pin directly from the AP2112K LDO. Do NOT use the VIN pin (5V input) — this would double-regulate and waste power as heat.</li>
+      <li><b>I²C pull-up resistors:</b> Most breakout boards include 4.7kΩ pull-ups on SDA/SCL. If yours don't, add them between SDA→3.3V and SCL→3.3V.</li>
+      <li><b>Decoupling capacitors:</b> Place C1/C2 as close as possible to the AP2112K pins (within 5mm). Use ceramic caps (X5R or X7R).</li>
+      <li><b>Wire length:</b> Keep I²C wires under 15cm. Longer wires cause signal degradation at 400kHz.</li>
+      <li><b>Star ground:</b> Connect all GND wires to a single point to avoid ground loops.</li>
+      <li><b>Test sequence:</b> Power → verify 3.3V → connect ESP32 → test I²C scan → connect IMUs one by one.</li>
+    </ul>
+  </div>
+
+  <h3>Connection Table</h3>
+  <table class="conn-table">
+    <thead>
+      <tr><th>Net</th><th>From</th><th>To</th><th>Wire Color</th><th>Notes</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>USB_5V</td><td>J1 VBUS</td><td>U7 VBUS</td><td><span class="wire-cell"><span class="wire-swatch" style="border-color:#e03131;"></span>Red</span></td><td>Charging only</td></tr>
+      <tr><td>VBAT</td><td>U7 VBAT</td><td>BT1 (+), U8 VIN</td><td><span class="wire-cell"><span class="wire-swatch" style="border-color:#e03131;"></span>Red</span></td><td>Battery positive</td></tr>
+      <tr><td>3.3V</td><td>U8 VOUT</td><td>ESP32 3.3V, U2 VIN, U3-U6 VCC</td><td><span class="wire-cell"><span class="wire-swatch" style="border-color:#e03131;"></span>Red</span></td><td>Regulated output</td></tr>
+      <tr><td>GND</td><td>J1 GND, U7 GND, U8 GND, BT1 (-)</td><td>Common GND</td><td><span class="wire-cell"><span class="wire-swatch" style="border-color:#1a1a1a;"></span>Black</span></td><td>Star topology</td></tr>
+      <tr><td>SDA21</td><td>ESP32 GPIO21</td><td>U2 SDA</td><td><span class="wire-cell"><span class="wire-swatch" style="border-color:#2f9e44;"></span>Green</span></td><td>I²C0 data</td></tr>
+      <tr><td>SCL22</td><td>ESP32 GPIO22</td><td>U2 SCL</td><td><span class="wire-cell"><span class="wire-swatch" style="border-color:#1971c2;"></span>Blue</span></td><td>I²C0 clock</td></tr>
+      <tr><td>CH0</td><td>U2 SD0/SC0</td><td>U3 SDA/SCL</td><td><span class="wire-cell"><span class="wire-swatch" style="border-color:#2f9e44;"></span>Green/<span class="wire-swatch" style="border-color:#1971c2;"></span>Blue</span></td><td>Dorsal wrist</td></tr>
+      <tr><td>CH1</td><td>U2 SD1/SC1</td><td>U4 SDA/SCL</td><td><span class="wire-cell"><span class="wire-swatch" style="border-color:#2f9e44;"></span>Green/<span class="wire-swatch" style="border-color:#1971c2;"></span>Blue</span></td><td>Thenar volar</td></tr>
+      <tr><td>CH2</td><td>U2 SD2/SC2</td><td>U5 SDA/SCL</td><td><span class="wire-cell"><span class="wire-swatch" style="border-color:#2f9e44;"></span>Green/<span class="wire-swatch" style="border-color:#1971c2;"></span>Blue</span></td><td>Thumb phalanx</td></tr>
+      <tr><td>CH3</td><td>U2 SD3/SC3</td><td>U6 SDA/SCL</td><td><span class="wire-cell"><span class="wire-swatch" style="border-color:#2f9e44;"></span>Green/<span class="wire-swatch" style="border-color:#1971c2;"></span>Blue</span></td><td>Index phalanx</td></tr>
+      <tr><td>LED</td><td>ESP32 GPIO2</td><td>D1 anode</td><td><span class="wire-cell"><span class="wire-swatch" style="border-color:#f08c00;"></span>Yellow</span></td><td>220Ω → GND</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Bill of Materials (BOM)</h3>
+  <table class="bom-table">
+    <thead>
+      <tr><th>Ref</th><th>Component</th><th>Package</th><th>Qty</th><th>Notes</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>U1</td><td>ESP32-DevKitC V4</td><td>Module</td><td>1</td><td>Power 3.3V pin directly</td></tr>
+      <tr><td>U2</td><td>TCA9548A Breakout</td><td>TSSOP-24</td><td>1</td><td>@0x70, A0/A1/A2→GND</td></tr>
+      <tr><td>U3-U6</td><td>GY-521 (MPU6050)</td><td>QFN-24</td><td>4</td><td>@0x68, AD0→GND</td></tr>
+      <tr><td>U7</td><td>MCP73831</td><td>SOT-23-5</td><td>1</td><td>LiPo charger, 500mA</td></tr>
+      <tr><td>U8</td><td>AP2112K-3.3</td><td>SOT-23-5</td><td>1</td><td>LDO 3.3V, 600mA</td></tr>
+      <tr><td>BT1</td><td>LiPo Battery</td><td>Pouch</td><td>1</td><td>3.7V, 500mAh+, JST-PH 2.0</td></tr>
+      <tr><td>J1</td><td>Micro-USB Connector</td><td>SMD</td><td>1</td><td>Charging only</td></tr>
+      <tr><td>C1, C2</td><td>Ceramic Capacitor</td><td>0805</td><td>2</td><td>4.7µF, X5R/X7R</td></tr>
+      <tr><td>D1</td><td>LED (Blue)</td><td>5mm</td><td>1</td><td>Power indicator</td></tr>
+      <tr><td>R1</td><td>Resistor</td><td>0805</td><td>1</td><td>220Ω (LED current limit)</td></tr>
+      <tr><td>R2, R3</td><td>Resistor</td><td>0805</td><td>2</td><td>4.7kΩ (I²C pull-ups, if needed)</td></tr>
+    </tbody>
+  </table>
+
+  <div class="build-note">
+    <h4>🔧 Tools Required</h4>
+    <ul>
+      <li>Soldering iron (fine tip, 300-350°C)</li>
+      <li>30AWG silicone-insulated stranded wire (red, black, green, blue, yellow)</li>
+      <li>Wire strippers + flush cutters</li>
+      <li>Multimeter (continuity + voltage)</li>
+      <li>Helping hands / PCB holder</li>
+      <li>Heat shrink tubing (2mm, 3mm)</li>
+      <li>Flux + solder (lead-free, 0.5mm)</li>
+    </ul>
+  </div>
+</body>
+</html>

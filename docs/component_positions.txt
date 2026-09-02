@@ -10,14 +10,19 @@ Recommended Locations (based on tremor analysis):
    - Position: Volar surface, at the prominence of the thumb muscles
    - Rationale: Sensitive to tremor in thumb abduction/adduction and opposition movements
 
-3. IMU on the proximal phalanx of the thumb
-   - Position: Dorsal or lateral aspect of the thumb's proximal phalanx (between CMC and MCP joints)
-   - Rationale: Directly measures tremor at the thumb IP joint, which showed the highest effect size across diagnoses in our analysis
+3. IMU on the thumb proximal phalanx, dorsal-radial with 20° tilt — **LOCKED 2026-08-27 Option A + ET (was CMC)**
+   - Position: Dorsal-radial aspect of thumb proximal phalanx with 20° radial tilt toward flexion axis (midpoint between CMC-MCP), thumb IP flexion axis for pill-rolling 4-6Hz. CMC remains as grasp fallback per `refined_hardware_design.md:13` (+20% for opposition) but phalanx now primary for pill-rolling specificity.
+   - Rationale: Pill-rolling thumb-index flexion vs CMC abduction; tilted X aligns to flexion while Z stays up for fusion; coherence thumb-index >0.6 balanced with finger-wrist >0.6 (see `firmware/common/config.py:64`). See `wiring_diagram_prompt_4imu_minimalist.txt:7`.
 
-These three locations provide complementary coverage:
-- Dorsal wrist signals reflect global tremor and posture
+4. IMU on the index proximal phalanx, dorsal (added for ET, replaces forearm) — **Option A + ET 2026-08-27**
+   - Position: Dorsal aspect of index finger proximal phalanx (midpoint MCP-PIP), aligned with thumb phalanx for thumb-index coherence.
+   - Rationale: Essential tremor postural peak 6-8Hz distal on index/middle fingers (per `Scientific Reports 2022 s41598-022-08922-6` snuff-box > wrist, and `PMC10776092` dorsal index finger); forearm 1.5cm proximal remains as optional CH4 if re-added. ET finger-wrist coherence >0.6 vs pill-rolling thumb-index coherence distinguishes PD rest vs ET postural.
+
+These four locations provide complementary coverage:
+- Dorsal wrist signals reflect global tremor and posture (rest baseline)
 - Thenar eminence captures palm-side thumb base movements
-- Thumb proximal phalanx targets the most tremor-sensitive joint identified (THUMB_IP)
+- Thumb proximal phalanx 20° tilt targets pill-rolling 4-6Hz flexion (locked Option A)
+- Index proximal phalanx dorsal targets ET 6-8Hz postural/kinetic + thumb-index phase (replaces forearm for distal specificity)
 
 All IMUs should be oriented consistently (e.g., Z-axis upward, X-axis radial, Y-axis proximal) to simplify data fusion.
 

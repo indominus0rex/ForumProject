@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wiring Diagram — 4-IMU ESP32 Tremor Monitor (Thumb CMC, No LRA) — Minimalist Box + Hand Inset</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; max-width: 1400px; margin:0 auto; padding:20px; background:#f8f9fa; color:#2c3e50; }
+        h1 { text-align:center; margin-bottom:4px; }
+        .subtitle { text-align:center; color:#666; margin-bottom:18px; font-size:14px; }
+        .diagram-container { background:white; border-radius:8px; box-shadow:0 2px 10px rgba(0,0,0,.1); padding:18px; overflow-x:auto; }
+        svg { width:100%; height:auto; display:block; max-width:1200px; margin:0 auto; }
+        .box { fill:white; stroke:#2c3e50; stroke-width:1.8; rx:7; }
+        .box-tca { fill:#f5f0ff; stroke:#8e44ad; }
+        .box-imu0 { stroke:#2A6FFF; fill:#eef3ff; }
+        .box-imu1 { stroke:#1DBA5A; fill:#eefaf1; }
+        .box-imu2 { stroke:#E8B500; fill:#fff9e0; }
+        .box-imu3 { stroke:#FF7A1A; fill:#fff0e6; }
+        .box-led { stroke:#d4ac0d; fill:#fef9e7; }
+        .box-nc { stroke:#95a5a6; fill:#f2f3f4; stroke-dasharray:5 4; }
+        .bus-red { stroke:#c0392b; stroke-width:3; fill:none; }
+        .bus-black { stroke:#2c3e50; stroke-width:3; fill:none; }
+        .wire { fill:none; stroke-width:2.1; stroke-linecap:round; }
+        .wire-blue { stroke:#2A6FFF; }
+        .wire-green { stroke:#1DBA5A; }
+        .wire-yellow { stroke:#E8B500; }
+        .wire-orange { stroke:#FF7A1A; }
+        .wire-led { stroke:#d4ac0d; }
+        .label { font-size:10.5px; fill:#2c3e50; }
+        .label-bold { font-size:11.5px; font-weight:700; fill:#2c3e50; }
+        .legend { display:flex; flex-wrap:wrap; gap:12px; justify-content:center; margin:14px 0; padding:12px; background:#ecf0f1; border-radius:6px; font-size:13px; }
+        .legend-item { display:flex; align-items:center; gap:7px; }
+        .legend-swatch { width:14px; height:14px; border-radius:3px; display:inline-block; border:1px solid #aaa; }
+        .specs-table { width:100%; border-collapse:collapse; margin:16px 0; font-size:13px; }
+        .specs-table th,.specs-table td { border:1px solid #ddd; padding:8px; text-align:left; }
+        .specs-table th { background:#ecf0f1; }
+        .notes { background:#fff9c4; border-left:4px solid #ffeb3b; padding:14px; margin:16px 0; border-radius:4px; }
+        .inset-title { font-size:9px; fill:#666; font-style:italic; }
+    </style>
+</head>
+<body>
+    <h1>ESP32 4-IMU Tremor Monitor — Minimalist Box + Visible Volar Ghost</h1>
+    <p class="subtitle">Option A + ET: thumb proximal phalanx 20° tilt (CH2 yellow pill 4-6Hz) + index proximal phalanx (CH3 orange ET 6-8Hz), thumb-index coherence 0.6 &amp; finger-wrist 0.6 balanced. Locked 2026-08-27 Option A. File <code>cad/connections_4imu.csv</code> · <code>PIN_ASSIGNMENTS.md:48</code> · prompts <code>wiring_diagram_prompt_4imu_minimalist.txt</code></p>
+    <div class="diagram-container">
+        <svg viewBox="0 0 1200 560" xmlns="http://www.w3.org/2000/svg">
+            <!-- Power buses horizontal  -->
+            <line x1="40" y1="500" x2="980" y2="500" class="bus-red"/>
+            <line x1="40" y1="520" x2="980" y2="520" class="bus-black"/>
+            <text x="40" y="492" class="label" fill="#c0392b">3.3V bus (red) — star to TCA + each GY-521 + 0.1µF per IC, 10-100µF bulk</text>
+            <text x="40" y="537" class="label" fill="#2c3e50">GND bus (black) — star ground, AD0→GND each IMU (0x68 via mux)</text>
+            <!-- Power cap symbols schematic  -->
+            <g transform="translate(200,488)">
+                <line x1="0" y1="0" x2="0" y2="12" stroke="#c0392b" stroke-width="1.5"/><line x1="-6" y1="6" x2="6" y2="6" stroke="#2c3e50" stroke-width="1.5"/><text x="8" y="9" class="label" font-size="8">0.1µF×5 + 10µF bulk</text>
+            </g>
+
+            <!-- ESP32 box at X30 ~ 220, mux at X50 ~ 460, IMUs at X75 ~ 760 -->
+            <!-- ESP32 -->
+            <g transform="translate(140,170)">
+                <rect x="0" y="0" width="190" height="170" rx="8" class="box"/>
+                <text x="95" y="18" text-anchor="middle" class="label-bold">ESP32-DevKitC</text>
+                <text x="95" y="30" text-anchor="middle" class="label" font-size="8">I2C0 400kHz · 100Hz · X30</text>
+                <text x="8" y="52" class="label">21 SDA →</text><circle cx="175" cy="48" r="3.5" fill="#1DBA5A"/>
+                <text x="8" y="70" class="label">22 SCL →</text><circle cx="175" cy="66" r="3.5" fill="#2A6FFF"/>
+                <text x="8" y="90" class="label">2 LED →</text><circle cx="175" cy="86" r="3.5" fill="#d4ac0d"/>
+                <text x="8" y="112" class="label">3.3V</text><circle cx="10" cy="122" r="2.5" fill="#c0392b"/>
+                <text x="8" y="130" class="label">GND</text><circle cx="10" cy="138" r="2.5" fill="#2c3e50"/>
+                <rect x="100" y="142" width="84" height="18" rx="4" class="box-nc"/><text x="142" y="154" text-anchor="middle" class="label" font-size="8" fill="#7f8c8d">25/18/19/20 NC</text>
+            </g>
+            <!-- TCA -->
+            <g transform="translate(430,195)">
+                <rect x="0" y="0" width="140" height="110" rx="7" class="box-tca"/>
+                <text x="70" y="18" text-anchor="middle" class="label-bold">TCA9548A</text>
+                <text x="70" y="30" text-anchor="middle" class="label" font-size="8">@0x70 A0/A1/A2→GND EN→3.3V · X50</text>
+                <text x="6" y="50" class="label" font-size="9">SDA</text><circle cx="6" cy="58" r="2.8" fill="#1DBA5A"/>
+                <text x="6" y="76" class="label" font-size="9">SCL</text><circle cx="6" cy="84" r="2.8" fill="#2A6FFF"/>
+                <text x="102" y="48" class="label" font-size="8">SD0/SC0 CH0 blue</text><circle cx="134" cy="46" r="2.8" fill="#2A6FFF"/><circle cx="134" cy="56" r="2.8" fill="#2A6FFF"/>
+                <text x="102" y="66" class="label" font-size="8">SD1/SC1 CH1 green</text><circle cx="134" cy="68" r="2.8" fill="#1DBA5A"/><circle cx="134" cy="78" r="2.8" fill="#1DBA5A"/>
+                <text x="102" y="88" class="label" font-size="8">SD2/SC2 CH2 yellow thumb phalanx 20°</text><circle cx="134" cy="90" r="2.8" fill="#E8B500"/><circle cx="134" cy="100" r="2.8" fill="#E8B500"/>
+                <text x="102" y="106" class="label" font-size="8">SD3/SC3 CH3 orange index phalanx</text>
+            </g>
+            <!-- IMUs stacked -->
+            <g transform="translate(720,80)">
+                <rect x="0" y="0" width="220" height="56" rx="7" class="box-imu0"/>
+                <text x="10" y="18" class="label-bold" fill="#2A6FFF">IMU0 CH0 blue — dorsal wrist proximal</text>
+                <text x="10" y="30" class="label" font-size="8">primary, Keba 2025 rubber band, Y25 X75</text>
+                <text x="10" y="42" class="label" font-size="8">GY-521 @0x68 AD0→GND 0.1µF</text>
+                <circle cx="212" cy="18" r="2.5" fill="#2A6FFF"/><circle cx="212" cy="30" r="2.5" fill="#1DBA5A"/>
+            </g>
+            <g transform="translate(720,150)">
+                <rect x="0" y="0" width="220" height="56" rx="7" class="box-imu1"/>
+                <text x="10" y="18" class="label-bold" fill="#1DBA5A">IMU1 CH1 green — thenar volar</text>
+                <text x="10" y="30" class="label" font-size="8">thumb base flesh, Y45 X75</text>
+                <text x="10" y="42" class="label" font-size="8">GY-521 @0x68 AD0→GND 0.1µF</text>
+                <circle cx="212" cy="18" r="2.5" fill="#1DBA5A"/><circle cx="212" cy="30" r="2.5" fill="#1DBA5A"/>
+            </g>
+            <g transform="translate(720,220)">
+                <rect x="0" y="0" width="220" height="56" rx="7" class="box-imu2"/>
+                <text x="10" y="18" class="label-bold" fill="#8a6d00">IMU2 CH2 yellow — thumb phalanx 20° tilt</text>
+                <text x="10" y="30" class="label" font-size="8">[PILL 4-6Hz pill-rolling, Y65 X75]</text>
+                <text x="10" y="42" class="label" font-size="8">GY-521 @0x68 AD0→GND 0.1µF</text>
+                <circle cx="212" cy="18" r="2.5" fill="#E8B500"/><circle cx="212" cy="30" r="2.5" fill="#E8B500"/>
+            </g>
+            <g transform="translate(720,290)">
+                <rect x="0" y="0" width="220" height="56" rx="7" class="box-imu3"/>
+                <text x="10" y="18" class="label-bold" fill="#b85a00">IMU3 CH3 orange — index phalanx dorsal</text>
+                <text x="10" y="30" class="label" font-size="8">[ET 6-8Hz postural, Y85 X75]</text>
+                <text x="10" y="42" class="label" font-size="8">GY-521 @0x68 AD0→GND 0.1µF</text>
+                <circle cx="212" cy="18" r="2.5" fill="#FF7A1A"/><circle cx="212" cy="30" r="2.5" fill="#FF7A1A"/>
+            </g>
+            <g transform="translate(720,365)">
+                <rect x="0" y="0" width="220" height="38" rx="7" class="box-led"/>
+                <text x="10" y="16" class="label-bold" fill="#8a6d00">LED</text>
+                <text x="10" y="28" class="label" font-size="8">GPIO2 → 220Ω → GND (yellow) Y10 X75</text>
+                <circle cx="212" cy="14" r="2.5" fill="#d4ac0d"/>
+            </g>
+            <!-- DEFERRED grey box -->
+            <g transform="translate(140,380)">
+                <rect x="0" y="0" width="190" height="36" rx="7" class="box-nc"/>
+                <text x="95" y="14" text-anchor="middle" class="label-bold" fill="#7f8c8d">DEFERRED — NO LRA</text>
+                <text x="95" y="26" text-anchor="middle" class="label" font-size="7" fill="#7f8c8d">GPIO25 18/19/20 NC · haptic no-op · X30 Y85</text>
+            </g>
+
+            <!-- I2C bundled pair ESP32 -> TCA -->
+            <path d="M 315 48 L 430 48" class="wire wire-green"/>
+            <path d="M 315 66 L 430 58" class="wire wire-blue"/>
+            <text x="360" y="42" class="label" font-size="7" fill="#1DBA5A">SDA21</text><text x="360" y="77" class="label" font-size="7" fill="#2A6FFF">SCL22</text>
+            <!-- Per-channel pairs TCA -> IMU non-crossing rows -->
+            <path d="M 564 46 L 720 26" class="wire wire-blue"/><path d="M 564 56 L 720 34" class="wire wire-green"/>
+            <path d="M 564 68 L 720 82" class="wire wire-blue" style="stroke:#1DBA5A"/><path d="M 564 78 L 720 92" class="wire wire-green"/>
+            <path d="M 564 90 L 720 154" class="wire wire-yellow"/><path d="M 564 100 L 720 162" class="wire wire-yellow"/>
+            <path d="M 570 106 L 720 210" class="wire wire-orange"/><path d="M 570 112 L 720 218" class="wire wire-orange"/>
+            <!-- LED wire GPIO2 -->
+            <path d="M 315 86 L 430 86 L 430 20 L 720 20" class="wire wire-led"/>
+            <!-- Power taps red/black vertical drops (schematic only, single line) -->
+            <path d="M 165 340 L 165 500" class="wire" stroke="#c0392b" stroke-width="1.2" stroke-dasharray="4 3"/>
+            <path d="M 500 305 L 500 500" class="wire" stroke="#c0392b" stroke-width="1.2" stroke-dasharray="4 3"/>
+            <path d="M 830 360 L 830 500" class="wire" stroke="#c0392b" stroke-width="1.2" stroke-dasharray="4 3"/>
+
+            <!-- CH4-7 NC note near TCA -->
+            <text x="430" y="128" class="label" font-size="7" fill="#7f8c8d">CH4-7 NC (unused)</text>
+
+            <!-- Hand inset top-right 12% with volar ghost -->
+            <g transform="translate(980,30)">
+                <rect x="0" y="0" width="200" height="165" rx="8" fill="white" stroke="#bbb" stroke-width="1.2" stroke-dasharray="6 4"/>
+                <text x="100" y="13" text-anchor="middle" class="inset-title">Anatomical Reference — Not Wiring</text>
+                <text x="100" y="22" text-anchor="middle" class="inset-title" font-size="7">solid dorsal + dashed volar ghost</text>
+                <!-- dorsal hand outline simplified -->
+                <path d="M 30 45 L 30 105 L 55 130 L 95 130 L 155 110 L 170 75 L 170 40 L 140 28 L 90 28 L 60 38 Z" fill="none" stroke="#bbb" stroke-width="1.3"/>
+                <!-- fingers -->
+                <path d="M 140 38 L 148 14 L 158 14 L 150 38" fill="none" stroke="#bbb" stroke-width="1.1"/>
+                <path d="M 90 28 L 84 10 L 94 10 L 98 28" fill="none" stroke="#bbb" stroke-width="1.0"/>
+                <!-- forearm -->
+                <path d="M 30 105 L 10 125 L 10 140 L 30 140 Z" fill="none" stroke="#bbb" stroke-width="1.2"/>
+                <!-- volar thenar ghost translucent -->
+                <ellipse cx="72" cy="88" rx="22" ry="16" fill="rgba(200,230,200,0.18)" stroke="#1DBA5A" stroke-width="1" stroke-dasharray="4 3"/>
+                <text x="72" y="92" text-anchor="middle" font-size="6" fill="#1DBA5A">volar</text>
+                <!-- dots Option A + ET: thumb phalanx + index phalanx visible -->
+                <circle cx="38" cy="48" r="3.6" fill="#2A6FFF" stroke="#1a3d8f" stroke-width="1"/><text x="18" y="44" class="label" font-size="7">0 dorsal wrist</text>
+                <circle cx="72" cy="88" r="3.6" fill="#1DBA5A" stroke="#0e6b2a" stroke-width="1"/><text x="96" y="84" class="label" font-size="7">1 thenar volar (ghost)</text>
+                <circle cx="112" cy="26" r="3.6" fill="#E8B500" stroke="#7a5c00" stroke-width="1"/><text x="112" y="16" text-anchor="middle" class="label" font-size="6.5">2 thumb phalanx 20° [pill 4-6]</text>
+                <circle cx="138" cy="42" r="3.6" fill="#FF7A1A" stroke="#8a3b00" stroke-width="1"/><text x="138" y="30" text-anchor="middle" class="label" font-size="6.5">3 index phalanx [ET 6-8]</text>
+                <!-- leader to CH numbers -->
+                <text x="100" y="158" text-anchor="middle" class="label" font-size="7" fill="#666">Dots 0-3 → main boxes IMU0-3 same colors · NO wires inside inset</text>
+            </g>
+            <!-- sampling note bottom -->
+            <text x="600" y="552" text-anchor="middle" class="label" font-size="8" fill="#666">SAMPLES 128 @100Hz (SAMPLE_INTERVAL_US 10000) · I2C 400kHz · TCA9548A 0x70 · all GY-521 0x68 via mux (1<<ch) · SHORT &lt;15cm · cad/connections_4imu.csv</text>
+        </svg>
+    </div>
+    <div class="legend">
+        <div class="legend-item"><span class="legend-swatch" style="background:#2A6FFF;"></span> CH0 blue dorsal wrist</div>
+        <div class="legend-item"><span class="legend-swatch" style="background:#1DBA5A;"></span> CH1 green thenar</div>
+        <div class="legend-item"><span class="legend-swatch" style="background:#E8B500;"></span> CH2 yellow thumb phalanx 20° [pill 4-6]</div>
+        <div class="legend-item"><span class="legend-swatch" style="background:#FF7A1A;"></span> CH3 orange index phalanx [ET 6-8]</div>
+        <div class="legend-item"><span class="legend-swatch" style="background:#c0392b;"></span> 3.3V bus + 0.1µF×5 +10µF bulk</div>
+        <div class="legend-item"><span class="legend-swatch" style="background:#2c3e50;"></span> GND star</div>
+        <div class="legend-item"><span class="legend-swatch" style="background:#d4ac0d;"></span> LED GPIO2 220R</div>
+        <div class="legend-item"><span class="legend-swatch" style="background:#95a5a6; border:1px dashed #666;"></span> DEFERRED GPIO25/18/19/20 NC</div>
+    </div>
+    <div class="notes">
+        <b>Build Note 2026-08-27 Option A + ET — Thumb+Index Phalanx:</b> Option A <code>0 wrist /1 thenar/2 thumb phalanx 20° /3 index phalanx</code> replaces <code>CMC+forearm</code> for pill-rolling <code>4-6Hz</code> + ET <code>6-8Hz</code> with balanced cohernce <code>0.6</code> (<code>firmware/common/config.py:64 COH_THUMB_INDEX/_FINGER_WRIST</code>) and <code>pill_power/et_power</code> in <code>stages/features.py</code>. Inset now shows <code>DOT2 thumb phalanx 20°</code> + <code>DOT3 index phalanx</code> with volar ghost still visible. LRAs <b>DEFERRED</b>. Prompts: <code>wiring_diagram_prompt_4imu_no_lra.txt</code> + <code>wiring_diagram_prompt_4imu_minimalist.txt</code> (box+visible volar). Pins <code>PIN_ASSIGNMENTS.md:48</code>, wires <code>cad/connections_4imu.csv</code>.
+    </div>
+    <table class="specs-table">
+        <tr><th>Block</th><th>Component</th><th>Qty</th><th>Connection</th></tr>
+        <tr><td>MCU</td><td>ESP32-DevKitC</td><td>1</td><td>21 SDA → mux SDA, 22 SCL → mux SCL @400kHz; 2 LED; 3V3/GND buses; 25/18/19/20 NC</td></tr>
+        <tr><td>Mux</td><td>TCA9548A @0x70</td><td>1</td><td>A0-A2 GND, EN 3.3V; select <code>i2c.writeto(0x70, 1&lt;&lt;ch)</code> then <code>readfrom_mem 0x68 0x3B</code></td></tr>
+        <tr><td>IMUs</td><td>GY-521 MPU6050 @0x68 AD0→GND</td><td>4</td><td>CH0 blue dorsal wrist, CH1 green thenar volar, CH2 yellow thumb phalanx 20° tilt (pill 4-6Hz), CH3 orange index phalanx (ET 6-8Hz) — each 0.1µF; coherence 0.6 balanced</td></tr>
+        <tr><td>Indication</td><td>LED 220Ω</td><td>1</td><td>GPIO2 active high</td></tr>
+        <tr><td>Future</td><td>LRA</td><td>0 this build</td><td>GPIO25/18/19/20 deferred grey NC; haptic stage duty 0</td></tr>
+    </table>
+</body>
+</html>

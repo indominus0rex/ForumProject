@@ -24,10 +24,29 @@ class AuditStage:
                 "safe": frame.get("safe", True),
                 "stationary": frame.get("stationary", False),
                 "drift_flag": frame.get("drift_flag", False),
+                "quality_ok": frame.get("quality_ok", True),
+                "quality_reason": frame.get("quality_reason", "ok"),
+                "state": frame.get("state", "?"),
+                "action": frame.get("action", "?"),
+                "dominant_freq": frame.get("dominant_freq", 0.0),
+                "dominant_mag": frame.get("dominant_mag", 0.0),
+                "haptic_reason": frame.get("haptic_reason", ""),
             }
             self._buf.append(entry)
             if len(self._buf) > self.capacity:
                 self._buf.pop(0)
+            # Compact CSV event line for Thonny / offline personalization
+            # ts,label,conf,quality_ok,state,action,freq,mag
+            try:
+                print("EVT,{},{},{:.2f},{},{},{},{:.1f},{:.2f},{}".format(
+                    entry["ts"], entry["label"], entry["conf"] if entry["conf"] else 0.0,
+                    1 if entry["quality_ok"] else 0,
+                    entry["state"], entry["action"],
+                    entry["dominant_freq"], entry["dominant_mag"],
+                    entry["quality_reason"],
+                ))
+            except Exception:
+                pass
         frame["audit_log"] = self._buf
         return frame
 

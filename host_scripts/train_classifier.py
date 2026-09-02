@@ -18,6 +18,71 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import StratifiedKFold, cross_val_score
 
+# Optional: tremor suppression analysis functions
+def calculate_tremor_suppression(pre_data, post_data, feature='tremor_power'):
+    """
+    Calculate tremor suppression effectiveness between pre and post intervention data.
+    
+    Args:
+        pre_data: list of tremor feature values from pre-intervention
+        post_data: list of tremor feature values from post-intervention
+        feature: name of feature being analyzed (for reporting)
+        
+    Returns:
+        dict with suppression metrics
+    """
+    if not pre_data or not post_data:
+        return {"error": "Insufficient data"}
+    
+    pre_mean = np.mean(pre_data)
+    post_mean = np.mean(post_data)
+    
+    if pre_mean > 0:
+        percent_reduction = (pre_mean - post_mean) / pre_mean * 100.0
+    else:
+        percent_reduction = 0.0
+        
+    return {
+        "pre_mean": float(pre_mean),
+        "post_mean": float(post_mean),
+        "absolute_reduction": float(pre_mean - post_mean),
+        "percent_reduction": float(percent_reduction),
+        "pre_std": float(np.std(pre_data)),
+        "post_std": float(np.std(post_data)),
+        "pre_count": len(pre_data),
+        "post_count": len(post_data)
+    }
+
+
+def extract_tremor_features_from_window(window):
+    """
+    Extract tremor-relevant features from a 128x3 window (lightweight version).
+    Returns tremor power in 4-8 Hz band.
+    """
+    FS = 100.0
+    SAMPLES = 128
+    
+    # Time-domain RMS
+    rms = float(np.sqrt(np.mean(window ** 2)))
+    
+    # Frequency-domain features
+    centered = window - window.mean(axis=0, keepdims=True)
+    hann = np.hanning(SAMPLES).reshape(-1, 1)
+    spec = np.fft.rfft(centered * hann, axis=0)
+    mag = np.abs(spec) * 2 / SAMPLES
+    freqs = np.fft.rfftfreq(SAMPLES, d=1.0 / FS)
+    mag_total = mag.sum(axis=1)  # sum across x+y+z
+    
+    # Tremor band power (4-8 Hz)
+    lo_i = max(1, int(4.0 / (FS / SAMPLES)))
+    hi_i = min(SAMPLES//2 - 1, int(8.0 / (FS / SAMPLES)))
+    if hi_i > lo_i:
+        tremor_power = float(np.sqrt(np.mean(mag_total[lo_i:hi_i+1] ** 2)))
+    else:
+        tremor_power = 0.0
+    
+    return {"rms": rms, "tremor_power": tremor_power}
+
 
 FS = 100.0
 N = 128

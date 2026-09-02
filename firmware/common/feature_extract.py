@@ -6,13 +6,13 @@ Input: window = list of 128 samples, either:
 
 Output: list of 15 floats in fixed order. Order MUST match train_classifier.py.
 
-Feature order:
+Feature order (15-base, backward-compatible):
   0  rms_all            — RMS of all axes concatenated
   1  std_all            — Std dev of all axes concatenated
   2  mean_crossing_rate — Zero-mean crossing rate of all axes
   3  dominant_freq_hz   — Peak frequency (Hz) from magnitude FFT
   4  band_3_6           — RMS band power 3-6 Hz
-  5  band_6_9           — RMS band power 6-9 Hz
+  5  band_6_9           — RMS band power 6-9 Hz (ET postural 6-8 peak inside)
   6  band_9_12          — RMS band power 9-12 Hz
   7  band_12_25         — RMS band power 12-25 Hz
   8  spectral_entropy   — Normalized spectral entropy (0-1)
@@ -22,6 +22,9 @@ Feature order:
   12 rms_z              — RMS of z-axis
   13 xy_ratio           — rms_x / max(rms_y, 1e-6)
   14 peak_prominence    — peak_mag / max(median_mag, 1e-6)
+
+Extended (Option A + ET, 2026-08-27):
+  pill_4_6 / et_6_9 via helper pill_band_power() and coherence metrics (thumb-index 0.6, finger-wrist 0.6) in FeaturesStage — not in base 15, exposed in frame["pill_power"]/["et_power"]/["coherence"] for future 16-feat model.
 """
 
 import math
@@ -92,8 +95,40 @@ def _mean_crossing_rate(xs: List[float], mu: float) -> float:
     return cnt / len(xs) if xs else 0.0
 
 
+# Pre-computed twiddles cache + Hann window cache keyed by n
+_TWIDDLES: dict = {}
+_HANN_CACHE: dict = {}
+
+
+def _get_twiddles(n: int):
+    if n in _TWIDDLES:
+        return _TWIDDLES[n]
+    d = {}
+    size = 2
+    while size <= n:
+        half = size // 2
+        cos_t = [0.0] * half
+        sin_t = [0.0] * half
+        for k in range(half):
+            ang = -2 * math.pi * k / size
+            cos_t[k] = math.cos(ang)
+            sin_t[k] = math.sin(ang)
+        d[size] = (cos_t, sin_t)
+        size <<= 1
+    _TWIDDLES[n] = d
+    return d
+
+
+def _get_hann(n: int):
+    if n in _HANN_CACHE:
+        return _HANN_CACHE[n]
+    w = [0.5 * (1 - math.cos(2 * math.pi * i / (n - 1))) for i in range(n)]
+    _HANN_CACHE[n] = w
+    return w
+
+
 def _in_place_fft(real: List[float], imag: List[float]) -> None:
-    """In-place iterative Cooley-Tukey FFT."""
+    """In-place iterative Cooley-Tukey FFT with pre-computed twiddles."""
     n = len(real)
     if n <= 1:
         return
@@ -107,14 +142,15 @@ def _in_place_fft(real: List[float], imag: List[float]) -> None:
             j -= m
             m >>= 1
         j += m
+    tw = _get_twiddles(n)
     size = 2
     while size <= n:
         half = size // 2
+        cos_t, sin_t = tw[size]
         for i in range(0, n, size):
             for k in range(half):
-                ang = -2 * math.pi * k / size
-                c = math.cos(ang)
-                s = math.sin(ang)
+                c = cos_t[k]
+                s = sin_t[k]
                 ie = i + k
                 io = i + k + half
                 ro = real[io]
@@ -125,7 +161,7 @@ def _in_place_fft(real: List[float], imag: List[float]) -> None:
                 imag[io] = imag[ie] - ti
                 real[ie] += tr
                 imag[ie] += ti
-        size *= 2
+        size <<= 1
 
 
 def _fft_mag_sum(
@@ -146,9 +182,9 @@ def _fft_mag_sum(
         mag = math.sqrt((r[0] - mean_x) ** 2 + (r[1] - mean_y) ** 2 + (r[2] - mean_z) ** 2)
         real[i] = mag
     imag = [0.0] * n
+    hann = _get_hann(n)
     for i in range(n):
-        w = 0.5 * (1 - math.cos(2 * math.pi * i / (n - 1)))
-        real[i] *= w
+        real[i] *= hann[i]
     _in_place_fft(real, imag)
     half = n // 2
     mag = [0.0] * half

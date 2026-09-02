@@ -23,13 +23,16 @@ class Stage(Protocol):
         ...
 
 # Ordered stage names mirroring the folder order used by the refactor.
+# Quality gates before classify; state_machine gates haptic.
 STAGE_ORDER: List[str] = [
     "safety",
     "sensor",
     "stationarity",
+    "quality",
     "fft",
     "features",
     "classify",
+    "state_machine",
     "haptic",
     "audit",
 ]

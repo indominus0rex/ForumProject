@@ -11,9 +11,11 @@ Elastic fabric IMU mount inspired by bicycle gloves but optimized for breathabil
 
 ## IMU Integration
 - IMU pockets: Sewn rectangular openings (22mm x 22mm x 4mm) at:
-  - Dorsum hand center (over 3rd metacarpal bone)
-  - Thenar eminence (palmar base of thumb)
-  - Thumb CMC joint (dorsal aspect between trapezium and first metacarpal)
+  - CH0 — Dorsum hand center (over 3rd metacarpal bone)
+  - CH1 — Thenar eminence (palmar base of thumb)
+  - CH2 — Thumb proximal phalanx (dorsal-radial 20° tilt toward nail)
+  - CH3 — Index proximal phalanx (dorsal)
+- Pocket dimensions: 22×22×4 mm for all four locations (including index phalanx).
 - Pocket flaps: Overlapping mesh panels with hook-and-loop tabs for removable sensor access
 
 ## Features

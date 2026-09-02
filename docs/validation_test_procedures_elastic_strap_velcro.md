@@ -125,8 +125,8 @@ Quantify resistance to lateral and longitudinal migration of the strap system du
 
 ### Test Setup
 - Elastic strap with Velcro closure assembled per strap_and_lra_design.md
-- IMU/LRA pocket assemblies installed at designated locations
-- Test weights simulating IMU (~8g) and LRA (~3g) masses
+- 4 IMU pockets installed at designated locations (CH0–CH3)
+- Test weights: IMU (~8g) ×4, no actuator this build
 - Motion capture system or high-speed camera (≥120 fps)
 - Force sensors mounted on test rig
 
@@ -136,6 +136,8 @@ Quantify resistance to lateral and longitudinal migration of the strap system du
 2. Apply known loads simulating tendon resistance:
    - Dorsum IMU: 0.5N radial, 0.3N ventral
    - Thenar IMU: 0.4N palmar, 0.2N radial
+   - Thumb proximal phalanx IMU: 0.3N dorsal, 0.2N radial
+   - Index proximal phalanx IMU: 0.3N dorsal, 0.2N radial
 3. Measure initial position of pocket centers
 4. Apply cyclic loads simulating tremor frequencies (3-8Hz)
 5. Track position displacement over 10-minute period
@@ -183,7 +185,7 @@ Collect quantitative comfort and wearability data from human subjects during ext
 - Screening for skin sensitivities or contraindications
 
 ### Equipment
-- Assembled strap systems with IMU/LRA pockets (non-functional dummy weights)
+- Assembled strap systems with 4 IMU pockets (non-functional dummy weights ~8g each), no actuator
 - Comfort questionnaire (validated scales)
 - Skin assessment tools (dermatographometer, moisture sensor)
 - Activity monitors (to correlate movement with discomfort)

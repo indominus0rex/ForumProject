@@ -113,8 +113,14 @@ class DataCollector:
         try:
             sample = self.read_sample()
         except Exception:
-            # Gravity fallback on read error
-            sample = (0.0, 0.0, 1.0) * len(self.sensors)
+            # Gravity fallback on read error — replicate per-sensor
+            # need tuple length 3 * num_sensors, not tuple repetition
+            n_sensors = len(self.sensors) if self.sensors else 1
+            sample = tuple([0.0, 0.0, 1.0] * n_sensors) if n_sensors > 1 else (0.0, 0.0, 1.0)
+            if len(sample) == 3 and n_sensors == 1:
+                pass
+            elif len(sample) != 3 * n_sensors:
+                sample = tuple([0.0, 0.0, 1.0] * n_sensors)
 
         # Store in buffer
         base_idx = self._sample_index * len(sample)

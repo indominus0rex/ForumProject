@@ -12,46 +12,99 @@ from common.config import (
     SAMPLES, SAMPLE_INTERVAL_US, LED_PIN, LRA_PIN, LRA_FREQ,
     LRA_PINS, USE_LRA_ARRAY, I2C_BUS, I2C_SCL_PIN, I2C_SDA_PIN,
     I2C_FREQ, AUDIT_CAPACITY,
+    CONF_THRESH_KINETIC, CONF_THRESH_POSTURAL,
+    STATE_CONFIRM_WINDOWS, STATE_COOLDOWN_WINDOWS,
+    STATE_MAX_TREMOR_BEFORE_COOLDOWN,
+    QUALITY_FALLBACK_THRESH, QUALITY_FLAT_VAR_THRESH,
+    TCA9548A_ADDR, NUM_IMUS, I2C_MUX_ENABLED, IMU_CHANNELS, IMU_LOCATIONS,
 )
 from common.gy521 import GY521
+try:
+    from common.tca9548a import TCA9548A
+except ImportError:
+    TCA9548A = None
 
 # ---- HARDWARE ----
 led = Pin(LED_PIN, Pin.OUT)
+# LRAs deferred for 4-IMU build 2026-08-27 — leave NC, haptic stage will no-op
 lra = PWM(Pin(LRA_PIN), freq=LRA_FREQ, duty=0)
+lra.duty(0)
 if USE_LRA_ARRAY:
     lra_array = [PWM(Pin(pin), freq=LRA_FREQ, duty=0) for pin in LRA_PINS]
+    for d in lra_array:
+        d.duty(0)
 else:
     lra_array = []
 
 i2c = I2C(I2C_BUS, scl=Pin(I2C_SCL_PIN), sda=Pin(I2C_SDA_PIN), freq=I2C_FREQ)
-try:
-    sensor = GY521(i2c)
-    print("GY-521 OK. HSP dispatcher online.")
-except Exception as e:
-    print("Sensor init failed:", e)
-    sys.exit()
+
+# TCA9548A mux for 4 IMUs (scalable 1..4) — research lock 2026-08-27 thumb CMC
+mux = None
+sensors = []
+if I2C_MUX_ENABLED and TCA9548A is not None:
+    try:
+        mux = TCA9548A(i2c, addr=TCA9548A_ADDR)
+        # Validate mux present
+        if TCA9548A_ADDR not in i2c.scan():
+            print("TCA9548A not found at 0x70 — falling back to single IMU.")
+            mux = None
+        else:
+            for ch in IMU_CHANNELS[:NUM_IMUS]:
+                mux.select_channel(ch)
+                try:
+                    s = GY521(i2c)  # each at 0x68 behind mux
+                    sensors.append(s)
+                    print("GY-521 ch{} ({} ) OK.".format(ch, IMU_LOCATIONS[ch] if ch < len(IMU_LOCATIONS) else ch))
+                except Exception as e:
+                    print("GY-521 ch{} init failed:".format(ch), e)
+            if not sensors:
+                print("No IMUs behind mux — falling back to single.")
+                mux = None
+            else:
+                print("Mux online: {} IMU(s) via TCA9548A. Primary ch0 dorsal wrist for classification.".format(len(sensors)))
+                sensor = sensors[0]  # primary for legacy single-window pipeline
+    except Exception as e:
+        print("Mux init failed:", e, "— falling back to single IMU.")
+        mux = None
+
+if mux is None:
+    try:
+        sensor = GY521(i2c)
+        sensors = [sensor]
+        print("GY-521 OK (single). HSP dispatcher online — use ch0 dorsal wrist.")
+    except Exception as e:
+        print("Sensor init failed:", e)
+        sys.exit()
 
 # ---- STAGES ----
 from stages import STAGE_ORDER
 from stages.safety import SafetyStage
 from stages.sensor import SensorStage
 from stages.stationarity import StationarityStage
+from stages.quality import QualityStage
 from stages.fft import FFTStage
 from stages.features import FeaturesStage
 from stages.classify import ClassifyStage
+from stages.state_machine import TremorStateMachine
 from stages.haptic import HapticStage
 from stages.audit import AuditStage
 
 # Shared frame dict passed through pipeline
+# window = primary IMU (ch0 dorsal wrist) for existing classifier (backward-compatible)
+# multi_window = list of 4 windows [128][3] for logging/future fusion (thumb CMC lock)
 frame = {
     "now_us": 0,
     "prev_us": None,
     "window": [[0.0, 0.0, 0.0] for _ in range(SAMPLES)],
+    "multi_window": [[[0.0, 0.0, 0.0] for _ in range(SAMPLES)] for _ in range(max(1, len(sensors)))],
     "led": led,
     "lra": lra,
     "lra_array": lra_array,
     "use_lra_array": USE_LRA_ARRAY,
     "sensor": sensor,
+    "sensors": sensors,
+    "mux": mux,
+    "num_imus": len(sensors),
 }
 
 # Pre-allocate stages
@@ -59,9 +112,20 @@ stages = {
     "safety": SafetyStage(),
     "sensor": SensorStage(sensor, frame["window"], SAMPLES),
     "stationarity": StationarityStage(window_len=SAMPLES),
+    "quality": QualityStage(
+        fallback_thresh=QUALITY_FALLBACK_THRESH,
+        flat_thresh=QUALITY_FLAT_VAR_THRESH,
+    ),
     "fft": FFTStage(samples=SAMPLES, fs=100.0),
     "features": FeaturesStage(fs=100.0, n=SAMPLES),
     "classify": ClassifyStage(samples=SAMPLES, fs=100.0),
+    "state_machine": TremorStateMachine(
+        confirm_windows=STATE_CONFIRM_WINDOWS,
+        cooldown_windows=STATE_COOLDOWN_WINDOWS,
+        conf_thresh_kinetic=CONF_THRESH_KINETIC,
+        conf_thresh_postural=CONF_THRESH_POSTURAL,
+        max_tremor_before_cooldown=STATE_MAX_TREMOR_BEFORE_COOLDOWN,
+    ),
     "haptic": HapticStage(),
     "audit": AuditStage(capacity=AUDIT_CAPACITY),
 }
@@ -75,30 +139,73 @@ _sample_errors = 0  # Track consecutive sensor read errors
 
 
 def sample_callback(t: Timer) -> None:
-    """Timer ISR: read sensor sample and store in frame buffer.
+    """Timer ISR: read ALL multiplexed IMUs per tick (scalable 1..4).
 
-    Keeps ISR short; logs errors via counter for main-loop visibility.
+    Budget: 10ms @100Hz; 4× MPU6050 reads ~4ms @400kHz. Keeps ISR short.
+    Primary ch0 feeds existing single-IMU pipeline (backward-compatible).
+    All channels stored in multi_window for CSV logging / future 60-feat fusion.
     """
     global window_index, first_sample_time, last_sample_time, window_ready, _sample_errors
 
-    try:
-        raw = sensor.i2c.readfrom_mem(sensor.addr, 0x3B, 6)
+    # Helper to read one GY521 at 0x68
+    def _read_one(s):
+        try:
+            raw = s.i2c.readfrom_mem(s.addr, 0x3B, 6)
+            def combine(h: int, l: int) -> int:
+                v = (h << 8) | l
+                return v if v < 32768 else v - 65536
+            x = combine(raw[0], raw[1]) / 16384.0
+            y = combine(raw[2], raw[3]) / 16384.0
+            z = combine(raw[4], raw[5]) / 16384.0
+            return x, y, z, False
+        except Exception:
+            return 0.0, 0.0, 1.0, True
 
-        def combine(h: int, l: int) -> int:
-            v = (h << 8) | l
-            return v if v < 32768 else v - 65536
+    if mux is not None and len(sensors) > 1:
+        err_cnt = 0
+        # Round-robin: select channel then read that IMU's 0x68
+        for idx, s in enumerate(sensors):
+            ch = IMU_CHANNELS[idx] if idx < len(IMU_CHANNELS) else idx
+            try:
+                mux.select_channel(ch)
+            except Exception:
+                err_cnt += 1
+                x = y = 0.0; z = 1.0
+                is_err = True
+            else:
+                x, y, z, is_err = _read_one(s)
+                if is_err:
+                    err_cnt += 1
+            # Store in per-IMU multi_window
+            try:
+                frame["multi_window"][idx][window_index][0] = x
+                frame["multi_window"][idx][window_index][1] = y
+                frame["multi_window"][idx][window_index][2] = z
+            except Exception:
+                pass
+            # Primary is ch0 (dorsal wrist) for existing pipeline
+            if idx == 0:
+                px, py, pz = x, y, z
+                primary_err = is_err
+        _sample_errors = err_cnt
+        x, y, z = px, py, pz
+        # expose per-IMU latest for quality stage extension
+        frame["multi_xyz"] = [(frame["multi_window"][i][window_index][0],
+                               frame["multi_window"][i][window_index][1],
+                               frame["multi_window"][i][window_index][2]) for i in range(len(sensors))]
+        frame["primary_err"] = primary_err
+    else:
+        x, y, z, is_err = _read_one(sensor)
+        _sample_errors = 1 if is_err else 0
+        try:
+            frame["multi_window"][0][window_index][0] = x
+            frame["multi_window"][0][window_index][1] = y
+            frame["multi_window"][0][window_index][2] = z
+        except Exception:
+            pass
+        frame["primary_err"] = is_err
 
-        x = combine(raw[0], raw[1]) / 16384.0
-        y = combine(raw[2], raw[3]) / 16384.0
-        z = combine(raw[4], raw[5]) / 16384.0
-        _sample_errors = 0  # Reset on success
-
-    except Exception:
-        _sample_errors += 1
-        # Gravity fallback; flagged as sensor_error by sensor stage
-        x, y, z = 0.0, 0.0, 1.0
-
-    # Store sample in window buffer
+    # Store sample in primary window buffer (backward-compatible)
     frame["window"][window_index][0] = x
     frame["window"][window_index][1] = y
     frame["window"][window_index][2] = z

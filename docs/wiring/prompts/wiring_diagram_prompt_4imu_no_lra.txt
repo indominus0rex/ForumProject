@@ -1,0 +1,55 @@
+Professional vector wiring diagram, white background, top-down isometric view of a left human hand and forearm wearing a wearable Parkinson's tremor monitor. Clean technical illustration, 300 DPI, thin black outlines, sans-serif labels with leader lines. No LRA actuators — this build is 4-IMU only.
+
+ESP32-DevKitC on volar forearm (label: "ESP32-DevKitC, I2C0 SDA=GPIO21, SCL=GPIO22, LED=GPIO2, 3.3V/GND").
+
+TCA9548A multiplexer module beside ESP32 (label: "TCA9548A @0x70, A0/A1/A2->GND, EN->3.3V").
+
+Sensing — FOUR GY-521 / MPU6050 IMUs (blue rectangles with small chip outline, label GY-521 0x68, AD0->GND each channel):
+  IMU0 — dorsal wrist, just proximal to wrist joint, dorsal side (Channel 0, blue wire pair, label: "IMU0 CH0 — dorsal wrist proximal (primary, Keba 2025)")
+  IMU1 — thenar eminence, volar thumb base (Channel 1, green wire pair, label: "IMU1 CH1 — thenar volar")
+  IMU2 — thumb proximal phalanx, dorsal-radial with 20° tilt (Channel 2, yellow wire pair, label: "IMU2 CH2 — thumb proximal phalanx dorsal-radial 20° [PILL-ROLLING OPTIMIZED, LOCKED over CMC 2026-08-27]")
+  IMU3 — index proximal phalanx, dorsal (Channel 3, orange wire pair, label: "IMU3 CH3 — index proximal phalanx dorsal [ET postural 6-8Hz, thumb-index coherence]")
+
+All AD0 pins to GND (address 0x68 each channel isolated by mux). 0.1uF ceramic decoupling at each IMU VCC/GND and at TCA9548A VCC/GND, plus 10-100uF bulk on 3.3V rail between 3.3V and GND buses — show as small capacitor symbols near rail.
+
+Power rails (perfboard horizontal buses at bottom of diagram):
+  Red horizontal bus — 3.3V from ESP32 3V3 to TCA9548A VCC and each GY-521 VCC (via 0.1uF).
+  Black horizontal bus — GND from ESP32 GND to TCA9548A GND and each GY-521 GND, star ground with no daisy chain.
+
+I2C bus wiring:
+  Blue solid wire — ESP32 GPIO22 (SCL) -> TCA9548A SCL.
+  Green solid wire — ESP32 GPIO21 (SDA) -> TCA9548A SDA.
+  TCA9548A SD0/SC0 -> IMU0 SDA/SCL (blue pair, label "CH0")
+  TCA9548A SD1/SC1 -> IMU1 SDA/SCL (green pair, label "CH1")
+  TCA9548A SD2/SC2 -> IMU2 SDA/SCL (yellow pair, label "CH2 thumb phalanx pill-axis")
+  TCA9548A SD3/SC3 -> IMU3 SDA/SCL (orange pair, label "CH3 index phalanx ET")
+  Unused mux channels 4-7 left unconnected, label "CH4-7 NC".
+
+Indication:
+  ESP32 GPIO2 -> 220R resistor -> LED anode, LED cathode -> GND (thin yellow wire, label: "LED GPIO2 active high").
+
+DEFERRED — NO LRAs:
+  Show ESP32 GPIO25, GPIO18, GPIO19, GPIO20 as small grey NC pads with label: "GPIO25/18/19/20 — DEFERRED (no LRA this build, haptic stage no-op)". Do NOT draw any LRA coin motors, drivers, MOSFETs, or flyback diodes. This is intentional for the 4-IMU no-LRA harness.
+
+Anatomical accuracy + INSET (boxes main, hand reference small):
+  MAIN 85% remains box schematic (see COMPONENTS/WIRES above) — no anatomy in main wiring.
+  INSET 12% top-right, dashed border labeled "Anatomical Reference — Not Wiring (solid dorsal + dashed translucent volar thenar ghost)":
+    Solid grey dorsal hand+forearm outline + dashed translucent volar thenar ghost fill rgba(200,230,200,0.15) to make IMU1 visible.
+    Four 4px dots color-matched to main wires: DOT0 blue dorsal wrist proximal, DOT1 green on volar ghost thenar, DOT2 yellow thumb proximal phalanx dorsal-radial 20° [PILL-ROLLING + ET], DOT3 orange index proximal phalanx dorsal [ET postural/thumb-index coherence]. Each dot with outside 0-3 leader label, NO wires inside inset.
+    Wire exits via 3mm strain loops at each pocket, stitched every 15mm along low-bend paths avoiding knuckles (show small loops) — in main boxes only.
+    Labels: DOT2 "2 thumb phalanx (pill 4-6Hz)", DOT3 "3 index phalanx (ET 6-8Hz)" with fore-arm ghost removed — index distal is the ET hotspot.
+
+Style requirements:
+  Color-coded legend top-right box (above inset): Blue=CH0 dorsal wrist, Green=CH1 thenar, Yellow=CH2 thumb phalanx (pill), Orange=CH3 index phalanx (ET), Red=3.3V, Black=GND, Yellow-grey=LED/DEFERRED, Grey pad=NC.
+  All labels outside the skin/boxes with thin leader arrows; no text on skin itself (except inset dot labels outside inset).
+  Realistic component proportions (GY-521 ~20x20mm, TCA9548A breakout ~41x18mm, ESP32 ~55x28mm) but simplified outlines for clarity.
+  Wire thickness proportional to function; I2C pairs slightly thicker.
+  Sampling note bottom-center: "SAMPLES 128 @100Hz (SAMPLE_INTERVAL_US 10000), I2C 400kHz, TCA9548A 0x70, all GY-521 0x68 via mux, file cad/connections_4imu.csv — pill 4-6Hz + ET 6-8Hz, coherence 0.6 balanced".
+  Short version for image models: also use wiring_diagram_prompt_4imu_minimalist.txt:1 (box+visible-volar inset short, 280 words).
+
+Negative prompt:
+  no LRA actuators, no vibration motors, no ERM motors, no MOSFETs, no DRV2605, no battery pack, no photorealistic skin pores, no shadows, no cluttered wire crossings, no missing channel labels, no thumb CMC-only view (use phalanx), no forearm-only CH3 (use index phalanx).
+
+Purpose: research paper figure / assembly guide, must match firmware/common/config.py (SDA21/SCL22, TCA9548A_ADDR 0x70, NUM_IMUS 4, IMU_CHANNELS [0,1,2,3], IMU_LOCATIONS, SAMPLES 128) and PIN_ASSIGNMENTS.md:48 and cad/connections_4imu.csv.
+
+Reference: knowledge.md:5a-c, docs/research_web_2026-08-27.md, docs/component_positions.txt:13, docs/imu_lra_placement.txt, WIRING_DIAGRAM_DESIGN.md:28.

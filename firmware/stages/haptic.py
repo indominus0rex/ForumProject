@@ -23,6 +23,8 @@ class HapticStage:
             dev.duty(duty)
 
     def process(self, frame: Frame) -> Frame:
+        # Confidence/state/quality gated: prefer frame["action"] from state_machine
+        action = frame.get("action")
         label = frame.get("label")
         conf = frame.get("confidence", 0.0)
         led = frame.get("led")
@@ -30,7 +32,41 @@ class HapticStage:
         lra_array = frame.get("lra_array", [])
         use_array = frame.get("use_lra_array", False)
 
-        # import time inside process to avoid top-level import on MicroPython start
+        # Hard gates
+        if not frame.get("quality_ok", True) or not frame.get("safe", True):
+            if led:
+                led.value(0)
+            self._set_all_lras(led, lra, lra_array, LRA_DUTY_OFF)
+            frame["haptic_reason"] = "gated:{}".format(frame.get("quality_reason", "unsafe"))
+            return frame
+
+        # If state machine present, drive from action
+        if action is not None:
+            import time
+            now = time.ticks_ms()
+            if action == "none" or action == "observe":
+                if led:
+                    led.value(0)
+                self._set_all_lras(led, lra, lra_array, LRA_DUTY_OFF)
+                frame["haptic_reason"] = action
+                return frame
+            if action == "cue_low":
+                phase = (now // 1000) % 2
+                if led:
+                    led.value(1 if phase == 0 else 0)
+                self._set_all_lras(led, lra, lra_array, LRA_DUTY_OFF)
+                frame["haptic_reason"] = "cue_low"
+                return frame
+            if action == "cue_high":
+                if led:
+                    led.value(1)
+                phase = (now // 500) % 2
+                duty = LRA_DUTY_ON if phase == 0 else LRA_DUTY_OFF
+                self._set_all_lras(led, lra, lra_array, duty)
+                frame["haptic_reason"] = "cue_high"
+                return frame
+
+        # Fallback: direct label mapping (when state_machine not in pipeline)
         import time
         now = time.ticks_ms()
 

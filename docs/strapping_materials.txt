@@ -6,7 +6,8 @@ Table: Recommended strapping/adhesive materials for each IMU location
 |----------|------------------|----------------|---------------------|
 | Dorsum of hand (near wrist) | 3M Micropore Surgical Tape | Elastic fabric strap (nylon/spandex with silicone grip), Tegaderm transparent dressing | Breathable, allows wrist flexion/extension, low profile |
 | Thenar eminence (thumb muscle base) | Hypafix or Mefix Non-Woven Tape | Silicone gel straps, Soft Velcro straps (foam/fabric backing) | Conforms to curved, fleshy area, resists shear forces |
-| Thumb proximal phalanx | Small pieces of 3M Micropore or Hypafix (≈1 cm squares) | Double-sided medical adhesive discs, Narrow kinesiology tape strips | Secure on small bony prominence, minimal interference with thumb motion |
+| Thumb proximal phalanx (dorsal-radial 20° tilt toward nail) | Small pieces of 3M Micropore or Hypafix (≈1 cm squares) | Double-sided medical adhesive discs, Narrow kinesiology tape strips | Secure on small bony prominence, minimal interference with thumb motion |
+| Index proximal phalanx (dorsal) | 3M Micropore or Hypafix (~1 cm squares) | Double-sided medical adhesive disc, narrow kinesiology tape | Small bony prominence, secure without restricting finger flexion, keep clear of PIP joint motion |
 
 General notes:
 - Skin preparation: clean with alcohol wipe, let dry; consider skin barrier wipes for prolonged wear.

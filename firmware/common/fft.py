@@ -12,7 +12,7 @@ class FFTProcessor:
     """FFT processor for fixed-size real-valued signal windows."""
 
     def __init__(self, num_samples: int = 128):
-        """Initialize with Hann window.
+        """Initialize with Hann window and pre-computed twiddles.
 
         Args:
             num_samples: Window size (must be power of 2).
@@ -22,6 +22,23 @@ class FFTProcessor:
             0.5 * (1 - math.cos(2 * math.pi * i / (num_samples - 1)))
             for i in range(num_samples)
         ]
+        # Pre-compute twiddle factors per FFT size to avoid cos/sin in loop
+        # twiddles[size] = ([cos], [sin]) for k in 0..size/2-1
+        self._twiddles = {}
+        size = 2
+        while size <= num_samples:
+            half = size // 2
+            cos_t = [0.0] * half
+            sin_t = [0.0] * half
+            for k in range(half):
+                ang = -2 * math.pi * k / size
+                cos_t[k] = math.cos(ang)
+                sin_t[k] = math.sin(ang)
+            self._twiddles[size] = (cos_t, sin_t)
+            size <<= 1
+        # Pre-allocate reusable buffers to reduce GC pressure
+        self._real_buf = [0.0] * num_samples
+        self._imag_buf = [0.0] * num_samples
 
     def _in_place_fft(self, real: List[float], imag: List[float]) -> None:
         """In-place iterative Cooley-Tukey FFT (bit-reversal + butterfly)."""
@@ -41,11 +58,11 @@ class FFTProcessor:
         size = 2
         while size <= n:
             half = size // 2
+            cos_t, sin_t = self._twiddles[size]
             for i in range(0, n, size):
                 for k in range(half):
-                    ang = -2 * math.pi * k / size
-                    c = math.cos(ang)
-                    s = math.sin(ang)
+                    c = cos_t[k]
+                    s = sin_t[k]
                     ie = i + k
                     io = i + k + half
                     ro = real[io]
@@ -56,7 +73,7 @@ class FFTProcessor:
                     imag[io] = imag[ie] - ti
                     real[ie] += tr
                     imag[ie] += ti
-            size *= 2
+            size <<= 1
 
     def process_data(
         self,

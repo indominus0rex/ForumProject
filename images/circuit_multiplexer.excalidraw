@@ -1,0 +1,1419 @@
+{
+  "type": "excalidraw",
+  "version": 2,
+  "source": "hermes-agent",
+  "elements": [
+    {
+      "type": "text",
+      "id": "title",
+      "x": 360,
+      "y": 20,
+      "text": "Forum Project - ESP32 Tremor Detection (Multiplexer Variant)",
+      "fontSize": 28,
+      "fontFamily": 1,
+      "strokeColor": "#1e1e1e",
+      "originalText": "Forum Project - ESP32 Tremor Detection (Multiplexer Variant)",
+      "autoResize": true
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "x": 440,
+      "y": 60,
+      "text": "ESP32 + TCA9548A -> 4x GY-521 IMUs + LRA haptics (100 Hz sampling, I2C 400 kHz)",
+      "fontSize": 16,
+      "fontFamily": 1,
+      "strokeColor": "#757575",
+      "originalText": "ESP32 + TCA9548A -> 4x GY-521 IMUs + LRA haptics (100 Hz sampling, I2C 400 kHz)",
+      "autoResize": true
+    },
+    {
+      "type": "rectangle",
+      "id": "zone_power",
+      "x": 50,
+      "y": 110,
+      "width": 1400,
+      "height": 100,
+      "backgroundColor": "#fff3bf",
+      "fillStyle": "solid",
+      "roundness": {
+        "type": 3
+      },
+      "strokeColor": "#f59e0b",
+      "strokeWidth": 1,
+      "opacity": 30,
+      "boundElements": [
+        {
+          "id": "t_zone_power",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "id": "t_zone_power",
+      "x": 60,
+      "y": 116,
+      "text": "Power",
+      "fontSize": 16,
+      "fontFamily": 1,
+      "strokeColor": "#92400e",
+      "originalText": "Power",
+      "autoResize": true
+    },
+    {
+      "type": "rectangle",
+      "id": "usb_block",
+      "x": 80,
+      "y": 150,
+      "width": 160,
+      "height": 50,
+      "backgroundColor": "#ffd8a8",
+      "fillStyle": "solid",
+      "roundness": {
+        "type": 3
+      },
+      "strokeColor": "#f59e0b",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "boundElements": [
+        {
+          "id": "t_usb_block",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "id": "t_usb_block",
+      "x": 85,
+      "y": 155,
+      "width": 150,
+      "height": 40,
+      "text": "USB 5V (power bank)",
+      "fontSize": 16,
+      "fontFamily": 1,
+      "strokeColor": "#1e1e1e",
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "containerId": "usb_block",
+      "originalText": "USB 5V (power bank)",
+      "autoResize": true
+    },
+    {
+      "type": "rectangle",
+      "id": "lipo_block",
+      "x": 280,
+      "y": 150,
+      "width": 180,
+      "height": 50,
+      "backgroundColor": "#ffd8a8",
+      "fillStyle": "solid",
+      "roundness": {
+        "type": 3
+      },
+      "strokeColor": "#f59e0b",
+      "strokeWidth": 2,
+      "strokeStyle": "dashed",
+      "boundElements": [
+        {
+          "id": "t_lipo_block",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "id": "t_lipo_block",
+      "x": 285,
+      "y": 155,
+      "width": 170,
+      "height": 40,
+      "text": "LiPo 3.7V -> boost (wearable, optional)",
+      "fontSize": 14,
+      "fontFamily": 1,
+      "strokeColor": "#1e1e1e",
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "containerId": "lipo_block",
+      "originalText": "LiPo 3.7V -> boost (wearable, optional)",
+      "autoResize": true
+    },
+    {
+      "type": "rectangle",
+      "id": "rail_5v",
+      "x": 500,
+      "y": 150,
+      "width": 140,
+      "height": 50,
+      "backgroundColor": "#ffc9c9",
+      "fillStyle": "solid",
+      "roundness": {
+        "type": 3
+      },
+      "strokeColor": "#ef4444",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "boundElements": [
+        {
+          "id": "t_rail_5v",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "id": "t_rail_5v",
+      "x": 505,
+      "y": 155,
+      "width": 130,
+      "height": 40,
+      "text": "+5V rail",
+      "fontSize": 16,
+      "fontFamily": 1,
+      "strokeColor": "#1e1e1e",
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "containerId": "rail_5v",
+      "originalText": "+5V rail",
+      "autoResize": true
+    },
+    {
+      "type": "rectangle",
+      "id": "rail_3v3",
+      "x": 670,
+      "y": 150,
+      "width": 140,
+      "height": 50,
+      "backgroundColor": "#ffc9c9",
+      "fillStyle": "solid",
+      "roundness": {
+        "type": 3
+      },
+      "strokeColor": "#ef4444",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "boundElements": [
+        {
+          "id": "t_rail_3v3",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "id": "t_rail_3v3",
+      "x": 675,
+      "y": 155,
+      "width": 130,
+      "height": 40,
+      "text": "+3V3 rail",
+      "fontSize": 16,
+      "fontFamily": 1,
+      "strokeColor": "#1e1e1e",
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "containerId": "rail_3v3",
+      "originalText": "+3V3 rail",
+      "autoResize": true
+    },
+    {
+      "type": "rectangle",
+      "id": "rail_gnd",
+      "x": 840,
+      "y": 150,
+      "width": 140,
+      "height": 50,
+      "backgroundColor": "#e9ecef",
+      "fillStyle": "solid",
+      "roundness": {
+        "type": 3
+      },
+      "strokeColor": "#495057",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "boundElements": [
+        {
+          "id": "t_rail_gnd",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "id": "t_rail_gnd",
+      "x": 845,
+      "y": 155,
+      "width": 130,
+      "height": 40,
+      "text": "GND rail",
+      "fontSize": 16,
+      "fontFamily": 1,
+      "strokeColor": "#1e1e1e",
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "containerId": "rail_gnd",
+      "originalText": "GND rail",
+      "autoResize": true
+    },
+    {
+      "type": "arrow",
+      "id": "a_usb_5v",
+      "x": 240,
+      "y": 175,
+      "width": 260,
+      "height": 0,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          260,
+          0
+        ]
+      ],
+      "strokeColor": "#ef4444",
+      "strokeWidth": 2,
+      "endArrowhead": "arrow"
+    },
+    {
+      "type": "arrow",
+      "id": "a_lipo_5v",
+      "x": 460,
+      "y": 175,
+      "width": 40,
+      "height": 0,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          40,
+          0
+        ]
+      ],
+      "strokeColor": "#ef4444",
+      "strokeWidth": 2,
+      "strokeStyle": "dashed",
+      "endArrowhead": "arrow"
+    },
+    {
+      "type": "rectangle",
+      "id": "esp32",
+      "x": 550,
+      "y": 290,
+      "width": 360,
+      "height": 320,
+      "backgroundColor": "#a5d8ff",
+      "fillStyle": "solid",
+      "roundness": {
+        "type": 3
+      },
+      "strokeColor": "#4a9eed",
+      "strokeWidth": 2,
+      "boundElements": [
+        {
+          "id": "t_esp32",
+          "type": "text"
+        },
+        {
+          "id": "a_3v3_esp",
+          "type": "arrow"
+        },
+        {
+          "id": "a_5v_esp",
+          "type": "arrow"
+        },
+        {
+          "id": "a_gnd_esp",
+          "type": "arrow"
+        },
+        {
+          "id": "a_esp_sda",
+          "type": "arrow"
+        },
+        {
+          "id": "a_esp_scl",
+          "type": "arrow"
+        },
+        {
+          "id": "a_esp_led",
+          "type": "arrow"
+        },
+        {
+          "id": "a_esp_lra",
+          "type": "arrow"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "id": "t_esp32",
+      "x": 555,
+      "y": 300,
+      "width": 350,
+      "height": 30,
+      "text": "ESP32-DevKit (MicroPython)",
+      "fontSize": 22,
+      "fontFamily": 1,
+      "strokeColor": "#1e1e1e",
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "containerId": "esp32",
+      "originalText": "ESP32-DevKit (MicroPython)",
+      "autoResize": true
+    },
+    {
+      "type": "text",
+      "id": "p_3v3",
+      "x": 580,
+      "y": 340,
+      "text": "3V3",
+      "fontSize": 14,
+      "fontFamily": 1,
+      "strokeColor": "#1e1e1e",
+      "originalText": "3V3",
+      "autoResize": true
+    },
+    {
+      "type": "text",
+      "id": "p_gnd",
+      "x": 580,
+      "y": 370,
+      "text": "GND",
+      "fontSize": 14,
+      "fontFamily": 1,
+      "strokeColor": "#1e1e1e",
+      "originalText": "GND",
+      "autoResize": true
+    },
+    {
+      "type": "text",
+      "id": "p_gpio2",
+      "x": 580,
+      "y": 405,
+      "text": "GPIO2  LED",
+      "fontSize": 14,
+      "fontFamily": 1,
+      "strokeColor": "#1e1e1e",
+      "originalText": "GPIO2  LED",
+      "autoResize": true
+    },
+    {
+      "type": "text",
+      "id": "p_gpio21",
+      "x": 580,
+      "y": 435,
+      "text": "GPIO21 I2C0 SDA",
+      "fontSize": 14,
+      "fontFamily": 1,
+      "strokeColor": "#1e1e1e",
+      "originalText": "GPIO21 I2C0 SDA",
+      "autoResize": true
+    },
+    {
+      "type": "text",
+      "id": "p_gpio22",
+      "x": 580,
+      "y": 465,
+      "text": "GPIO22 I2C0 SCL",
+      "fontSize": 14,
+      "fontFamily": 1,
+      "strokeColor": "#1e1e1e",
+      "originalText": "GPIO22 I2C0 SCL",
+      "autoResize": true
+    },
+    {
+      "type": "text",
+      "id": "p_gpio23",
+      "x": 580,
+      "y": 495,
+      "text": "GPIO23 I2C1 SCL*",
+      "fontSize": 14,
+      "fontFamily": 1,
+      "strokeColor": "#1e1e1e",
+      "originalText": "GPIO23 I2C1 SCL*",
+      "autoResize": true
+    },
+    {
+      "type": "text",
+      "id": "p_gpio19",
+      "x": 580,
+      "y": 525,
+      "text": "GPIO19 I2C1 SDA*",
+      "fontSize": 14,
+      "fontFamily": 1,
+      "strokeColor": "#1e1e1e",
+      "originalText": "GPIO19 I2C1 SDA*",
+      "autoResize": true
+    },
+    {
+      "type": "text",
+      "id": "p_gpio18",
+      "x": 580,
+      "y": 555,
+      "text": "GPIO18 LRA[0]*",
+      "fontSize": 14,
+      "fontFamily": 1,
+      "strokeColor": "#1e1e1e",
+      "originalText": "GPIO18 LRA[0]*",
+      "autoResize": true
+    },
+    {
+      "type": "text",
+      "id": "p_gpio25",
+      "x": 580,
+      "y": 585,
+      "text": "GPIO25 LRA PWM",
+      "fontSize": 14,
+      "fontFamily": 1,
+      "strokeColor": "#1e1e1e",
+      "originalText": "GPIO25 LRA PWM",
+      "autoResize": true
+    },
+    {
+      "type": "text",
+      "id": "p_legend_pin",
+      "x": 480,
+      "y": 660,
+      "text": "* = reserved / unused in current firmware (USE_LRA_ARRAY=False)",
+      "fontSize": 12,
+      "fontFamily": 1,
+      "strokeColor": "#757575",
+      "originalText": "* = reserved / unused in current firmware (USE_LRA_ARRAY=False)",
+      "autoResize": true
+    },
+    {
+      "type": "arrow",
+      "id": "a_3v3_esp",
+      "x": 740,
+      "y": 200,
+      "width": 0,
+      "height": 90,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          90
+        ]
+      ],
+      "strokeColor": "#ef4444",
+      "strokeWidth": 2,
+      "endArrowhead": "arrow",
+      "endBinding": {
+        "elementId": "esp32",
+        "fixedPoint": [
+          0.5,
+          0.0
+        ]
+      }
+    },
+    {
+      "type": "arrow",
+      "id": "a_5v_esp",
+      "x": 640,
+      "y": 200,
+      "width": 0,
+      "height": 90,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          90
+        ]
+      ],
+      "strokeColor": "#ef4444",
+      "strokeWidth": 2,
+      "endArrowhead": "arrow",
+      "endBinding": {
+        "elementId": "esp32",
+        "fixedPoint": [
+          0.2,
+          0.0
+        ]
+      }
+    },
+    {
+      "type": "arrow",
+      "id": "a_gnd_esp",
+      "x": 880,
+      "y": 200,
+      "width": 0,
+      "height": 90,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          90
+        ]
+      ],
+      "strokeColor": "#495057",
+      "strokeWidth": 2,
+      "endArrowhead": "arrow",
+      "endBinding": {
+        "elementId": "esp32",
+        "fixedPoint": [
+          0.8,
+          0.0
+        ]
+      }
+    },
+    {
+      "type": "rectangle",
+      "id": "zone_i2c",
+      "x": 50,
+      "y": 720,
+      "width": 1400,
+      "height": 290,
+      "backgroundColor": "#d3f9d8",
+      "fillStyle": "solid",
+      "roundness": {
+        "type": 3
+      },
+      "strokeColor": "#22c55e",
+      "strokeWidth": 1,
+      "opacity": 25,
+      "boundElements": [
+        {
+          "id": "t_zone_i2c",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "id": "t_zone_i2c",
+      "x": 60,
+      "y": 726,
+      "text": "I2C0 bus - 400 kHz, 4.7 kOhm pull-ups to 3V3 on SDA + SCL (MUX side only)",
+      "fontSize": 14,
+      "fontFamily": 1,
+      "strokeColor": "#15803d",
+      "originalText": "I2C0 bus - 400 kHz, 4.7 kOhm pull-ups to 3V3 on SDA + SCL (MUX side only)",
+      "autoResize": true
+    },
+    {
+      "type": "rectangle",
+      "id": "r_sda",
+      "x": 510,
+      "y": 870,
+      "width": 26,
+      "height": 26,
+      "backgroundColor": "#fff3bf",
+      "fillStyle": "solid",
+      "strokeColor": "#f59e0b",
+      "strokeWidth": 2,
+      "boundElements": [
+        {
+          "id": "t_r_sda",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "id": "t_r_sda",
+      "x": 545,
+      "y": 874,
+      "text": "4.7k -> 3V3 (SDA)",
+      "fontSize": 13,
+      "fontFamily": 1,
+      "strokeColor": "#1e1e1e",
+      "originalText": "4.7k -> 3V3 (SDA)",
+      "autoResize": true
+    },
+    {
+      "type": "rectangle",
+      "id": "r_scl",
+      "x": 510,
+      "y": 910,
+      "width": 26,
+      "height": 26,
+      "backgroundColor": "#fff3bf",
+      "fillStyle": "solid",
+      "strokeColor": "#f59e0b",
+      "strokeWidth": 2,
+      "boundElements": [
+        {
+          "id": "t_r_scl",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "id": "t_r_scl",
+      "x": 545,
+      "y": 914,
+      "text": "4.7k -> 3V3 (SCL)",
+      "fontSize": 13,
+      "fontFamily": 1,
+      "strokeColor": "#1e1e1e",
+      "originalText": "4.7k -> 3V3 (SCL)",
+      "autoResize": true
+    },
+    {
+      "type": "rectangle",
+      "id": "mux",
+      "x": 600,
+      "y": 790,
+      "width": 320,
+      "height": 160,
+      "backgroundColor": "#d0bfff",
+      "fillStyle": "solid",
+      "roundness": {
+        "type": 3
+      },
+      "strokeColor": "#8b5cf6",
+      "strokeWidth": 2,
+      "boundElements": [
+        {
+          "id": "t_mux",
+          "type": "text"
+        },
+        {
+          "id": "a_esp_sda",
+          "type": "arrow"
+        },
+        {
+          "id": "a_esp_scl",
+          "type": "arrow"
+        },
+        {
+          "id": "a_mux_ch0",
+          "type": "arrow"
+        },
+        {
+          "id": "a_mux_ch1",
+          "type": "arrow"
+        },
+        {
+          "id": "a_mux_ch2",
+          "type": "arrow"
+        },
+        {
+          "id": "a_mux_ch3",
+          "type": "arrow"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "id": "t_mux",
+      "x": 605,
+      "y": 800,
+      "width": 310,
+      "height": 25,
+      "text": "TCA9548A I2C multiplexer",
+      "fontSize": 20,
+      "fontFamily": 1,
+      "strokeColor": "#1e1e1e",
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "containerId": "mux",
+      "originalText": "TCA9548A I2C multiplexer",
+      "autoResize": true
+    },
+    {
+      "type": "text",
+      "id": "t_mux_addr",
+      "x": 660,
+      "y": 830,
+      "text": "I2C addr: 0x70  (A0-A2 tied to GND)",
+      "fontSize": 14,
+      "fontFamily": 1,
+      "strokeColor": "#1e1e1e",
+      "originalText": "I2C addr: 0x70  (A0-A2 tied to GND)",
+      "autoResize": true
+    },
+    {
+      "type": "text",
+      "id": "t_mux_pins",
+      "x": 620,
+      "y": 860,
+      "text": "VCC=3V3, GND, SDA, SCL, RESET=3V3",
+      "fontSize": 14,
+      "fontFamily": 1,
+      "strokeColor": "#1e1e1e",
+      "originalText": "VCC=3V3, GND, SDA, SCL, RESET=3V3",
+      "autoResize": true
+    },
+    {
+      "type": "text",
+      "id": "t_mux_chans",
+      "x": 650,
+      "y": 900,
+      "text": "SD0/SD1/SD2/SD3 -> SC0/SC1/SC2/SC3",
+      "fontSize": 14,
+      "fontFamily": 1,
+      "strokeColor": "#1e1e1e",
+      "originalText": "SD0/SD1/SD2/SD3 -> SC0/SC1/SC2/SC3",
+      "autoResize": true
+    },
+    {
+      "type": "arrow",
+      "id": "a_esp_sda",
+      "x": 720,
+      "y": 620,
+      "width": -130,
+      "height": 280,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          -130,
+          280
+        ]
+      ],
+      "strokeColor": "#8b5cf6",
+      "strokeWidth": 2,
+      "endArrowhead": "arrow"
+    },
+    {
+      "type": "text",
+      "id": "t_a_esp_sda",
+      "x": 605,
+      "y": 720,
+      "text": "SDA @ 400 kHz",
+      "fontSize": 13,
+      "fontFamily": 1,
+      "strokeColor": "#1e1e1e",
+      "originalText": "SDA @ 400 kHz",
+      "autoResize": true
+    },
+    {
+      "type": "arrow",
+      "id": "a_esp_scl",
+      "x": 750,
+      "y": 620,
+      "width": -130,
+      "height": 320,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          -130,
+          320
+        ]
+      ],
+      "strokeColor": "#8b5cf6",
+      "strokeWidth": 2,
+      "endArrowhead": "arrow"
+    },
+    {
+      "type": "text",
+      "id": "t_a_esp_scl",
+      "x": 605,
+      "y": 750,
+      "text": "SCL @ 400 kHz",
+      "fontSize": 13,
+      "fontFamily": 1,
+      "strokeColor": "#1e1e1e",
+      "originalText": "SCL @ 400 kHz",
+      "autoResize": true
+    },
+    {
+      "type": "arrow",
+      "id": "a_mux_ch0",
+      "x": 920,
+      "y": 800,
+      "width": 180,
+      "height": 30,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          180,
+          30
+        ]
+      ],
+      "strokeColor": "#8b5cf6",
+      "strokeWidth": 2,
+      "strokeStyle": "dashed",
+      "endArrowhead": "arrow"
+    },
+    {
+      "type": "arrow",
+      "id": "a_mux_ch1",
+      "x": 920,
+      "y": 820,
+      "width": 420,
+      "height": 10,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          420,
+          10
+        ]
+      ],
+      "strokeColor": "#8b5cf6",
+      "strokeWidth": 2,
+      "strokeStyle": "dashed",
+      "endArrowhead": "arrow"
+    },
+    {
+      "type": "arrow",
+      "id": "a_mux_ch2",
+      "x": 920,
+      "y": 870,
+      "width": 180,
+      "height": 100,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          180,
+          100
+        ]
+      ],
+      "strokeColor": "#8b5cf6",
+      "strokeWidth": 2,
+      "strokeStyle": "dashed",
+      "endArrowhead": "arrow"
+    },
+    {
+      "type": "arrow",
+      "id": "a_mux_ch3",
+      "x": 920,
+      "y": 890,
+      "width": 420,
+      "height": 90,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          420,
+          90
+        ]
+      ],
+      "strokeColor": "#8b5cf6",
+      "strokeWidth": 2,
+      "strokeStyle": "dashed",
+      "endArrowhead": "arrow"
+    },
+    {
+      "type": "rectangle",
+      "id": "imu0",
+      "x": 1000,
+      "y": 800,
+      "width": 200,
+      "height": 80,
+      "backgroundColor": "#b2f2bb",
+      "fillStyle": "solid",
+      "roundness": {
+        "type": 3
+      },
+      "strokeColor": "#22c55e",
+      "strokeWidth": 2,
+      "boundElements": [
+        {
+          "id": "t_imu0",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "id": "t_imu0",
+      "x": 1005,
+      "y": 805,
+      "width": 190,
+      "height": 70,
+      "text": "IMU #0\nThumb",
+      "fontSize": 16,
+      "fontFamily": 1,
+      "strokeColor": "#1e1e1e",
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "containerId": "imu0",
+      "originalText": "IMU #0\nThumb",
+      "autoResize": true
+    },
+    {
+      "type": "rectangle",
+      "id": "imu1",
+      "x": 1240,
+      "y": 800,
+      "width": 200,
+      "height": 80,
+      "backgroundColor": "#b2f2bb",
+      "fillStyle": "solid",
+      "roundness": {
+        "type": 3
+      },
+      "strokeColor": "#22c55e",
+      "strokeWidth": 2,
+      "boundElements": [
+        {
+          "id": "t_imu1",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "id": "t_imu1",
+      "x": 1245,
+      "y": 805,
+      "width": 190,
+      "height": 70,
+      "text": "IMU #1\nIndex",
+      "fontSize": 16,
+      "fontFamily": 1,
+      "strokeColor": "#1e1e1e",
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "containerId": "imu1",
+      "originalText": "IMU #1\nIndex",
+      "autoResize": true
+    },
+    {
+      "type": "rectangle",
+      "id": "imu2",
+      "x": 1000,
+      "y": 940,
+      "width": 200,
+      "height": 80,
+      "backgroundColor": "#b2f2bb",
+      "fillStyle": "solid",
+      "roundness": {
+        "type": 3
+      },
+      "strokeColor": "#22c55e",
+      "strokeWidth": 2,
+      "boundElements": [
+        {
+          "id": "t_imu2",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "id": "t_imu2",
+      "x": 1005,
+      "y": 945,
+      "width": 190,
+      "height": 70,
+      "text": "IMU #2\nMiddle",
+      "fontSize": 16,
+      "fontFamily": 1,
+      "strokeColor": "#1e1e1e",
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "containerId": "imu2",
+      "originalText": "IMU #2\nMiddle",
+      "autoResize": true
+    },
+    {
+      "type": "rectangle",
+      "id": "imu3",
+      "x": 1240,
+      "y": 940,
+      "width": 200,
+      "height": 80,
+      "backgroundColor": "#b2f2bb",
+      "fillStyle": "solid",
+      "roundness": {
+        "type": 3
+      },
+      "strokeColor": "#22c55e",
+      "strokeWidth": 2,
+      "boundElements": [
+        {
+          "id": "t_imu3",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "id": "t_imu3",
+      "x": 1245,
+      "y": 945,
+      "width": 190,
+      "height": 70,
+      "text": "IMU #3\nRing/Pinky",
+      "fontSize": 16,
+      "fontFamily": 1,
+      "strokeColor": "#1e1e1e",
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "containerId": "imu3",
+      "originalText": "IMU #3\nRing/Pinky",
+      "autoResize": true
+    },
+    {
+      "type": "text",
+      "id": "t_imu_pwr",
+      "x": 1000,
+      "y": 780,
+      "text": "Each GY-521: VCC=3V3, GND=GND, SDA+SCL from a MUX channel output",
+      "fontSize": 12,
+      "fontFamily": 1,
+      "strokeColor": "#757575",
+      "originalText": "Each GY-521: VCC=3V3, GND=GND, SDA+SCL from a MUX channel output",
+      "autoResize": true
+    },
+    {
+      "type": "rectangle",
+      "id": "led_block",
+      "x": 80,
+      "y": 510,
+      "width": 180,
+      "height": 50,
+      "backgroundColor": "#fff3bf",
+      "fillStyle": "solid",
+      "roundness": {
+        "type": 3
+      },
+      "strokeColor": "#f59e0b",
+      "strokeWidth": 2,
+      "boundElements": [
+        {
+          "id": "t_led",
+          "type": "text"
+        },
+        {
+          "id": "a_esp_led",
+          "type": "arrow"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "id": "t_led",
+      "x": 85,
+      "y": 525,
+      "width": 170,
+      "height": 20,
+      "text": "Status LED (built-in)",
+      "fontSize": 16,
+      "fontFamily": 1,
+      "strokeColor": "#1e1e1e",
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "containerId": "led_block",
+      "originalText": "Status LED (built-in)",
+      "autoResize": true
+    },
+    {
+      "type": "rectangle",
+      "id": "lra_block",
+      "x": 300,
+      "y": 510,
+      "width": 220,
+      "height": 100,
+      "backgroundColor": "#ffd8a8",
+      "fillStyle": "solid",
+      "roundness": {
+        "type": 3
+      },
+      "strokeColor": "#f59e0b",
+      "strokeWidth": 2,
+      "boundElements": [
+        {
+          "id": "t_lra",
+          "type": "text"
+        },
+        {
+          "id": "a_esp_lra",
+          "type": "arrow"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "id": "t_lra",
+      "x": 305,
+      "y": 515,
+      "width": 210,
+      "height": 90,
+      "text": "LRA haptic\nGPIO25 PWM @ 200 Hz\nvia logic-level MOSFET\n(IRLZ44N / 2N7000)\n+ flyback diode",
+      "fontSize": 14,
+      "fontFamily": 1,
+      "strokeColor": "#1e1e1e",
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "containerId": "lra_block",
+      "originalText": "LRA haptic\nGPIO25 PWM @ 200 Hz\nvia logic-level MOSFET\n(IRLZ44N / 2N7000)\n+ flyback diode",
+      "autoResize": true
+    },
+    {
+      "type": "arrow",
+      "id": "a_esp_led",
+      "x": 550,
+      "y": 390,
+      "width": -290,
+      "height": 145,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          -290,
+          145
+        ]
+      ],
+      "strokeColor": "#f59e0b",
+      "strokeWidth": 2,
+      "endArrowhead": "arrow"
+    },
+    {
+      "type": "arrow",
+      "id": "a_esp_lra",
+      "x": 580,
+      "y": 570,
+      "width": -70,
+      "height": -10,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          -70,
+          -10
+        ]
+      ],
+      "strokeColor": "#f59e0b",
+      "strokeWidth": 2,
+      "endArrowhead": "arrow"
+    },
+    {
+      "type": "rectangle",
+      "id": "lra_array_block",
+      "x": 80,
+      "y": 640,
+      "width": 440,
+      "height": 70,
+      "backgroundColor": "#fff3bf",
+      "fillStyle": "solid",
+      "roundness": {
+        "type": 3
+      },
+      "strokeColor": "#f59e0b",
+      "strokeWidth": 2,
+      "strokeStyle": "dashed",
+      "boundElements": [
+        {
+          "id": "t_lra_array",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "id": "t_lra_array",
+      "x": 85,
+      "y": 645,
+      "width": 430,
+      "height": 60,
+      "text": "(reserved) LRA array - prox->dist [hypothenar, thenar, dorsal]\nGPIO18/19/20 - enabled when USE_LRA_ARRAY=True",
+      "fontSize": 13,
+      "fontFamily": 1,
+      "strokeColor": "#92400e",
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "containerId": "lra_array_block",
+      "originalText": "(reserved) LRA array - prox->dist [hypothenar, thenar, dorsal]\nGPIO18/19/20 - enabled when USE_LRA_ARRAY=True",
+      "autoResize": true
+    },
+    {
+      "type": "text",
+      "id": "legend_title",
+      "x": 50,
+      "y": 1040,
+      "text": "Legend",
+      "fontSize": 18,
+      "fontFamily": 1,
+      "strokeColor": "#1e1e1e",
+      "originalText": "Legend",
+      "autoResize": true
+    },
+    {
+      "type": "rectangle",
+      "id": "sw_red",
+      "x": 50,
+      "y": 1075,
+      "width": 30,
+      "height": 30,
+      "backgroundColor": "#ffc9c9",
+      "fillStyle": "solid",
+      "strokeColor": "#ef4444",
+      "strokeWidth": 2
+    },
+    {
+      "type": "text",
+      "id": "t_sw_red",
+      "x": 88,
+      "y": 1082,
+      "text": "Power rail",
+      "fontSize": 14,
+      "fontFamily": 1,
+      "strokeColor": "#1e1e1e",
+      "originalText": "Power rail",
+      "autoResize": true
+    },
+    {
+      "type": "rectangle",
+      "id": "sw_yellow",
+      "x": 270,
+      "y": 1075,
+      "width": 30,
+      "height": 30,
+      "backgroundColor": "#fff3bf",
+      "fillStyle": "solid",
+      "strokeColor": "#f59e0b",
+      "strokeWidth": 2
+    },
+    {
+      "type": "text",
+      "id": "t_sw_yellow",
+      "x": 308,
+      "y": 1082,
+      "text": "GPIO / signal / pull-up",
+      "fontSize": 14,
+      "fontFamily": 1,
+      "strokeColor": "#1e1e1e",
+      "originalText": "GPIO / signal / pull-up",
+      "autoResize": true
+    },
+    {
+      "type": "rectangle",
+      "id": "sw_orange",
+      "x": 490,
+      "y": 1075,
+      "width": 30,
+      "height": 30,
+      "backgroundColor": "#ffd8a8",
+      "fillStyle": "solid",
+      "strokeColor": "#f59e0b",
+      "strokeWidth": 2
+    },
+    {
+      "type": "text",
+      "id": "t_sw_orange",
+      "x": 528,
+      "y": 1082,
+      "text": "USB / battery / LRA",
+      "fontSize": 14,
+      "fontFamily": 1,
+      "strokeColor": "#1e1e1e",
+      "originalText": "USB / battery / LRA",
+      "autoResize": true
+    },
+    {
+      "type": "rectangle",
+      "id": "sw_blue",
+      "x": 710,
+      "y": 1075,
+      "width": 30,
+      "height": 30,
+      "backgroundColor": "#a5d8ff",
+      "fillStyle": "solid",
+      "strokeColor": "#4a9eed",
+      "strokeWidth": 2
+    },
+    {
+      "type": "text",
+      "id": "t_sw_blue",
+      "x": 748,
+      "y": 1082,
+      "text": "MCU",
+      "fontSize": 14,
+      "fontFamily": 1,
+      "strokeColor": "#1e1e1e",
+      "originalText": "MCU",
+      "autoResize": true
+    },
+    {
+      "type": "rectangle",
+      "id": "sw_green",
+      "x": 930,
+      "y": 1075,
+      "width": 30,
+      "height": 30,
+      "backgroundColor": "#b2f2bb",
+      "fillStyle": "solid",
+      "strokeColor": "#22c55e",
+      "strokeWidth": 2
+    },
+    {
+      "type": "text",
+      "id": "t_sw_green",
+      "x": 968,
+      "y": 1082,
+      "text": "Sensor",
+      "fontSize": 14,
+      "fontFamily": 1,
+      "strokeColor": "#1e1e1e",
+      "originalText": "Sensor",
+      "autoResize": true
+    },
+    {
+      "type": "rectangle",
+      "id": "sw_purple",
+      "x": 1150,
+      "y": 1075,
+      "width": 30,
+      "height": 30,
+      "backgroundColor": "#d0bfff",
+      "fillStyle": "solid",
+      "strokeColor": "#8b5cf6",
+      "strokeWidth": 2
+    },
+    {
+      "type": "text",
+      "id": "t_sw_purple",
+      "x": 1188,
+      "y": 1082,
+      "text": "Multiplexer",
+      "fontSize": 14,
+      "fontFamily": 1,
+      "strokeColor": "#1e1e1e",
+      "originalText": "Multiplexer",
+      "autoResize": true
+    },
+    {
+      "type": "text",
+      "id": "src_note",
+      "x": 50,
+      "y": 1130,
+      "text": "Source: firmware/common/config.py + docs/EMBED_README.md + docs/assembly_checklist.md",
+      "fontSize": 12,
+      "fontFamily": 1,
+      "strokeColor": "#757575",
+      "originalText": "Source: firmware/common/config.py + docs/EMBED_README.md + docs/assembly_checklist.md",
+      "autoResize": true
+    }
+  ],
+  "appState": {
+    "viewBackgroundColor": "#ffffff"
+  }
+}
