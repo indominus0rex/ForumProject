@@ -10,7 +10,7 @@ Pushes included (firmware-only, no hardware change):
      gain is constant across shakes; raw amplitude still sets output duty.
 
 TODO (tune on body): AMP_GATE, fixed_gain, PREDICTION_MS (measure LRA latency),
-  W fusion weights, MAX_DUTY cap lives in fit_main.py.
+  W fusion weights, MAX_DUTY cap lives in fit_main.py (device-side, not versioned).
 """
 import math
 
