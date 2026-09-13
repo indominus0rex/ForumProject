@@ -21,7 +21,7 @@ class PLL:
     """
 
     def __init__(self, fs: float = 100.0, center_freq: float = 6.0,
-                 bandwidth: float = 0.5, damping: float = 0.707):
+                 bandwidth: float = 1.0, damping: float = 0.707):  # bw matches common/config.py PLL_BANDWIDTH_HZ
         """Initialize PLL.
 
         Args:

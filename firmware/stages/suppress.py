@@ -25,6 +25,9 @@ class SuppressStage:
                  prediction_ms: float = 15.0, initial_gain: float = 0.5):
         """Initialize suppression pipeline.
 
+        Defaults mirror common/config.py (PLL_BANDWIDTH_HZ, PREDICTION_MS,
+        ADAPTIVE_GAIN_INITIAL) — keep in sync manually (MicroPython-safe).
+
         Args:
             fs: Sampling frequency in Hz.
             pll_bandwidth: PLL loop bandwidth in Hz.

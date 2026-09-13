@@ -27,6 +27,7 @@ W = [0.4, 0.2, 0.2, 0.2]  # TODO: auto-tune from per-channel band power
 class Combo:
     def __init__(self, fs=100.0, pll_bandwidth=1.0,
                  prediction_ms=15.0, initial_gain=0.5, fixed_gain=None):
+        # Defaults mirror common/config.py — keep in sync manually.
         from common.bandpass import BandpassFilter
         from common.pll import PLL
         from common.predictor import PhasePredictor

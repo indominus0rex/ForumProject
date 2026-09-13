@@ -79,3 +79,11 @@ def test_window_replay_locks():
         for _ in range(3):
             frame = combo.process(dict(frame))
         assert 0 <= frame["suppress_duty"] <= 1023
+
+
+if __name__ == "__main__":
+    test_registry_has_six_combos()
+    test_each_combo_contract()
+    test_b6_quarantined()
+    test_window_replay_locks()
+    print("plan_b tests passed!")
