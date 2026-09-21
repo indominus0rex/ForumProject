@@ -6,6 +6,7 @@ Returns dominant frequency and magnitude above noise threshold.
 
 import math
 from typing import List, Tuple
+from common.dsp import get_twiddles, get_hann, in_place_fft
 
 
 class FFTProcessor:
@@ -18,62 +19,13 @@ class FFTProcessor:
             num_samples: Window size (must be power of 2).
         """
         self.num_samples = num_samples
-        self.window = [
-            0.5 * (1 - math.cos(2 * math.pi * i / (num_samples - 1)))
-            for i in range(num_samples)
-        ]
+        self.window = get_hann(num_samples)
         # Pre-compute twiddle factors per FFT size to avoid cos/sin in loop
         # twiddles[size] = ([cos], [sin]) for k in 0..size/2-1
-        self._twiddles = {}
-        size = 2
-        while size <= num_samples:
-            half = size // 2
-            cos_t = [0.0] * half
-            sin_t = [0.0] * half
-            for k in range(half):
-                ang = -2 * math.pi * k / size
-                cos_t[k] = math.cos(ang)
-                sin_t[k] = math.sin(ang)
-            self._twiddles[size] = (cos_t, sin_t)
-            size <<= 1
+        self._twiddles = get_twiddles(num_samples)
         # Pre-allocate reusable buffers to reduce GC pressure
         self._real_buf = [0.0] * num_samples
         self._imag_buf = [0.0] * num_samples
-
-    def _in_place_fft(self, real: List[float], imag: List[float]) -> None:
-        """In-place iterative Cooley-Tukey FFT (bit-reversal + butterfly)."""
-        n = len(real)
-        if n <= 1:
-            return
-        j = 0
-        for i in range(n):
-            if i < j:
-                real[i], real[j] = real[j], real[i]
-                imag[i], imag[j] = imag[j], imag[i]
-            m = n >> 1
-            while m >= 1 and j >= m:
-                j -= m
-                m >>= 1
-            j += m
-        size = 2
-        while size <= n:
-            half = size // 2
-            cos_t, sin_t = self._twiddles[size]
-            for i in range(0, n, size):
-                for k in range(half):
-                    c = cos_t[k]
-                    s = sin_t[k]
-                    ie = i + k
-                    io = i + k + half
-                    ro = real[io]
-                    io_im = imag[io]
-                    tr = ro * c - io_im * s
-                    ti = ro * s + io_im * c
-                    real[io] = real[ie] - tr
-                    imag[io] = imag[ie] - ti
-                    real[ie] += tr
-                    imag[ie] += ti
-            size <<= 1
 
     def process_data(
         self,
@@ -94,7 +46,7 @@ class FFTProcessor:
         real = [(signal_data[i] - mean_val) * self.window[i] for i in range(self.num_samples)]
         imag = [0.0] * self.num_samples
 
-        self._in_place_fft(real, imag)
+        in_place_fft(real, imag)
 
         max_mag = 0.0
         dominant_freq = 0.0
