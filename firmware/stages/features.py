@@ -4,6 +4,10 @@ Features stage: defers to feature_extract.compute but as a stage.
 Computes 15-element feature vector from window and stores in frame.
 """
 
+import sys
+import os
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
+
 import common.feature_extract as feature_extract
 from stages import Frame
 
@@ -61,3 +65,14 @@ class FeaturesStage:
             frame["coh_thumb_index"] = frame.get("coh_thumb_index", 0.0)
             frame["coh_finger_wrist"] = frame.get("coh_finger_wrist", 0.0)
         return frame
+
+
+if __name__ == "__main__":
+    import math
+    stage = FeaturesStage(fs=100.0, n=128)
+    frame = {"window": [[math.sin(2 * math.pi * 6 * i / 100), 0.0, 1.0] for i in range(128)]}
+    out = stage.process(frame)
+    assert len(out["features"]) == 15
+    assert all(isinstance(x, float) for x in out["features"])
+    assert out["features"][0] > 0, "rms_all must be positive"
+    print("features stage smoke test passed")

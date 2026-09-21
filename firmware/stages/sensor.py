@@ -5,6 +5,19 @@ a clean dict. Reads one sample per callback, updates rolling means for safety,
 and flags sensor_error on exception (gravity fallback).
 """
 
+import sys
+import os
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
+
+# Mock machine module for host-side testing (must be before common.gy521 import)
+import types
+machine = types.ModuleType("machine")
+machine.I2C = None
+machine.Pin = None
+machine.PWM = None
+machine.Timer = None
+sys.modules["machine"] = machine
+
 from common.gy521 import GY521
 from stages import Frame
 
@@ -72,3 +85,13 @@ class SensorStage:
         frame["z_mean"] = z_mean
         frame["sensor_error"] = sensor_error
         return frame
+
+
+if __name__ == "__main__":
+    stage = SensorStage(sensor=None, sample_buf=[[0.0, 0.0, 1.0] for _ in range(128)], samples=128)
+    # Frame with x/y/z present
+    frame = {"x": 0.1, "y": 0.2, "z": 1.0}
+    out = stage.process(frame)
+    assert out["sensor_error"] is False
+    assert "x_mean" in out
+    print("sensor stage smoke test passed")

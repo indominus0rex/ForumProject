@@ -1,6 +1,6 @@
 """firmware/stages/state_machine.py — Context state machine + confidence-gated haptic policy.
 
-Implements the edge-tremor-coach policy from docs/SYSTEM_ARCHITECTURE_IMPROVEMENTS.md:
+Implements the edge-tremor-coach policy from docs/system_architecture_improvements.md:
 
   idle -> observing -> tremor_candidate -> confirmed_tremor -> feedback -> cooldown
 

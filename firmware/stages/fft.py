@@ -5,6 +5,10 @@ Wraps common.fft.FFTProcessor and exposes process(frame) contract.
 If frame['skip_fft'] is True, stage returns frame unchanged.
 """
 
+import sys
+import os
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
+
 import math
 from common.fft import FFTProcessor
 from stages import Frame
@@ -42,3 +46,16 @@ class FFTStage:
         frame["dominant_mag"] = mag
         frame["fft_skipped"] = False
         return frame
+
+
+if __name__ == "__main__":
+    import math
+    stage = FFTStage(samples=128, fs=100.0)
+    # 6 Hz sine on x-axis with gravity offset (magnitude preserves 6 Hz)
+    window = [[math.sin(2 * math.pi * 6 * i / 100), 0.0, 1.0] for i in range(128)]
+    frame = {"window": window}
+    out = stage.process(frame)
+    assert out["fft_skipped"] is False
+    assert out["dominant_freq"] > 0, f"dom_freq {out['dominant_freq']} should be positive"
+    assert out["dominant_mag"] > 0, f"dom_mag {out['dominant_mag']} should be positive"
+    print("fft stage smoke test passed")

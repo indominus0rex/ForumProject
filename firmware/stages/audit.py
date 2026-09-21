@@ -4,6 +4,10 @@ Audit stage: tiny ring buffer for decision telemetry.
 Stores last N decisions (label, confidence, timestamp) for debugging.
 """
 
+import sys
+import os
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
+
 from stages import Frame
 
 
@@ -52,3 +56,20 @@ class AuditStage:
 
     def get_log(self) -> list[dict]:
         return list(self._buf)
+
+
+if __name__ == "__main__":
+    import time as _time
+    # Host-side fallback for MicroPython's time.ticks_ms()
+    if not hasattr(_time, "ticks_ms"):
+        _time.ticks_ms = lambda: int(_time.time() * 1000)
+
+    stage = AuditStage(capacity=32)
+    frame = {"label": "kinetic", "confidence": 0.8, "safe": True, "stationary": False,
+             "drift_flag": False, "quality_ok": True, "quality_reason": "ok",
+             "state": "feedback", "action": "cue_high", "dominant_freq": 6.0,
+             "dominant_mag": 1.2, "haptic_reason": "suppress:512"}
+    out = stage.process(frame)
+    assert len(out["audit_log"]) == 1
+    assert out["audit_log"][0]["label"] == "kinetic"
+    print("audit stage smoke test passed")

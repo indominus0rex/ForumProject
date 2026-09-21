@@ -1,12 +1,13 @@
 """firmware/stages/classify.py
 
-Classify stage: logistic regression forward with heuristic fallback.
-Uses model, scaler, logreg. Stores label, confidence, probs in frame.
+Classify stage: 2-layer DNN forward with heuristic fallback.
+Uses model_dnn, scaler, dnn. Stores label, confidence, probs in frame.
 """
 
-import common.model as model
+import common.model_dnn as model
 import common.scaler as scaler
 import common.logreg as logreg
+import common.dnn as dnn
 import common.feature_extract as feature_extract
 import math
 from common.fft import FFTProcessor
@@ -24,10 +25,10 @@ class ClassifyStage:
         self.fs = fs
         self._fft_proc = FFTProcessor(num_samples=samples)
 
-    def _classify_logreg(self, window: list[list[float]]) -> tuple[str, float, list[float]]:
+    def _classify_dnn(self, window: list[list[float]]) -> tuple[str, float, list[float]]:
         feats = feature_extract.compute(window, fs=self.fs, n=self.samples)
         x = scaler.apply(feats, model.FEATURE_MEAN, model.FEATURE_STD)
-        _, probs = logreg.forward(x, model.WEIGHTS, model.BIAS)
+        _, probs = dnn.forward(x, model.W1, model.B1, model.W2, model.B2)
         idx = logreg.argmax(probs)
         return model.CLASSES[idx], probs[idx], probs
 
@@ -47,8 +48,8 @@ class ClassifyStage:
             frame["classify_error"] = "no window"
             return frame
 
-        if model.WEIGHTS is not None:
-            label, conf, probs = self._classify_logreg(window)
+        if model.W1 is not None and model.W2 is not None:
+            label, conf, probs = self._classify_dnn(window)
         else:
             label, conf, probs = self._classify_heuristic(window)
 

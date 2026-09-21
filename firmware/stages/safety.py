@@ -7,6 +7,10 @@ Safety stage: lightweight sanity checks before downstream stages run.
   flags the frame for auto-recalibration downstream.
 """
 
+import sys
+import os
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
+
 from stages import Frame
 from common.config import PIPELINE_CONFIG as _CFG
 
@@ -53,3 +57,17 @@ class SafetyStage:
 
         frame["safe"] = True
         return frame
+
+
+if __name__ == "__main__":
+    stage = SafetyStage()
+    # Good frame: no errors, sane timing
+    good = {"now_us": 1_000_000, "prev_us": 990_000, "sensor_error": False}
+    out = stage.process(good)
+    assert out["safe"] is True, "good frame should be safe"
+    # Bad frame: sensor error
+    bad = {"sensor_error": True}
+    out = stage.process(bad)
+    assert out["safe"] is False, "sensor error should be unsafe"
+    assert out["error_msg"] == "sensor read error"
+    print("safety stage smoke test passed")

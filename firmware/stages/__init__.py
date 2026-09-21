@@ -5,10 +5,13 @@ Every stage implements:
 where Frame is a mutable dict. The main loop never touches stage internals.
 
 Order of execution (default):
-  safety -> sensor -> stationarity -> fft -> features -> classify -> haptic -> audit
+  safety -> sensor -> stationarity -> quality -> bandpass -> fft
+  -> features -> audit
 
-Adding a new stage is as simple as creating a module and registering it in
-embedded_main_hsp.STAGES. No changes to hardware contracts.
+classify / state_machine / actuate / haptic removed from pipeline:
+  - DNN weights not yet trained for Option A+ET placement
+  - ERM (TB6612FNG) output controlled separately, not via classify→state_machine→actuate→haptic
+  - Add back after retraining + baking weights into model_dnn.py
 """
 
 from typing import Protocol, Dict, Any, List
@@ -23,17 +26,15 @@ class Stage(Protocol):
         ...
 
 # Ordered stage names mirroring the folder order used by the refactor.
-# Quality gates before classify; state_machine gates haptic.
+# Quality gates before suppress; suppress drives haptic.
 STAGE_ORDER: List[str] = [
     "safety",
     "sensor",
     "stationarity",
     "quality",
+    "bandpass",
     "fft",
     "features",
-    "classify",
-    "state_machine",
-    "haptic",
     "audit",
 ]
 

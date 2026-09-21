@@ -12,6 +12,10 @@ Sets frame["quality_ok"], frame["quality_reason"], frame["quality_metrics"].
 Downstream stages should gate feedback on quality_ok.
 """
 
+import sys
+import os
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
+
 from stages import Frame
 from common.config import PIPELINE_CONFIG as _CFG
 import math
@@ -131,3 +135,17 @@ class QualityStage:
         # Expose fallback count to safety/audit
         frame["fallback_ratio"] = metrics.get("fallback_ratio", 0.0)
         return frame
+
+
+if __name__ == "__main__":
+    import math
+    stage = QualityStage()
+    # Good window: 6 Hz sine + gravity
+    good = {"window": [[math.sin(2 * math.pi * 6 * i / 100), 0.0, 1.0] for i in range(128)]}
+    out = stage.process(good)
+    assert out["quality_ok"] is True, f"good window failed: {out['quality_reason']}"
+    # Bad window: all fallback (0,0,1)
+    bad = {"window": [[0.0, 0.0, 1.0] for _ in range(128)]}
+    out = stage.process(bad)
+    assert out["quality_ok"] is False, "fallback window should fail"
+    print("quality stage smoke test passed")

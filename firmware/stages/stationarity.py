@@ -6,6 +6,10 @@ variance ratio (high-freq / low-freq energy proxy) and sets
 frame['stationary'] and frame['skip_fft'].
 """
 
+import sys
+import os
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
+
 from stages import Frame
 from common.config import PIPELINE_CONFIG as _CFG
 
@@ -58,3 +62,20 @@ class StationarityStage:
         # If stationary, downstream stages can skip expensive FFT
         frame["skip_fft"] = stationary
         return frame
+
+
+if __name__ == "__main__":
+    import math
+    stage = StationarityStage(window_len=128)
+    # Stationary: DC signal (no variance)
+    frame = {"x": 0.0, "y": 0.0, "z": 1.0}
+    for _ in range(64):
+        out = stage.process(frame)
+    assert out["stationary"] is True, "DC signal should be stationary"
+    assert out["skip_fft"] is True
+    # Non-stationary: 6 Hz sine
+    for i in range(64):
+        frame = {"x": math.sin(2 * math.pi * 6 * i / 100), "y": 0.0, "z": 1.0}
+        out = stage.process(frame)
+    assert out["stationary"] is False, "sine signal should not be stationary"
+    print("stationarity stage smoke test passed")
