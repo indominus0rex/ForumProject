@@ -7,10 +7,13 @@ frame['stationary'] and frame['skip_fft'].
 """
 
 from stages import Frame
+from common.config import PIPELINE_CONFIG as _CFG
 
 
 class StationarityStage:
-    def __init__(self, window_len: int = 128, ratio_thresh: float = 0.15):
+    def __init__(self, window_len: int = 128, ratio_thresh: float = None):
+        if ratio_thresh is None:
+            ratio_thresh = _CFG["STATIONARITY_RATIO_THRESH"]
         self.window_len = window_len
         self.ratio_thresh = ratio_thresh
         self._buf: list[float] = []

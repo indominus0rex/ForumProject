@@ -8,10 +8,24 @@ WINDOW_SECONDS = SAMPLES * SAMPLE_INTERVAL_US / 1_000_000  # 1.28 s
 
 # Hardware pins
 LED_PIN = 2
-LRA_PIN = 25
-LRA_FREQ = 200
-LRA_PINS = [18, 19, 20]  # Proximal-to-distal: [hypothenar, thenar, dorsal]
-USE_LRA_ARRAY = False
+
+# TB6612FNG dual H-bridge motor driver (replaces LRA PWM):
+#  - VMOT: motor power supply (2.5V-5.5V) — do NOT power from ESP32 GPIO
+#  - VCC: logic power (2.7V-5.5V), can use ESP32 3V3
+#  - GND: common ground (ESP32 GND + VMOT GND must be common)
+#  - STBY: standby — pulled HIGH to enable driver, LOW to disable
+#  - AIN1, AIN2: direction control for channel A (single ERM)
+#  - PWMA: PWM speed control for channel A (0-1023 duty)
+#  - BIN1, BIN2, PWMB: channel B unused for single-ERM build
+# Direction: AIN1=1, AIN2=0 → motor spins one way; AIN1=0, AIN2=1 → reverse.
+# For ERM (unidirectional vibration), only one direction is used.
+TB6612FNG_PIN_AIN1 = 25
+TB6612FNG_PIN_AIN2 = 26
+TB6612FNG_PIN_PWMA = 27
+TB6612FNG_PIN_STBY = 28
+# Motor supply voltage for ERM (check your ERM datasheet, typically 1.5V-3V for coin motors)
+# TB6612FNG VMOT must be >= motor rated voltage; TB6612FNG VCC can be 3.3V from ESP32
+ERM_VMOT_VOLTS = 3.0  # adjust to your ERM spec
 
 # I2C
 I2C_BUS = 0
@@ -20,15 +34,6 @@ I2C_SDA_PIN = 21
 I2C_FREQ = 400000
 GY521_ADDR = 0x68
 
-# LRA duty cycles
-LRA_DUTY_ON = 512
-LRA_DUTY_OFF = 0
-
-# Heuristic fallback thresholds (used when model.WEIGHTS is None)
-HEURISTIC_LO_HZ = 3.0
-HEURISTIC_HI_HZ = 12.0
-HEURISTIC_MAG_THRESHOLD = 1.2
-
 # Stationarity
 STATIONARITY_RATIO_THRESH = 0.15
 
@@ -36,13 +41,6 @@ STATIONARITY_RATIO_THRESH = 0.15
 QUALITY_FALLBACK_THRESH = 0.08
 QUALITY_SATURATION_G = 1.95
 QUALITY_FLAT_VAR_THRESH = 1e-5
-
-# State machine / confidence gating
-CONF_THRESH_KINETIC = 0.55
-CONF_THRESH_POSTURAL = 0.50
-STATE_CONFIRM_WINDOWS = 2
-STATE_COOLDOWN_WINDOWS = 2
-STATE_MAX_TREMOR_BEFORE_COOLDOWN = 4
 
 # Audit
 AUDIT_CAPACITY = 32
@@ -71,3 +69,31 @@ ET_BAND_LO_HZ = 6.0
 ET_BAND_HI_HZ = 9.0
 COH_THUMB_INDEX_THRESH = 0.60  # pill-rolling discriminant (thumb phalanx vs index phalanx)
 COH_FINGER_WRIST_THRESH = 0.60  # ET postural discriminant (mean[thumb,index] vs wrist)
+
+# Bandpass filter parameters
+BANDPASS_LOW_HZ = 3.0           # Lower cutoff frequency
+BANDPASS_HIGH_HZ = 12.0         # Upper cutoff frequency
+
+# STFT (Short-Time Fourier Transform) selection
+USE_STFT = False             # False = single FFT (default, proven); True = overlapping STFT
+STFT_FRAME_LEN = 64          # must be power of 2 (freq resolution 100/64 = 1.5625 Hz)
+STFT_HOP = 32                # 50% overlap; must divide 128-64
+
+# Pipeline stage tunables (single source of truth)
+PIPELINE_CONFIG = {
+    # Quality stage
+    "QUALITY_FALLBACK_THRESH": 0.08,
+    "QUALITY_SATURATION_G": 1.95,
+    "QUALITY_FLAT_VAR_THRESH": 1e-5,
+    "QUALITY_GRAVITY_MIN": 0.6,
+    "QUALITY_GRAVITY_MAX": 1.6,
+    "QUALITY_JITTER_VAR_THRESH": 5.0,
+    # Stationarity stage
+    "STATIONARITY_RATIO_THRESH": 0.15,
+    # FFT stage
+    "FFT_NOISE_THRESHOLD": 0.35,
+    # Safety stage
+    "SAFETY_TIME_JUMP_US": 2_000_000,
+    "SAFETY_DRIFT_G": 0.10,
+    "SAFETY_HIST_LEN": 16,
+}

@@ -7,6 +7,7 @@ Returns dominant frequency and magnitude above noise threshold.
 import math
 from typing import List, Tuple
 from common.dsp import get_twiddles, get_hann, in_place_fft
+from common.config import PIPELINE_CONFIG as _CFG
 
 
 class FFTProcessor:
@@ -50,7 +51,7 @@ class FFTProcessor:
 
         max_mag = 0.0
         dominant_freq = 0.0
-        NOISE_THRESHOLD = 0.35
+        NOISE_THRESHOLD = _CFG["FFT_NOISE_THRESHOLD"]
 
         for i in range(1, self.num_samples // 2):
             magnitude = math.sqrt(real[i]**2 + imag[i]**2)

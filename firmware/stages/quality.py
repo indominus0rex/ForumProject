@@ -13,16 +13,17 @@ Downstream stages should gate feedback on quality_ok.
 """
 
 from stages import Frame
+from common.config import PIPELINE_CONFIG as _CFG
 import math
 
 
-# Tunables — keep in sync with common/config.py if centralized
-FALLBACK_RATIO_THRESH = 0.08   # >8% fallback samples => bad window
-SATURATION_THRESH_G = 1.95     # near +/-2g limit
-FLAT_VARIANCE_THRESH = 1e-5    # all axes frozen
-GRAVITY_MIN = 0.6              # mean magnitude sanity window
-GRAVITY_MAX = 1.6
-JITTER_VAR_THRESH = 5.0        # excess diff variance => motion artifact (g units)
+# Tunables — read from common/config.py PIPELINE_CONFIG
+FALLBACK_RATIO_THRESH = _CFG["QUALITY_FALLBACK_THRESH"]
+SATURATION_THRESH_G = _CFG["QUALITY_SATURATION_G"]
+FLAT_VARIANCE_THRESH = _CFG["QUALITY_FLAT_VAR_THRESH"]
+GRAVITY_MIN = _CFG["QUALITY_GRAVITY_MIN"]
+GRAVITY_MAX = _CFG["QUALITY_GRAVITY_MAX"]
+JITTER_VAR_THRESH = _CFG["QUALITY_JITTER_VAR_THRESH"]
 
 
 class QualityStage:

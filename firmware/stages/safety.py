@@ -8,13 +8,14 @@ Safety stage: lightweight sanity checks before downstream stages run.
 """
 
 from stages import Frame
+from common.config import PIPELINE_CONFIG as _CFG
 
 
 class SafetyStage:
     def __init__(self):
         # Short rolling window for drift detection (median of recent z).
         self._z_hist: list[float] = []
-        self._hist_len = 16
+        self._hist_len = _CFG["SAFETY_HIST_LEN"]
 
     def process(self, frame: Frame) -> Frame:
         # 1) Sensor health flag from the sensor stage.
@@ -28,8 +29,7 @@ class SafetyStage:
         prev = frame.get("prev_us")
         if prev is not None and now is not None:
             dt = abs(now - prev)
-            # Anything > 2 seconds between samples is obviously wrong.
-            if dt > 2_000_000:
+            if dt > _CFG["SAFETY_TIME_JUMP_US"]:
                 frame["safe"] = False
                 frame["error_msg"] = "time jump"
                 return frame
@@ -44,7 +44,7 @@ class SafetyStage:
                 # crude median-based drift flag: if current z deviates >0.1g from median.
                 s = sorted(self._z_hist)
                 med = s[self._hist_len // 2]
-                if abs(z - med) > 0.10:
+                if abs(z - med) > _CFG["SAFETY_DRIFT_G"]:
                     frame["drift_flag"] = True
                 else:
                     frame["drift_flag"] = False
