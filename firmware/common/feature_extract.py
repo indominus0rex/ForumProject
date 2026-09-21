@@ -106,13 +106,16 @@ def _median(xs: List[float]) -> float:
     return 0.5 * (s[n // 2 - 1] + s[n // 2])
 
 
-def compute(window: Window, fs: float = 100.0, n: int = 128) -> List[float]:
+def compute(window: Window, fs: float = 100.0, n: int = 128,
+            spectrum: Tuple[float, List[float], List[float]] = None) -> List[float]:
     """Extract 15 features from 128-sample 3-axis window.
 
     Args:
         window: 128 samples, either 2D [[x,y,z],...] or flat [x,y,z,x,y,z,...].
         fs: Sampling frequency in Hz.
         n: Number of samples (must be 128).
+        spectrum: Optional pre-computed (peak_freq, mag, _) from compute_spectrum().
+                  When provided, skips the internal FFT.
 
     Returns:
         List of 15 feature floats in fixed order.
@@ -139,8 +142,11 @@ def compute(window: Window, fs: float = 100.0, n: int = 128) -> List[float]:
         dom_axis = 2
     xy_ratio = rms_x / rms_y if rms_y > 1e-6 else 1.0
 
-    window_2d = [[x[i], y[i], z[i]] for i in range(n)]
-    dom_freq, mag, _ = compute_spectrum(window_2d, fs=fs, n=n)
+    if spectrum is not None:
+        dom_freq, mag, _ = spectrum
+    else:
+        window_2d = [[x[i], y[i], z[i]] for i in range(n)]
+        dom_freq, mag, _ = compute_spectrum(window_2d, fs=fs, n=n)
     bp_3_6 = band_power(mag, fs, n, 3.0, 6.0)
     bp_6_9 = band_power(mag, fs, n, 6.0, 9.0)
     bp_9_12 = band_power(mag, fs, n, 9.0, 12.0)

@@ -18,19 +18,16 @@ class FeaturesStage:
         if not window:
             frame["features_error"] = "no window"
             return frame
-        feats = feature_extract.compute(window, fs=self.fs, n=self.n)
+        # Compute spectrum once, reuse for features + extended metrics
+        _, mag, _ = feature_extract.compute_spectrum(window, fs=self.fs, n=self.n)
+        feats = feature_extract.compute(window, fs=self.fs, n=self.n,
+                                        spectrum=(0.0, mag, mag))
         frame["features"] = feats
         # Option A + ET 2026-08-27: pill 4-6Hz + ET 6-9Hz power for pill-rolling/ET postural, and coherence
         # Keep base 15 for backward compat; expose extended metrics in frame for state_machine/audit and future 16-feat model
         try:
-            # Re-use already computed FFT magnitude via feature_extract internals would be optimal,
-            # but cheap to recompute band powers here via helper
-            import common.feature_extract as fe
-            # Quick pill/et powers: reuse last mag if available via compute internals? For now compute via window 2D FFT
-            # Extract mag via _fft_mag_sum (uses primary window only — multi-IMU coherence uses raw windows)
-            _, mag, _ = fe._fft_mag_sum(window, fs=self.fs, n=self.n)  # type: ignore
-            frame["pill_power"] = fe._band_power(mag, self.fs, self.n, 4.0, 6.0)  # pill-rolling 4-6
-            frame["et_power"] = fe._band_power(mag, self.fs, self.n, 6.0, 9.0)   # ET postural 6-8 inside
+            frame["pill_power"] = feature_extract.band_power(mag, self.fs, self.n, 4.0, 6.0)  # pill-rolling 4-6
+            frame["et_power"] = feature_extract.band_power(mag, self.fs, self.n, 6.0, 9.0)   # ET postural 6-8 inside
             # Thumb-index and finger-wrist coherence (Option A: CH2 thumb phalanx 20° vs CH3 index phalanx)
             multi = frame.get("multi_window")
             if multi and len(multi) >= 4:
