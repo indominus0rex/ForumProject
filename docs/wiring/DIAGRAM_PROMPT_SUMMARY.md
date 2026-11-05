@@ -1,8 +1,8 @@
 DIAGRAM PROMPT SUMMARY
 =====================
 
-Created: REVISED_WIRING_DIAGRAM_PROMPT.txt
-Location: C:\ForumProject\REVISED_WIRING_DIAGRAM_PROMPT.txt
+Created: revised_wiring_diagram_prompt.txt
+Location: C:\ForumProject\revised_wiring_diagram_prompt.txt
 Size: 7,434 bytes
 
 This prompt generates a wiring diagram showing ONLY:

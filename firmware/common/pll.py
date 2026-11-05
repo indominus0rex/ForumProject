@@ -63,7 +63,7 @@ class PLL:
         self.lock_count = 0
         self.lock_threshold = 50  # samples before declaring lock
 
-        # G2 coarse estimator (zero-crossing rate, ported from prototype/loop2.py).
+        # G2 coarse estimator (zero-crossing rate, ported from prototype/loop_v2.py).
         # Scale-invariant: crossings detected on RMS-normalized input so it
         # works for raw sines (~1.0) and bandpassed tremor (~0.15) alike.
         # Seeded from center_freq (the best prior; also a warm start after
@@ -71,11 +71,15 @@ class PLL:
         self._rms = 1.0
         self._crate = max(3.0, min(12.0, center_freq))
         self._cslow = max(3.0, min(12.0, center_freq))
+        # Unclamped twin of _cslow: same leak, but fed the raw crossing rate
+        # so out-of-band tones (2/15 Hz) stay distinguishable from rail tones
+        # (3/12 Hz) after the [3, 12] clamp saturates. Rail-lock veto only.
+        self._craw = max(3.0, min(12.0, center_freq))
         self._armed = False
         self._cross_n = 0
         self._unlocked_n = 0
 
-        # B1 disagreement counter (ported from prototype/loop2.py).
+        # B1 disagreement counter (ported from prototype/loop_v2.py).
         self._disagree_n = 0
 
     def update(self, sample: float) -> Tuple[float, float, float]:
@@ -116,6 +120,11 @@ class PLL:
             self._cross_n += 1
         fest = max(3.0, min(12.0, self._crate))
         self._cslow += 0.02 * (fest - self._cslow)
+        # Faster leak than _cslow on purpose: a slow unclamped tracker would
+        # slew through the agree band during 2 Hz pull-in long enough (>50
+        # samples) to false-lock; at 0.05 the pass-through stays <50 while
+        # steady-state ripple stays inside the 0.75 rail veto band.
+        self._craw += 0.05 * (self._crate - self._craw)
 
         # NCO outputs (in-phase and quadrature)
         nco_sin = math.sin(self.phase)
@@ -135,7 +144,7 @@ class PLL:
         # Low-pass filter the phase error (removes 2x frequency component)
         self.phase_error_filtered += self.alpha_lpf * (phase_error - self.phase_error_filtered)
 
-        # Agreement veto (B1 core, ported from prototype/loop2.py): coarse
+        # Agreement veto (B1 core, ported from prototype/loop_v2.py): coarse
         # zero-crossing estimate vs NCO frequency. A slow beat keeps perr
         # small while the two disagree; 30 consecutive disagreements veto
         # lock. Scale-free (unlike raw error magnitude), so it holds for
@@ -189,7 +198,22 @@ class PLL:
             self.phase += 2.0 * math.pi
 
         # Lock detection: absolute band (as before) AND coarse agreement.
-        if abs(self.phase_error_filtered) < 0.1 and agree:
+        # Rail-edge addendum (Task 4): at the clamp rails a steady-state
+        # phase offset freezes in (|perr| parks ~0.3-0.6, never < 0.1 — worse
+        # at 3 Hz where the 2f image leaks through the LPF), so the absolute
+        # band alone never fires there. When the NCO sits at a rail AND the
+        # coarse estimator agrees (clamped band) AND the *unclamped* rate
+        # agrees (rejects 2/15 Hz, which also park at rails with small perr),
+        # a wider perr band declares honest rail lock. The perr term does NOT
+        # guard offband tones — the unclamped veto does. The B1 disagree veto
+        # above stays authoritative everywhere else.
+        fcoarse_rail = min(12.0, max(3.0, self._cslow))
+        at_rail = self.freq <= 3.15 or self.freq >= 11.85
+        rail_ok = (self._cross_n >= 3
+                   and abs(fcoarse_rail - self.freq) < 0.5
+                   and abs(self._craw - self.freq) < 0.75)
+        rail_hold = at_rail and rail_ok and abs(self.phase_error_filtered) < 0.7
+        if (abs(self.phase_error_filtered) < 0.1 and agree) or rail_hold:
             self.lock_count += 1
             if self.lock_count >= self.lock_threshold:
                 self.locked = True
@@ -227,6 +251,7 @@ class PLL:
         self._rms = 1.0
         self._crate = max(3.0, min(12.0, self.center_freq))
         self._cslow = max(3.0, min(12.0, self.center_freq))
+        self._craw = max(3.0, min(12.0, self.center_freq))
         self._armed = False
         self._cross_n = 0
         self._unlocked_n = 0

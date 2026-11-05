@@ -86,6 +86,7 @@ def extract_tremor_features_from_window(window):
 
 FS = 100.0
 N = 128
+HIDDEN = 16  # must match N_HIDDEN in firmware/common/model_dnn.py
 
 
 def parse_file(path):
@@ -189,7 +190,7 @@ def fmt_list(arr, fmt="{:.6f}"):
     return "[" + ", ".join(fmt.format(float(v)) for v in arr) + "]"
 
 
-def main(paths):
+def main(paths, use_dnn=False):
     if not paths:
         paths = sorted(glob.glob(os.path.join("sessions", "*.csv")))
         if not paths:
@@ -214,12 +215,21 @@ def main(paths):
 
     scaler = StandardScaler().fit(X)
     Xs = scaler.transform(X)
-    clf = LogisticRegression(
-        max_iter=500,
-        multi_class="multinomial",
-        C=1.0,
-        solver="lbfgs",
-    ).fit(Xs, y)
+    if use_dnn:
+        from sklearn.neural_network import MLPClassifier
+        clf = MLPClassifier(
+            hidden_layer_sizes=(HIDDEN,),
+            activation="relu",
+            max_iter=2000,
+            random_state=0,
+        ).fit(Xs, y)
+    else:
+        clf = LogisticRegression(
+            max_iter=500,
+            multi_class="multinomial",
+            C=1.0,
+            solver="lbfgs",
+        ).fit(Xs, y)
 
     train_acc = float((clf.predict(Xs) == y).mean())
     print("\nTrain accuracy: {:.3f}".format(train_acc))
@@ -230,15 +240,30 @@ def main(paths):
             scores = cross_val_score(clf, Xs, y, cv=StratifiedKFold(n_splits=n_splits, shuffle=True, random_state=0))
             print("CV accuracy: {:.3f} +/- {:.3f}".format(scores.mean(), scores.std()))
 
-    print("\n# === paste into model.py ===")
-    print("CLASSES = {}".format(list(clf.classes_)))
+    if use_dnn:
+        print("\n# === paste into model_dnn.py ===")
+    else:
+        print("\n# === paste into model.py ===")
+    print("CLASSES = {}".format([str(c) for c in clf.classes_]))
     print("FEATURE_MEAN = {}".format(fmt_list(scaler.mean_)))
     print("FEATURE_STD  = {}".format(fmt_list(scaler.scale_)))
-    print("WEIGHTS = [")
-    for row in clf.coef_:
-        print("    " + fmt_list(row) + ",")
-    print("]")
-    print("BIAS   = {}".format(fmt_list(clf.intercept_)))
+    if use_dnn:
+        print("W1 = [  # {} x {}".format(HIDDEN, X.shape[1]))
+        for row in clf.coefs_[0].T:
+            print("    " + fmt_list(row) + ",")
+        print("]")
+        print("B1 = {}".format(fmt_list(clf.intercepts_[0])))
+        print("W2 = [  # {} x {}".format(len(clf.classes_), HIDDEN))
+        for row in clf.coefs_[1].T:
+            print("    " + fmt_list(row) + ",")
+        print("]")
+        print("B2 = {}".format(fmt_list(clf.intercepts_[1])))
+    else:
+        print("WEIGHTS = [")
+        for row in clf.coef_:
+            print("    " + fmt_list(row) + ",")
+        print("]")
+        print("BIAS   = {}".format(fmt_list(clf.intercept_)))
     print("# === end ===")
 
     # confusion
@@ -255,4 +280,7 @@ def main(paths):
 
 
 if __name__ == "__main__":
-    sys.exit(main(sys.argv[1:]))
+    args = sys.argv[1:]
+    use_dnn = "--dnn" in args
+    paths = [a for a in args if a != "--dnn"]
+    sys.exit(main(paths, use_dnn=use_dnn))

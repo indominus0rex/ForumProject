@@ -1,12 +1,12 @@
-# Strap and LRA Design for IMU/Haptic Mount
+# Strap and ERM + TB6612FNG Design for IMU/Haptic Mount
 
 ## Overview
-This document describes a removable, adjustable mounting system for IMUs and Linear Resonant Actuators (LRAs) using:
+This document describes a removable, adjustable mounting system for IMUs and ERM vibration motors (driven by TB6612FNG H-bridge) using:
 - Elastic fabric (nylon/spandex 4‑way stretch) for conformity and comfort.
 - Hook‑and‑loop (Velcro) closures for secure fastening and quick release.
 - Fabric pockets with Velcro flaps that allow the sensors/actuators to be slid in/out without undoing the strap.
 
-The design follows the recommendations in `strapping_materials.txt`, `breathable_imu_mount_design.md`, and the LRA placement notes from `imu_lra_placement.txt` and `refined_hardware_design.md`.
+The design follows the recommendations in `strapping_materials.txt`, `breathable_imu_mount_design.md`, and the ERM placement notes from `imu_lra_placement.txt` and `refined_hardware_design.md`. See `docs/erm_tb6612fng_wiring.md` for TB6612FNG wiring details.
 
 ---
 ## 1. IMU Mounting (4 IMU Locations)

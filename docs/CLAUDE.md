@@ -7,17 +7,17 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 Embedded tremor-detection system. Two-tier setup:
 
 - **MicroPython on ESP32** (firmware layer): reads GY-521 (MPU6050) accelerometer over I2C, computes FFT on-device, detects dominant tremor frequency, drives an LED when intensity crosses threshold.
-- **Google Colab** (analysis layer): offline FFT/plot of raw 3-axis samples for dataset exploration and graph export (`graph_1.png`).
+- **Google Colab** (analysis layer): offline FFT/plot of raw 3-axis samples for dataset exploration and graph export (`gy521_accelerometer_sample_plot.png`).
 
 Repo name is `C:\ForumProject` (Windows). Do not rename — git remote is pinned to `Project_Thonny` (legacy).
 
 ## Files
 
-- `RawDataCollection.py` — MicroPython, runs on ESP32. Streams 3-axis samples as CSV (label-prefixed) for dataset capture. Set `LABEL = "healthy"` or `"tremor"` before flash.
+- `raw_data_collection.py` — MicroPython, runs on ESP32. Streams 3-axis samples as CSV (label-prefixed) for dataset capture. Set `LABEL = "healthy"` or `"tremor"` before flash.
 - `fft.py` — MicroPython, runs on ESP32. Same sensor pipeline plus on-device Cooley-Tukey FFT; reports dominant frequency + intensity; toggles LED on GPIO 2 when `mag > 1.2`.
 - `colab.py` — Python 3, runs in Colab. Parses raw CSV string, plots time-domain + single-sided FFT spectrum (fs=20 Hz, Nyquist=10 Hz). Comment is Thai — leave as-is.
 - `data.txt` — 100-row sample of 3-axis accelerometer data (X,Y,Z in g, comma-separated, one sample per line).
-- `graph_1.png` — Pre-rendered output from `colab.py`.
+- `gy521_accelerometer_sample_plot.png` — Pre-rendered output from `colab.py`.
 
 ## Hardware contract (do not break)
 
@@ -41,7 +41,7 @@ python -c "import matplotlib, numpy; print('ok')"
 python colab.py   # or paste cells into a notebook
 ```
 
-CSV capture workflow: flash `RawDataCollection.py` → run → copy `LABEL,<samples...>` lines from Thonny shell → paste into `colab.py` `raw_data` string → run cells.
+CSV capture workflow: flash `raw_data_collection.py` → run → copy `LABEL,<samples...>` lines from Thonny shell → paste into `colab.py` `raw_data` string → run cells.
 
 ## Conventions
 

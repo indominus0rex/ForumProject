@@ -5,7 +5,7 @@ SolidWorks + FreeCAD source for the tremor-detection wiring diagram 3D model.
 ## Quick start (FreeCAD — recommended)
 
 1. Install FreeCAD 0.21+ (https://www.freecad.org)
-2. Drop vendor STEPs in `parts/_vendor/` (see `FREECAD_INSTALL.md`)
+2. Drop vendor STEPs in `parts/_vendor/` (see `freecad_install.md`)
 3. Run:
    ```
    cd C:\ForumProject\cad
@@ -16,7 +16,7 @@ SolidWorks + FreeCAD source for the tremor-detection wiring diagram 3D model.
 ## Quick start (SolidWorks)
 
 1. Install SolidWorks from `C:\ForumProject\SolidWorksSetup.exe`
-2. Follow `SOLIDWORKS_MANUAL.md` step by step
+2. Follow `solidworks_manual.md` step by step
 3. Run `perfboard_grid.swp` first (Tools > Macro > Run)
 
 ## Files in this folder
@@ -33,9 +33,9 @@ SolidWorks + FreeCAD source for the tremor-detection wiring diagram 3D model.
 - `perfboard_grid.swp` — VBA macro: auto-generates perfboard with 30x15 hole grid.
 
 ### Docs
-- `SOLIDWORKS_MANUAL.md` — Step-by-step guide for SolidWorks users.
-- `FREECAD_INSTALL.md` — FreeCAD install + troubleshooting.
-- `DRAWING_CHECKLIST.md` — SLDDRW / TechDraw checklist (title block, balloons, BOM).
+- `solidworks_manual.md` — Step-by-step guide for SolidWorks users.
+- `freecad_install.md` — FreeCAD install + troubleshooting.
+- `drawing_checklist.md` — SLDDRW / TechDraw checklist (title block, balloons, BOM).
 
 ### Output dirs (created on first run)
 - `parts/` — individual .step / .stl / .FCStd

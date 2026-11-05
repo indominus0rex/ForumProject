@@ -1,0 +1,1979 @@
+{
+  "type": "excalidraw",
+  "version": 2,
+  "source": "hermes-agent",
+  "elements": [
+    {
+      "type": "text",
+      "id": "title",
+      "x": 350,
+      "y": 5,
+      "width": 600,
+      "height": 30,
+      "text": "4-IMU ESP32 Tremor Monitor — Corrected Schematic",
+      "fontSize": 24,
+      "fontFamily": 1,
+      "strokeColor": "#1e1e1e",
+      "textAlign": "center",
+      "verticalAlign": "top",
+      "containerId": null,
+      "originalText": "4-IMU ESP32 Tremor Monitor — Corrected Schematic",
+      "autoResize": true
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "x": 300,
+      "y": 35,
+      "width": 700,
+      "height": 18,
+      "text": "ESP32-DevKitC 38-pin · TCA9548A @0x70 · 4× GY-521 · MT3608 Boost · I2C0 @400kHz",
+      "fontSize": 14,
+      "fontFamily": 1,
+      "strokeColor": "#868e96",
+      "textAlign": "center",
+      "verticalAlign": "top",
+      "containerId": null,
+      "originalText": "ESP32-DevKitC 38-pin · TCA9548A @0x70 · 4× GY-521 · MT3608 Boost · I2C0 @400kHz",
+      "autoResize": true
+    },
+    {
+      "type": "rectangle",
+      "id": "bg_power",
+      "x": 40,
+      "y": 70,
+      "width": 320,
+      "height": 520,
+      "strokeColor": "#ffd8a8",
+      "backgroundColor": "#fff9f0",
+      "fillStyle": "solid",
+      "strokeWidth": 1,
+      "roughness": 0,
+      "opacity": 100,
+      "roundness": {
+        "type": 3
+      },
+      "boundElements": [
+        {
+          "id": "t_bg_power",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "id": "t_bg_power",
+      "x": 50,
+      "y": 80,
+      "width": 100,
+      "height": 20,
+      "text": "POWER",
+      "fontSize": 16,
+      "fontFamily": 1,
+      "strokeColor": "#92400e",
+      "textAlign": "left",
+      "verticalAlign": "top",
+      "containerId": null,
+      "originalText": "POWER",
+      "autoResize": true
+    },
+    {
+      "type": "rectangle",
+      "id": "bg_mcu",
+      "x": 400,
+      "y": 70,
+      "width": 350,
+      "height": 520,
+      "strokeColor": "#a5d8ff",
+      "backgroundColor": "#e7f5ff",
+      "fillStyle": "solid",
+      "strokeWidth": 1,
+      "roughness": 0,
+      "opacity": 100,
+      "roundness": {
+        "type": 3
+      },
+      "boundElements": [
+        {
+          "id": "t_bg_mcu",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "id": "t_bg_mcu",
+      "x": 410,
+      "y": 80,
+      "width": 100,
+      "height": 20,
+      "text": "MCU",
+      "fontSize": 16,
+      "fontFamily": 1,
+      "strokeColor": "#1971c2",
+      "textAlign": "left",
+      "verticalAlign": "top",
+      "containerId": null,
+      "originalText": "MCU",
+      "autoResize": true
+    },
+    {
+      "type": "rectangle",
+      "id": "bg_sensors",
+      "x": 800,
+      "y": 70,
+      "width": 520,
+      "height": 520,
+      "strokeColor": "#b2f2bb",
+      "backgroundColor": "#ebfbee",
+      "fillStyle": "solid",
+      "strokeWidth": 1,
+      "roughness": 0,
+      "opacity": 100,
+      "roundness": {
+        "type": 3
+      },
+      "boundElements": [
+        {
+          "id": "t_bg_sensors",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "id": "t_bg_sensors",
+      "x": 810,
+      "y": 80,
+      "width": 100,
+      "height": 20,
+      "text": "SENSORS",
+      "fontSize": 16,
+      "fontFamily": 1,
+      "strokeColor": "#2f9e44",
+      "textAlign": "left",
+      "verticalAlign": "top",
+      "containerId": null,
+      "originalText": "SENSORS",
+      "autoResize": true
+    },
+    {
+      "type": "rectangle",
+      "id": "j1",
+      "x": 70,
+      "y": 110,
+      "width": 140,
+      "height": 60,
+      "strokeColor": "#1e1e1e",
+      "backgroundColor": "#ffd8a8",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "roughness": 1,
+      "opacity": 100,
+      "roundness": {
+        "type": 3
+      },
+      "boundElements": [
+        {
+          "id": "t_j1",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "id": "t_j1",
+      "x": 75,
+      "y": 118,
+      "width": 130,
+      "height": 44,
+      "text": "J1\nMicro-USB\n5V Input",
+      "fontSize": 16,
+      "fontFamily": 1,
+      "strokeColor": "#1e1e1e",
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "containerId": "j1",
+      "originalText": "J1\nMicro-USB\n5V Input",
+      "autoResize": true
+    },
+    {
+      "type": "rectangle",
+      "id": "u7",
+      "x": 70,
+      "y": 210,
+      "width": 140,
+      "height": 80,
+      "strokeColor": "#1e1e1e",
+      "backgroundColor": "#ffd8a8",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "roughness": 1,
+      "opacity": 100,
+      "roundness": {
+        "type": 3
+      },
+      "boundElements": [
+        {
+          "id": "t_u7",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "id": "t_u7",
+      "x": 75,
+      "y": 218,
+      "width": 130,
+      "height": 64,
+      "text": "U7\nTP4056\nLiPo Charger\nIN+ IN- B+ B-",
+      "fontSize": 16,
+      "fontFamily": 1,
+      "strokeColor": "#1e1e1e",
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "containerId": "u7",
+      "originalText": "U7\nTP4056\nLiPo Charger\nIN+ IN- B+ B-",
+      "autoResize": true
+    },
+    {
+      "type": "rectangle",
+      "id": "r_prog",
+      "x": 240,
+      "y": 230,
+      "width": 60,
+      "height": 30,
+      "strokeColor": "#1e1e1e",
+      "backgroundColor": "#ffd8a8",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "roughness": 1,
+      "opacity": 100,
+      "roundness": {
+        "type": 3
+      },
+      "boundElements": [
+        {
+          "id": "t_r_prog",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "id": "t_r_prog",
+      "x": 245,
+      "y": 235,
+      "width": 50,
+      "height": 20,
+      "text": "1.2kΩ\nPROG",
+      "fontSize": 14,
+      "fontFamily": 1,
+      "strokeColor": "#1e1e1e",
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "containerId": "r_prog",
+      "originalText": "1.2kΩ\nPROG",
+      "autoResize": true
+    },
+    {
+      "type": "rectangle",
+      "id": "bt1",
+      "x": 70,
+      "y": 330,
+      "width": 140,
+      "height": 60,
+      "strokeColor": "#1e1e1e",
+      "backgroundColor": "#ffd8a8",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "roughness": 1,
+      "opacity": 100,
+      "roundness": {
+        "type": 3
+      },
+      "boundElements": [
+        {
+          "id": "t_bt1",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "id": "t_bt1",
+      "x": 75,
+      "y": 338,
+      "width": 130,
+      "height": 44,
+      "text": "BT1\nLiPo 3.7V\n500mAh+",
+      "fontSize": 16,
+      "fontFamily": 1,
+      "strokeColor": "#1e1e1e",
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "containerId": "bt1",
+      "originalText": "BT1\nLiPo 3.7V\n500mAh+",
+      "autoResize": true
+    },
+    {
+          "type": "rectangle",
+          "id": "u8",
+          "x": 70,
+          "y": 430,
+          "width": 140,
+          "height": 70,
+          "strokeColor": "#1e1e1e",
+          "backgroundColor": "#d0bfff",
+          "fillStyle": "solid",
+          "strokeWidth": 2,
+          "roughness": 1,
+          "opacity": 100,
+          "roundness": {
+            "type": 3
+          },
+          "boundElements": [
+            {
+              "id": "t_u8",
+              "type": "text"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "id": "t_u8",
+          "x": 75,
+          "y": 438,
+          "width": 130,
+          "height": 54,
+          "text": "U8\nMT3608\nBoost 5V\nIN+ IN- OUT+ OUT-",
+          "fontSize": 16,
+          "fontFamily": 1,
+          "strokeColor": "#1e1e1e",
+          "textAlign": "center",
+          "verticalAlign": "middle",
+          "containerId": "u8",
+          "originalText": "U8\nMT3608\nBoost 5V\nIN+ IN- OUT+ OUT-",
+          "autoResize": true
+    },
+    {
+      "type": "rectangle",
+      "id": "c3",
+      "x": 240,
+      "y": 430,
+      "width": 60,
+      "height": 30,
+      "strokeColor": "#1e1e1e",
+      "backgroundColor": "#ffc9c9",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "roughness": 1,
+      "opacity": 100,
+      "roundness": {
+        "type": 3
+      },
+      "boundElements": [
+        {
+          "id": "t_c3",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "id": "t_c3",
+      "x": 245,
+      "y": 435,
+      "width": 50,
+      "height": 20,
+      "text": "C3\n10µF\nIN cap",
+      "fontSize": 12,
+      "fontFamily": 1,
+      "strokeColor": "#1e1e1e",
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "containerId": "c3",
+      "originalText": "C3\n10µF\nIN cap",
+      "autoResize": true
+    },
+    {
+      "type": "rectangle",
+      "id": "c4",
+      "x": 240,
+      "y": 470,
+      "width": 60,
+      "height": 30,
+      "strokeColor": "#1e1e1e",
+      "backgroundColor": "#ffc9c9",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "roughness": 1,
+      "opacity": 100,
+      "roundness": {
+        "type": 3
+      },
+      "boundElements": [
+        {
+          "id": "t_c4",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "id": "t_c4",
+      "x": 245,
+      "y": 475,
+      "width": 50,
+      "height": 20,
+      "text": "C4\n10µF\nOUT cap",
+      "fontSize": 12,
+      "fontFamily": 1,
+      "strokeColor": "#1e1e1e",
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "containerId": "c4",
+      "originalText": "C4\n10µF\nOUT cap",
+      "autoResize": true
+    },
+    {
+      "type": "rectangle",
+      "id": "u1",
+      "x": 450,
+      "y": 110,
+      "width": 240,
+      "height": 180,
+      "strokeColor": "#1e1e1e",
+      "backgroundColor": "#a5d8ff",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "roughness": 1,
+      "opacity": 100,
+      "roundness": {
+        "type": 3
+      },
+      "boundElements": [
+        {
+          "id": "t_u1",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "id": "t_u1",
+      "x": 455,
+      "y": 118,
+      "width": 230,
+      "height": 164,
+      "text": "U1\nESP32-DevKitC 38-pin\n────────────────\nVIN ← (from MT3608)\n3V3 ← (onboard AMS1117)\nGND ← (ground)\nGPIO21 → I2C0 SDA\nGPIO22 → I2C0 SCL\nGPIO2  → LED",
+      "fontSize": 16,
+      "fontFamily": 1,
+      "strokeColor": "#1e1e1e",
+      "textAlign": "left",
+      "verticalAlign": "middle",
+      "containerId": "u1",
+      "originalText": "U1\nESP32-DevKitC 38-pin\n────────────────\nVIN ← (from MT3608)\n3V3 ← (onboard AMS1117)\nGND ← (ground)\nGPIO21 → I2C0 SDA\nGPIO22 → I2C0 SCL\nGPIO2  → LED",
+      "autoResize": true
+    },
+    {
+      "type": "rectangle",
+      "id": "u2",
+      "x": 450,
+      "y": 330,
+      "width": 240,
+      "height": 100,
+      "strokeColor": "#1e1e1e",
+      "backgroundColor": "#a5d8ff",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "roughness": 1,
+      "opacity": 100,
+      "roundness": {
+        "type": 3
+      },
+      "boundElements": [
+        {
+          "id": "t_u2",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "id": "t_u2",
+      "x": 455,
+      "y": 338,
+      "width": 230,
+      "height": 84,
+      "text": "U2\nTCA9548A @0x70\n────────────────\nSDA · SCL ←\nCH0→U3 CH1→U4\nCH2→U5 CH3→U6",
+      "fontSize": 16,
+      "fontFamily": 1,
+      "strokeColor": "#1e1e1e",
+      "textAlign": "left",
+      "verticalAlign": "middle",
+      "containerId": "u2",
+      "originalText": "U2\nTCA9548A @0x70\n────────────────\nSDA · SCL ←\nCH0→U3 CH1→U4\nCH2→U5 CH3→U6",
+      "autoResize": true
+    },
+    {
+      "type": "rectangle",
+      "id": "d1",
+      "x": 450,
+      "y": 470,
+      "width": 110,
+      "height": 50,
+      "strokeColor": "#1e1e1e",
+      "backgroundColor": "#fff3bf",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "roughness": 1,
+      "opacity": 100,
+      "roundness": {
+        "type": 3
+      },
+      "boundElements": [
+        {
+          "id": "t_d1",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "id": "t_d1",
+      "x": 455,
+      "y": 478,
+      "width": 100,
+      "height": 34,
+      "text": "D1 LED\nGPIO2",
+      "fontSize": 16,
+      "fontFamily": 1,
+      "strokeColor": "#1e1e1e",
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "containerId": "d1",
+      "originalText": "D1 LED\nGPIO2",
+      "autoResize": true
+    },
+    {
+      "type": "rectangle",
+      "id": "r_led",
+      "x": 580,
+      "y": 480,
+      "width": 50,
+      "height": 30,
+      "strokeColor": "#1e1e1e",
+      "backgroundColor": "#fff3bf",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "roughness": 1,
+      "opacity": 100,
+      "roundness": {
+        "type": 3
+      },
+      "boundElements": [
+        {
+          "id": "t_r_led",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "id": "t_r_led",
+      "x": 585,
+      "y": 485,
+      "width": 40,
+      "height": 20,
+      "text": "220Ω",
+      "fontSize": 14,
+      "fontFamily": 1,
+      "strokeColor": "#1e1e1e",
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "containerId": "r_led",
+      "originalText": "220Ω",
+      "autoResize": true
+    },
+    {
+      "type": "rectangle",
+      "id": "r_sda",
+      "x": 710,
+      "y": 340,
+      "width": 50,
+      "height": 30,
+      "strokeColor": "#1e1e1e",
+      "backgroundColor": "#a5d8ff",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "roughness": 1,
+      "opacity": 100,
+      "roundness": {
+        "type": 3
+      },
+      "boundElements": [
+        {
+          "id": "t_r_sda",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "id": "t_r_sda",
+      "x": 715,
+      "y": 345,
+      "width": 40,
+      "height": 20,
+      "text": "4.7kΩ\nSDA",
+      "fontSize": 12,
+      "fontFamily": 1,
+      "strokeColor": "#1e1e1e",
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "containerId": "r_sda",
+      "originalText": "4.7kΩ\nSDA",
+      "autoResize": true
+    },
+    {
+      "type": "rectangle",
+      "id": "r_scl",
+      "x": 710,
+      "y": 380,
+      "width": 50,
+      "height": 30,
+      "strokeColor": "#1e1e1e",
+      "backgroundColor": "#a5d8ff",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "roughness": 1,
+      "opacity": 100,
+      "roundness": {
+        "type": 3
+      },
+      "boundElements": [
+        {
+          "id": "t_r_scl",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "id": "t_r_scl",
+      "x": 715,
+      "y": 385,
+      "width": 40,
+      "height": 20,
+      "text": "4.7kΩ\nSCL",
+      "fontSize": 12,
+      "fontFamily": 1,
+      "strokeColor": "#1e1e1e",
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "containerId": "r_scl",
+      "originalText": "4.7kΩ\nSCL",
+      "autoResize": true
+    },
+    {
+      "type": "rectangle",
+      "id": "u3",
+      "x": 840,
+      "y": 110,
+      "width": 150,
+      "height": 70,
+      "strokeColor": "#1e1e1e",
+      "backgroundColor": "#b2f2bb",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "roughness": 1,
+      "opacity": 100,
+      "roundness": {
+        "type": 3
+      },
+      "boundElements": [
+        {
+          "id": "t_u3",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "id": "t_u3",
+      "x": 845,
+      "y": 118,
+      "width": 140,
+      "height": 54,
+      "text": "U3 GY-521\nCH0 @0x68\nDorsal Wrist",
+      "fontSize": 16,
+      "fontFamily": 1,
+      "strokeColor": "#1e1e1e",
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "containerId": "u3",
+      "originalText": "U3 GY-521\nCH0 @0x68\nDorsal Wrist",
+      "autoResize": true
+    },
+    {
+      "type": "rectangle",
+      "id": "u4",
+      "x": 1030,
+      "y": 110,
+      "width": 150,
+      "height": 70,
+      "strokeColor": "#1e1e1e",
+      "backgroundColor": "#b2f2bb",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "roughness": 1,
+      "opacity": 100,
+      "roundness": {
+        "type": 3
+      },
+      "boundElements": [
+        {
+          "id": "t_u4",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "id": "t_u4",
+      "x": 1035,
+      "y": 118,
+      "width": 140,
+      "height": 54,
+      "text": "U4 GY-521\nCH1 @0x68\nThenar Volar",
+      "fontSize": 16,
+      "fontFamily": 1,
+      "strokeColor": "#1e1e1e",
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "containerId": "u4",
+      "originalText": "U4 GY-521\nCH1 @0x68\nThenar Volar",
+      "autoResize": true
+    },
+    {
+      "type": "rectangle",
+      "id": "u5",
+      "x": 840,
+      "y": 230,
+      "width": 150,
+      "height": 70,
+      "strokeColor": "#1e1e1e",
+      "backgroundColor": "#b2f2bb",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "roughness": 1,
+      "opacity": 100,
+      "roundness": {
+        "type": 3
+      },
+      "boundElements": [
+        {
+          "id": "t_u5",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "id": "t_u5",
+      "x": 845,
+      "y": 238,
+      "width": 140,
+      "height": 54,
+      "text": "U5 GY-521\nCH2 @0x68\nThumb Phalanx",
+      "fontSize": 16,
+      "fontFamily": 1,
+      "strokeColor": "#1e1e1e",
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "containerId": "u5",
+      "originalText": "U5 GY-521\nCH2 @0x68\nThumb Phalanx",
+      "autoResize": true
+    },
+    {
+      "type": "rectangle",
+      "id": "u6",
+      "x": 1030,
+      "y": 230,
+      "width": 150,
+      "height": 70,
+      "strokeColor": "#1e1e1e",
+      "backgroundColor": "#b2f2bb",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "roughness": 1,
+      "opacity": 100,
+      "roundness": {
+        "type": 3
+      },
+      "boundElements": [
+        {
+          "id": "t_u6",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "id": "t_u6",
+      "x": 1035,
+      "y": 238,
+      "width": 140,
+      "height": 54,
+      "text": "U6 GY-521\nCH3 @0x68\nIndex Phalanx",
+      "fontSize": 16,
+      "fontFamily": 1,
+      "strokeColor": "#1e1e1e",
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "containerId": "u6",
+      "originalText": "U6 GY-521\nCH3 @0x68\nIndex Phalanx",
+      "autoResize": true
+    },
+    {
+      "type": "rectangle",
+      "id": "c5",
+      "x": 840,
+      "y": 200,
+      "width": 40,
+      "height": 25,
+      "strokeColor": "#1e1e1e",
+      "backgroundColor": "#b2f2bb",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "roughness": 1,
+      "opacity": 100,
+      "roundElements": [
+        {
+          "id": "t_c5",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "id": "t_c5",
+      "x": 845,
+      "y": 203,
+      "width": 30,
+      "height": 18,
+      "text": "C5\n0.1µF",
+      "fontSize": 11,
+      "fontFamily": 1,
+      "strokeColor": "#1e1e1e",
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "containerId": "c5",
+      "originalText": "C5\n0.1µF",
+      "autoResize": true
+    },
+    {
+      "type": "rectangle",
+      "id": "c6",
+      "x": 1030,
+      "y": 200,
+      "width": 40,
+      "height": 25,
+      "strokeColor": "#1e1e1e",
+      "backgroundColor": "#b2f2bb",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "roughness": 1,
+      "opacity": 100,
+      "roundElements": [
+        {
+          "id": "t_c6",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "id": "t_c6",
+      "x": 1035,
+      "y": 203,
+      "width": 30,
+      "height": 18,
+      "text": "C6\n0.1µF",
+      "fontSize": 11,
+      "fontFamily": 1,
+      "strokeColor": "#1e1e1e",
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "containerId": "c6",
+      "originalText": "C6\n0.1µF",
+      "autoResize": true
+    },
+    {
+      "type": "rectangle",
+      "id": "c7",
+      "x": 840,
+      "y": 320,
+      "width": 40,
+      "height": 25,
+      "strokeColor": "#1e1e1e",
+      "backgroundColor": "#b2f2bb",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "roughness": 1,
+      "opacity": 100,
+      "roundElements": [
+        {
+          "id": "t_c7",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "id": "t_c7",
+      "x": 845,
+      "y": 323,
+      "width": 30,
+      "height": 18,
+      "text": "C7\n0.1µF",
+      "fontSize": 11,
+      "fontFamily": 1,
+      "strokeColor": "#1e1e1e",
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "containerId": "c7",
+      "originalText": "C7\n0.1µF",
+      "autoResize": true
+    },
+    {
+      "type": "rectangle",
+      "id": "c8",
+      "x": 1030,
+      "y": 320,
+      "width": 40,
+      "height": 25,
+      "strokeColor": "#1e1e1e",
+      "backgroundColor": "#b2f2bb",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "roughness": 1,
+      "opacity": 100,
+      "roundElements": [
+        {
+          "id": "t_c8",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "id": "t_c8",
+      "x": 1035,
+      "y": 323,
+      "width": 30,
+      "height": 18,
+      "text": "C8\n0.1µF",
+      "fontSize": 11,
+      "fontFamily": 1,
+      "strokeColor": "#1e1e1e",
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "containerId": "c8",
+      "originalText": "C8\n0.1µF",
+      "autoResize": true
+    },
+    {
+      "type": "arrow",
+      "id": "a_usb_chg",
+      "x": 140,
+      "y": 170,
+      "width": 0,
+      "height": 40,
+      "strokeColor": "#e03131",
+      "strokeWidth": 3,
+      "roughness": 1,
+      "opacity": 100,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          40
+        ]
+      ],
+      "endArrowhead": "arrow",
+      "startBinding": {
+        "elementId": "j1",
+        "fixedPoint": [
+          0.5,
+          1
+        ]
+      },
+      "endBinding": {
+        "elementId": "u7",
+        "fixedPoint": [
+          0.5,
+          0
+        ]
+      },
+      "boundElements": [
+        {
+          "id": "t_a_usb_chg",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "id": "t_a_usb_chg",
+      "x": 145,
+      "y": 185,
+      "width": 30,
+      "height": 15,
+      "text": "5V",
+      "fontSize": 14,
+      "fontFamily": 1,
+      "strokeColor": "#e03131",
+      "textAlign": "left",
+      "verticalAlign": "middle",
+      "containerId": "a_usb_chg",
+      "originalText": "5V",
+      "autoResize": true
+    },
+    {
+      "type": "arrow",
+      "id": "a_chg_bat",
+      "x": 140,
+      "y": 290,
+      "width": 0,
+      "height": 40,
+      "strokeColor": "#1e1e1e",
+      "strokeWidth": 2,
+      "roughness": 1,
+      "opacity": 100,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          40
+        ]
+      ],
+      "endArrowhead": "arrow",
+      "startBinding": {
+        "elementId": "u7",
+        "fixedPoint": [
+          0.5,
+          1
+        ]
+      },
+      "endBinding": {
+        "elementId": "bt1",
+        "fixedPoint": [
+          0.5,
+          0
+        ]
+      },
+      "boundElements": [
+        {
+          "id": "t_a_chg_bat",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "id": "t_a_chg_bat",
+      "x": 145,
+      "y": 305,
+      "width": 50,
+      "height": 15,
+      "text": "Charge",
+      "fontSize": 12,
+      "fontFamily": 1,
+      "strokeColor": "#1e1e1e",
+      "textAlign": "left",
+      "verticalAlign": "middle",
+      "containerId": "a_chg_bat",
+      "originalText": "Charge",
+      "autoResize": true
+    },
+    {
+      "type": "arrow",
+      "id": "a_prog",
+      "x": 210,
+      "y": 245,
+      "width": 30,
+      "height": 0,
+      "strokeColor": "#1e1e1e",
+      "strokeWidth": 2,
+      "roughness": 1,
+      "opacity": 100,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          30,
+          0
+        ]
+      ],
+      "endArrowhead": "arrow",
+      "startBinding": {
+        "elementId": "u7",
+        "fixedPoint": [
+          1,
+          0.5
+        ]
+      },
+      "endBinding": {
+        "elementId": "r_prog",
+        "fixedPoint": [
+          0,
+          0.5
+        ]
+      },
+      "boundElements": [
+        {
+          "id": "t_a_prog",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "id": "t_a_prog",
+      "x": 215,
+      "y": 230,
+      "width": 30,
+      "height": 15,
+      "text": "PROG",
+      "fontSize": 12,
+      "fontFamily": 1,
+      "strokeColor": "#1e1e1e",
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "containerId": "a_prog",
+      "originalText": "PROG",
+      "autoResize": true
+    },
+    {
+      "type": "arrow",
+      "id": "a_prog_gnd",
+      "x": 270,
+      "y": 260,
+      "width": 0,
+      "height": 30,
+      "strokeColor": "#1e1e1e",
+      "strokeWidth": 2,
+      "roughness": 1,
+      "opacity": 100,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          30
+        ]
+      ],
+      "endArrowhead": "arrow",
+      "startBinding": {
+        "elementId": "r_prog",
+        "fixedPoint": [
+          0.5,
+          1
+        ]
+      },
+      "boundElements": [
+        {
+          "id": "t_a_prog_gnd",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "id": "t_a_prog_gnd",
+      "x": 275,
+      "y": 270,
+      "width": 30,
+      "height": 15,
+      "text": "GND",
+      "fontSize": 12,
+      "fontFamily": 1,
+      "strokeColor": "#1e1e1e",
+      "textAlign": "left",
+      "verticalAlign": "middle",
+      "containerId": "a_prog_gnd",
+      "originalText": "GND",
+      "autoResize": true
+    },
+    {
+      "type": "arrow",
+      "id": "a_bat_ldo",
+      "x": 140,
+      "y": 390,
+      "width": 0,
+      "height": 40,
+      "strokeColor": "#e03131",
+      "strokeWidth": 3,
+      "roughness": 1,
+      "opacity": 100,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          40
+        ]
+      ],
+      "endArrowhead": "arrow",
+      "startBinding": {
+        "elementId": "bt1",
+        "fixedPoint": [
+          0.5,
+          1
+        ]
+      },
+      "endBinding": {
+        "elementId": "u9",
+        "fixedPoint": [
+          0.5,
+          0
+        ]
+      },
+      "boundElements": [
+        {
+          "id": "t_a_bat_ldo",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "id": "t_a_bat_ldo",
+      "x": 145,
+      "y": 405,
+      "width": 50,
+      "height": 15,
+      "text": "3.7V→5V",
+      "fontSize": 14,
+      "fontFamily": 1,
+      "strokeColor": "#e03131",
+      "textAlign": "left",
+      "verticalAlign": "middle",
+      "containerId": "a_bat_ldo",
+      "originalText": "3.7V→5V",
+      "autoResize": true
+    },
+    {
+      "type": "arrow",
+      "id": "a_c3_u9",
+      "x": 240,
+      "y": 445,
+      "width": -30,
+      "height": 0,
+      "strokeColor": "#1e1e1e",
+      "strokeWidth": 1,
+      "roughness": 1,
+      "opacity": 100,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          -30,
+          0
+        ]
+      ],
+      "endArrowhead": "arrow",
+      "startBinding": {
+        "elementId": "c3",
+        "fixedPoint": [
+          0,
+          0.5
+        ]
+      },
+      "endBinding": {
+        "elementId": "u9",
+        "fixedPoint": [
+          1,
+          0.3
+        ]
+      }
+    },
+    {
+      "type": "arrow",
+      "id": "a_c4_u9",
+      "x": 240,
+      "y": 485,
+      "width": -30,
+      "height": 0,
+      "strokeColor": "#1e1e1e",
+      "strokeWidth": 1,
+      "roughness": 1,
+      "opacity": 100,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          -30,
+          0
+        ]
+      ],
+      "endArrowhead": "arrow",
+      "startBinding": {
+        "elementId": "c4",
+        "fixedPoint": [
+          0,
+          0.5
+        ]
+      },
+      "endBinding": {
+        "elementId": "u9",
+        "fixedPoint": [
+          1,
+          0.7
+        ]
+      }
+    },
+    {
+      "type": "arrow",
+      "id": "a_ldo_esp",
+      "x": 210,
+      "y": 465,
+      "width": 240,
+      "height": 0,
+      "strokeColor": "#e03131",
+      "strokeWidth": 3,
+      "roughness": 1,
+      "opacity": 100,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          240,
+          0
+        ]
+      ],
+      "endArrowhead": "arrow",
+      "startBinding": {
+        "elementId": "u9",
+        "fixedPoint": [
+          1,
+          0.5
+        ]
+      },
+      "endBinding": {
+        "elementId": "u1",
+        "fixedPoint": [
+          0,
+          0.15
+        ]
+      },
+      "boundElements": [
+        {
+          "id": "t_a_ldo_esp",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "id": "t_a_ldo_esp",
+      "x": 310,
+      "y": 450,
+      "width": 40,
+      "height": 15,
+      "text": "5V",
+      "fontSize": 14,
+      "fontFamily": 1,
+      "strokeColor": "#e03131",
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "containerId": "a_ldo_esp",
+      "originalText": "5V",
+      "autoResize": true
+    },
+    {
+      "type": "arrow",
+      "id": "a_esp_mux",
+      "x": 570,
+      "y": 290,
+      "width": 0,
+      "height": 40,
+      "strokeColor": "#1971c2",
+      "strokeWidth": 2,
+      "roughness": 1,
+      "opacity": 100,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          40
+        ]
+      ],
+      "endArrowhead": "arrow",
+      "startBinding": {
+        "elementId": "u1",
+        "fixedPoint": [
+          0.5,
+          1
+        ]
+      },
+      "endBinding": {
+        "elementId": "u2",
+        "fixedPoint": [
+          0.5,
+          0
+        ]
+      },
+      "boundElements": [
+        {
+          "id": "t_a_esp_mux",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "id": "t_a_esp_mux",
+      "x": 575,
+      "y": 305,
+      "width": 50,
+      "height": 15,
+      "text": "I2C0",
+      "fontSize": 14,
+      "fontFamily": 1,
+      "strokeColor": "#1971c2",
+      "textAlign": "left",
+      "verticalAlign": "middle",
+      "containerId": "a_esp_mux",
+      "originalText": "I2C0",
+      "autoResize": true
+    },
+    {
+      "type": "arrow",
+      "id": "a_esp_led",
+      "x": 505,
+      "y": 290,
+      "width": 0,
+      "height": 180,
+      "strokeColor": "#f08c00",
+      "strokeWidth": 2,
+      "roughness": 1,
+      "opacity": 100,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          180
+        ]
+      ],
+      "endArrowhead": "arrow",
+      "startBinding": {
+        "elementId": "u1",
+        "fixedPoint": [
+          0.5,
+          1
+        ]
+      },
+      "endBinding": {
+        "elementId": "d1",
+        "fixedPoint": [
+          0.5,
+          0
+        ]
+      },
+      "boundElements": [
+        {
+          "id": "t_a_esp_led",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "id": "t_a_esp_led",
+      "x": 510,
+      "y": 370,
+      "width": 40,
+      "height": 15,
+      "text": "GPIO2",
+      "fontSize": 14,
+      "fontFamily": 1,
+      "strokeColor": "#f08c00",
+      "textAlign": "left",
+      "verticalAlign": "middle",
+      "containerId": "a_esp_led",
+      "originalText": "GPIO2",
+      "autoResize": true
+    },
+    {
+      "type": "arrow",
+      "id": "a_led_r",
+      "x": 560,
+      "y": 495,
+      "width": 20,
+      "height": 0,
+      "strokeColor": "#1e1e1e",
+      "strokeWidth": 2,
+      "roughness": 1,
+      "opacity": 100,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          20,
+          0
+        ]
+      ],
+      "endArrowhead": "arrow",
+      "startBinding": {
+        "elementId": "d1",
+        "fixedPoint": [
+          1,
+          0.5
+        ]
+      },
+      "endBinding": {
+        "elementId": "r_led",
+        "fixedPoint": [
+          0,
+          0.5
+        ]
+      },
+      "boundElements": [
+        {
+          "id": "t_a_led_r",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "id": "t_a_led_r",
+      "x": 565,
+      "y": 480,
+      "width": 30,
+      "height": 15,
+      "text": "→GND",
+      "fontSize": 12,
+      "fontFamily": 1,
+      "strokeColor": "#1e1e1e",
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "containerId": "a_led_r",
+      "originalText": "→GND",
+      "autoResize": true
+    },
+    {
+      "type": "arrow",
+      "id": "a_mux_u3",
+      "x": 690,
+      "y": 355,
+      "width": 150,
+      "height": 0,
+      "strokeColor": "#1971c2",
+      "strokeWidth": 2,
+      "roughness": 1,
+      "opacity": 100,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          150,
+          0
+        ]
+      ],
+      "endArrowhead": "arrow",
+      "startBinding": {
+        "elementId": "u2",
+        "fixedPoint": [
+          1,
+          0.25
+        ]
+      },
+      "endBinding": {
+        "elementId": "u3",
+        "fixedPoint": [
+          0,
+          0.5
+        ]
+      },
+      "boundElements": [
+        {
+          "id": "t_a_mux_u3",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "id": "t_a_mux_u3",
+      "x": 740,
+      "y": 340,
+      "width": 30,
+      "height": 15,
+      "text": "CH0",
+      "fontSize": 14,
+      "fontFamily": 1,
+      "strokeColor": "#1971c2",
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "containerId": "a_mux_u3",
+      "originalText": "CH0",
+      "autoResize": true
+    },
+    {
+      "type": "arrow",
+      "id": "a_mux_u4",
+      "x": 690,
+      "y": 370,
+      "width": 340,
+      "height": 0,
+      "strokeColor": "#1971c2",
+      "strokeWidth": 2,
+      "roughness": 1,
+      "opacity": 100,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          340,
+          0
+        ]
+      ],
+      "endArrowhead": "arrow",
+      "startBinding": {
+        "elementId": "u2",
+        "fixedPoint": [
+          1,
+          0.4
+        ]
+      },
+      "endBinding": {
+        "elementId": "u4",
+        "fixedPoint": [
+          0,
+          0.5
+        ]
+      },
+      "boundElements": [
+        {
+          "id": "t_a_mux_u4",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "id": "t_a_mux_u4",
+      "x": 830,
+      "y": 355,
+      "width": 30,
+      "height": 15,
+      "text": "CH1",
+      "fontSize": 14,
+      "fontFamily": 1,
+      "strokeColor": "#1971c2",
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "containerId": "a_mux_u4",
+      "originalText": "CH1",
+      "autoResize": true
+    },
+    {
+      "type": "arrow",
+      "id": "a_mux_u5",
+      "x": 690,
+      "y": 390,
+      "width": 150,
+      "height": 60,
+      "strokeColor": "#1971c2",
+      "strokeWidth": 2,
+      "roughness": 1,
+      "opacity": 100,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          150,
+          60
+        ]
+      ],
+      "endArrowhead": "arrow",
+      "startBinding": {
+        "elementId": "u2",
+        "fixedPoint": [
+          1,
+          0.6
+        ]
+      },
+      "endBinding": {
+        "elementId": "u5",
+        "fixedPoint": [
+          0,
+          0.5
+        ]
+      },
+      "boundElements": [
+        {
+          "id": "t_a_mux_u5",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "id": "t_a_mux_u5",
+      "x": 740,
+      "y": 410,
+      "width": 30,
+      "height": 15,
+      "text": "CH2",
+      "fontSize": 14,
+      "fontFamily": 1,
+      "strokeColor": "#1971c2",
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "containerId": "a_mux_u5",
+      "originalText": "CH2",
+      "autoResize": true
+    },
+    {
+      "type": "arrow",
+      "id": "a_mux_u6",
+      "x": 690,
+      "y": 410,
+      "width": 340,
+      "height": 60,
+      "strokeColor": "#1971c2",
+      "strokeWidth": 2,
+      "roughness": 1,
+      "opacity": 100,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          340,
+          60
+        ]
+      ],
+      "endArrowhead": "arrow",
+      "startBinding": {
+        "elementId": "u2",
+        "fixedPoint": [
+          1,
+          0.75
+        ]
+      },
+      "endBinding": {
+        "elementId": "u6",
+        "fixedPoint": [
+          0,
+          0.5
+        ]
+      },
+      "boundElements": [
+        {
+          "id": "t_a_mux_u6",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "id": "t_a_mux_u6",
+      "x": 830,
+      "y": 430,
+      "width": 30,
+      "height": 15,
+      "text": "CH3",
+      "fontSize": 14,
+      "fontFamily": 1,
+      "strokeColor": "#1971c2",
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "containerId": "a_mux_u6",
+      "originalText": "CH3",
+      "autoResize": true
+    },
+    {
+      "type": "arrow",
+      "id": "a_sda_pull",
+      "x": 735,
+      "y": 340,
+      "width": 0,
+      "height": -30,
+      "strokeColor": "#e03131",
+      "strokeWidth": 1,
+      "roughness": 1,
+      "opacity": 100,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          -30
+        ]
+      ],
+      "endArrowhead": "arrow",
+      "startBinding": {
+        "elementId": "r_sda",
+        "fixedPoint": [
+          0.5,
+          0
+        ]
+      },
+      "boundElements": [
+        {
+          "id": "t_a_sda_pull",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "id": "t_a_sda_pull",
+      "x": 740,
+      "y": 315,
+      "width": 30,
+      "height": 15,
+      "text": "3.3V",
+      "fontSize": 12,
+      "fontFamily": 1,
+      "strokeColor": "#e03131",
+      "textAlign": "left",
+      "verticalAlign": "middle",
+      "containerId": "a_sda_pull",
+      "originalText": "3.3V",
+      "autoResize": true
+    },
+    {
+      "type": "arrow",
+      "id": "a_scl_pull",
+      "x": 735,
+      "y": 380,
+      "width": 0,
+      "height": -30,
+      "strokeColor": "#e03131",
+      "strokeWidth": 1,
+      "roughness": 1,
+      "opacity": 100,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          -30
+        ]
+      ],
+      "endArrowhead": "arrow",
+      "startBinding": {
+        "elementId": "r_scl",
+        "fixedPoint": [
+          0.5,
+          0
+        ]
+      },
+      "boundElements": [
+        {
+          "id": "t_a_scl_pull",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "id": "t_a_scl_pull",
+      "x": 740,
+      "y": 355,
+      "width": 30,
+      "height": 15,
+      "text": "3.3V",
+      "fontSize": 12,
+      "fontFamily": 1,
+      "strokeColor": "#e03131",
+      "textAlign": "left",
+      "verticalAlign": "middle",
+      "containerId": "a_scl_pull",
+      "originalText": "3.3V",
+      "autoResize": true
+    },
+    {
+      "type": "text",
+      "id": "legend",
+      "x": 840,
+      "y": 400,
+      "width": 350,
+      "height": 160,
+      "text": "Legend:\n─────────────\nRed = Power (5V / 3.3V)\nBlue = I2C Bus (SDA/SCL)\nOrange = GPIO Signal\nBlack = Signal / GND\nGreen = Sensor Section\nYellow = LED Indicator\n\nFixes vs prior schematic:\n• MT3608: boost 3.7V→5V for VIN pin\n• TP4056: gets USB 5V input, charge-only\n• TP4056: NOT connected to load path\n• Added 1.2kΩ PROG resistor\n• Added 10µF input/output caps on boost",
+      "fontSize": 14,
+      "fontFamily": 1,
+      "strokeColor": "#495057",
+      "textAlign": "left",
+      "verticalAlign": "top",
+      "containerId": null,
+      "originalText": "Legend:\n─────────────\nRed = Power (5V / 3.3V)\nBlue = I2C Bus (SDA/SCL)\nOrange = GPIO Signal\nBlack = Signal / GND\nGreen = Sensor Section\nYellow = LED Indicator\n\nFixes vs prior schematic:\n• MT3608: boost 3.7V→5V for VIN pin\n• TP4056: gets USB 5V input, charge-only\n• TP4056: NOT connected to load path\n• Added 1.2kΩ PROG resistor\n• Added 10µF input/output caps on boost",
+      "autoResize": true
+    },
+    {
+      "type": "text",
+      "id": "notes",
+      "x": 40,
+      "y": 610,
+      "width": 1300,
+      "height": 50,
+      "text": "Operating Parameters: VCC 3.3V (onboard AMS1117) · I2C 400kHz · Sampling 100Hz · Window 128 samples · TCA9548A @0x70 (A0-A2→GND, EN→3.3V) · All GY-521 @0x68 via mux (AD0→GND) · Wire length <15cm · 0.1µF per IC + 10µF bulk on boost",
+      "fontSize": 12,
+      "fontFamily": 1,
+      "strokeColor": "#868e96",
+      "textAlign": "left",
+      "verticalAlign": "top",
+      "containerId": null,
+      "originalText": "Operating Parameters: VCC 3.3V (onboard AMS1117) · I2C 400kHz · Sampling 100Hz · Window 128 samples · TCA9548A @0x70 (A0-A2→GND, EN→3.3V) · All GY-521 @0x68 via mux (AD0→GND) · Wire length <15cm · 0.1µF per IC + 10µF bulk on boost",
+      "autoResize": true
+    }
+  ],
+  "appState": {
+    "viewBackgroundColor": "#ffffff"
+  }
+}

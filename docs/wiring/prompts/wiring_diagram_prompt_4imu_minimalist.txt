@@ -20,4 +20,4 @@ HAND INSET (12% top-right, dashed border "Anatomical Reference — Not Wiring"):
 
 STYLE: Thin 2px black box strokes, sans-serif 9-12pt labels outside skin with leader arrows, orthogonal wires. Negative: no LRA, no MOSFET, no battery, no photorealistic skin, no shadows, no clutter.
 
-Ref: PIN_ASSIGNMENTS.md:48 CH map, cad/connections_4imu.csv, firmware/common/config.py (SDA21/SCL22, 0x70, NUM_IMUS 4, IMU_CHANNELS [0,1,2,3], SAMPLES 128 @100Hz), knowledge.md:5a + docs/research_web_2026-08-27.md.
+Ref: pin_assignments.md:48 CH map, cad/connections_4imu.csv, firmware/common/config.py (SDA21/SCL22, 0x70, NUM_IMUS 4, IMU_CHANNELS [0,1,2,3], SAMPLES 128 @100Hz), knowledge.md:5a + docs/research_web_2026-08-27.md.

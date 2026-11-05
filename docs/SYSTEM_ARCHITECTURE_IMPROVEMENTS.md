@@ -32,7 +32,7 @@ This document outlines architectural improvements for the Parkinson's Tremor Mon
   OUTPUT_BUFFER = [0.0] * 384
   ```
 - **Expected gain**: 30% reduction in memory fragmentation, more predictable performance
-- **Status**: Implemented in firmware files (RawDataCollection.py, collect_pilot.py, embedded_main.py) - see commit a651166
+- **Status**: Implemented in firmware files (raw_data_collection.py, collect_pilot.py, embedded_main.py) - see commit a651166
 
 ### FFT Optimization
 - **Current**: Pure Python Cooley-Tukey with on-the-fly twiddle factor computation
@@ -67,7 +67,7 @@ This document outlines architectural improvements for the Parkinson's Tremor Mon
   ```
 
 ### Proposed Solution: Timer-based sampling
-- **Status**: Implemented in firmware files (RawDataCollection.py, collect_pilot.py, embedded_main.py) - see commit a651166
+- **Status**: Implemented in firmware files (raw_data_collection.py, collect_pilot.py, embedded_main.py) - see commit a651166
 - **Implementation**:
   ```python
   from machine import Timer

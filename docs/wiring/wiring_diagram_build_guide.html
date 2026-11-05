@@ -174,24 +174,26 @@
         <text x="-8" y="28" text-anchor="end" class="label-pin">GND</text>
       </g>
 
-      <!-- MCP73831 U7 -->
+      <!-- TP4056 U7 -->
       <g transform="translate(180,100)">
-        <rect x="0" y="0" width="100" height="70" class="comp-box-pwr"/>
-        <text x="50" y="16" text-anchor="middle" class="label-bold">U7</text>
-        <text x="50" y="30" text-anchor="middle" class="label">MCP73831</text>
-        <text x="50" y="42" text-anchor="middle" class="label">LiPo Charger</text>
-        <text x="50" y="58" text-anchor="middle" class="label-pin">SOT-23-5</text>
+        <rect x="0" y="0" width="100" height="80" class="comp-box-pwr"/>
+        <text x="50" y="14" text-anchor="middle" class="label-bold">U7</text>
+        <text x="50" y="26" text-anchor="middle" class="label">TP4056</text>
+        <text x="50" y="38" text-anchor="middle" class="label">LiPo Charger 1A</text>
+        <text x="50" y="52" text-anchor="middle" class="label-pin">Module w/ DW01</text>
         <!-- Pins -->
         <circle cx="0" cy="10" r="2.5" fill="#e03131"/>
         <circle cx="0" cy="25" r="2.5" fill="#1a1a1a"/>
         <circle cx="100" cy="10" r="2.5" fill="#e03131"/>
-        <circle cx="100" cy="25" r="2.5" fill="#e03131"/>
-        <circle cx="100" cy="40" r="2.5" fill="#f08c00"/>
-        <text x="-6" y="13" text-anchor="end" class="label-pin">VBUS</text>
-        <text x="-6" y="28" text-anchor="end" class="label-pin">GND</text>
-        <text x="106" y="13" class="label-pin">VBAT</text>
-        <text x="106" y="28" class="label-pin">PROG</text>
-        <text x="106" y="43" class="label-pin">STAT</text>
+        <circle cx="100" cy="25" r="2.5" fill="#1a1a1a"/>
+        <circle cx="100" cy="40" r="2.5" fill="#e03131"/>
+        <circle cx="100" cy="55" r="2.5" fill="#1a1a1a"/>
+        <text x="-6" y="13" text-anchor="end" class="label-pin">IN+</text>
+        <text x="-6" y="28" text-anchor="end" class="label-pin">IN-</text>
+        <text x="106" y="13" class="label-pin">B+</text>
+        <text x="106" y="28" class="label-pin">B-</text>
+        <text x="106" y="43" class="label-pin">OUT+</text>
+        <text x="106" y="58" class="label-pin">OUT-</text>
       </g>
 
       <!-- LiPo Battery BT1 -->
@@ -208,20 +210,20 @@
         <text x="-8" y="38" text-anchor="end" class="label-pin">-</text>
       </g>
 
-      <!-- AP2112K-3.3 U8 -->
+      <!-- MT3608 U8 -->
       <g transform="translate(220,200)">
         <rect x="0" y="0" width="100" height="70" class="comp-box-pwr"/>
         <text x="50" y="16" text-anchor="middle" class="label-bold">U8</text>
-        <text x="50" y="30" text-anchor="middle" class="label">AP2112K-3.3</text>
-        <text x="50" y="42" text-anchor="middle" class="label">LDO 3.3V</text>
-        <text x="50" y="58" text-anchor="middle" class="label-pin">SOT-23-5</text>
+        <text x="50" y="30" text-anchor="middle" class="label">MT3608</text>
+        <text x="50" y="42" text-anchor="middle" class="label">Boost 5V</text>
+        <text x="50" y="58" text-anchor="middle" class="label-pin">Module</text>
         <!-- Pins -->
         <circle cx="0" cy="10" r="2.5" fill="#e03131"/>
         <circle cx="0" cy="25" r="2.5" fill="#1a1a1a"/>
         <circle cx="100" cy="10" r="2.5" fill="#e03131"/>
-        <text x="-6" y="13" text-anchor="end" class="label-pin">VIN</text>
-        <text x="-6" y="28" text-anchor="end" class="label-pin">GND</text>
-        <text x="106" y="13" class="label-pin">VOUT</text>
+        <text x="-6" y="13" text-anchor="end" class="label-pin">IN+</text>
+        <text x="-6" y="28" text-anchor="end" class="label-pin">IN-</text>
+        <text x="106" y="13" class="label-pin">OUT+</text>
       </g>
 
       <!-- Capacitors -->
@@ -242,23 +244,25 @@
       <text x="105" y="350" text-anchor="middle" class="label-pin">Decoupling caps (input/output)</text>
 
       <!-- Power wires -->
-      <!-- USB VBUS → Charger VBUS -->
+      <!-- USB VBUS → TP4056 IN+ -->
       <path d="M 140 120 L 180 110" class="wire-pwr"/>
       <text x="155" y="108" class="label-wire" fill="#e03131">USB_5V</text>
-      <!-- USB GND → Charger GND -->
+      <!-- USB GND → TP4056 IN- -->
       <path d="M 140 135 L 180 125" class="wire-gnd"/>
-      <!-- Charger VBAT → Battery + -->
+      <!-- TP4056 B+ → Battery + -->
       <path d="M 280 110 L 320 110 L 320 225 L 180 225" class="wire-pwr"/>
       <text x="300" y="108" class="label-wire" fill="#e03131">VBAT</text>
-      <!-- Charger VBAT → LDO VIN -->
-      <path d="M 280 110 L 340 110 L 340 210 L 220 210" class="wire-pwr"/>
-      <!-- Battery - → GND -->
-      <path d="M 60 245 L 40 245 L 40 135 L 140 135" class="wire-gnd"/>
-      <!-- LDO GND → GND bus -->
-      <path d="M 220 225 L 40 225" class="wire-gnd"/>
-      <!-- LDO VOUT → 3.3V rail -->
+      <!-- TP4056 B- → Battery - -->
+      <path d="M 280 125 L 310 125 L 310 245 L 180 245" class="wire-gnd"/>
+      <!-- TP4056 OUT+ → MT3608 IN+ -->
+      <path d="M 280 140 L 340 140 L 340 210 L 220 210" class="wire-pwr"/>
+      <text x="300" y="138" class="label-wire" fill="#e03131">OUT+</text>
+      <!-- TP4056 OUT- → MT3608 IN- -->
+      <path d="M 280 155 L 330 155 L 330 225 L 220 225" class="wire-gnd"/>
+      <text x="300" y="153" class="label-wire" fill="#1a1a1a">OUT-</text>
+      <!-- MT3608 OUT+ → ESP32 VIN (5V) -->
       <path d="M 320 210 L 380 210" class="wire-pwr" stroke-width="3.5"/>
-      <text x="340" y="205" class="label-wire" fill="#e03131">3.3V</text>
+      <text x="340" y="205" class="label-wire" fill="#e03131">5V</text>
 
       <!-- ==================== MCU SECTION ==================== -->
       <rect x="420" y="60" width="380" height="340" fill="#e7f5ff" stroke="#1971c2" stroke-width="1.5" rx="6" opacity="0.3"/>
@@ -274,7 +278,7 @@
         <text x="10" y="70" class="label-pin">GPIO21 (SDA) →</text>
         <text x="10" y="85" class="label-pin">GPIO22 (SCL) →</text>
         <text x="10" y="100" class="label-pin">GPIO2 (LED) →</text>
-        <text x="10" y="115" class="label-pin">3.3V ←</text>
+        <text x="10" y="115" class="label-pin">VIN ←</text>
         <text x="10" y="130" class="label-pin">GND ←</text>
         <text x="10" y="145" class="label-pin">25/18/19/20 NC (LRA)</text>
         <!-- Pin circles -->
@@ -429,9 +433,9 @@
       <text x="60" y="530" class="label-pin">3.3V → Power rail (from LDO)</text>
       <text x="60" y="545" class="label-pin">GND → Ground rail</text>
       <text x="60" y="560" class="label-pin">GPIO25/18/19/20 → NC (LRA deferred)</text>
-      <text x="60" y="585" class="label-bold" style="fill:#e03131;">⚠ BYPASS ONBOARD REGULATOR</text>
-      <text x="60" y="600" class="label-pin">Power ESP32 3.3V pin directly</text>
-      <text x="60" y="615" class="label-pin">Do NOT use VIN pin (5V)</text>
+      <text x="60" y="585" class="label-bold" style="fill:#2f9e44;">✓ USE ONBOARD REGULATOR</text>
+      <text x="60" y="600" class="label-pin">Power ESP32 VIN with 5V from boost</text>
+      <text x="60" y="615" class="label-pin">Do NOT use 3.3V pin for power input</text>
       <text x="60" y="630" class="label-pin">Remove AMS1117 jumper if present</text>
 
       <!-- ==================== BUILD NOTES ==================== -->
@@ -449,7 +453,7 @@
       <!-- ==================== SPECIFICATIONS ==================== -->
       <rect x="860" y="350" width="500" height="230" fill="#f8f9fa" stroke="#dee2e6" stroke-width="1" rx="6"/>
       <text x="880" y="375" class="label-bold">OPERATING SPECIFICATIONS</text>
-      <text x="880" y="395" class="label-pin">VCC: 3.3V ±5% (from AP2112K-3.3 LDO)</text>
+      <text x="880" y="395" class="label-pin">VCC: 5V ±10% (from MT3608 boost)</text>
       <text x="880" y="410" class="label-pin">I²C: 400kHz (Fast Mode)</text>
       <text x="880" y="425" class="label-pin">Sampling: 100Hz (SAMPLE_INTERVAL_US = 10000)</text>
       <text x="880" y="440" class="label-pin">Window: 128 samples (1.28 seconds)</text>
@@ -470,12 +474,13 @@
   <div class="build-note">
     <h4>⚠ Critical Build Notes</h4>
     <ul>
-      <li><b>Bypass ESP32 onboard regulator:</b> Power the 3.3V pin directly from the AP2112K LDO. Do NOT use the VIN pin (5V input) — this would double-regulate and waste power as heat.</li>
+      <li><b>TP4056 module has 6 pads:</b> IN+ IN- (USB 5V input), B+ B- (battery), OUT+ OUT- (load-sharing output). Wire B+/B- to LiPo, OUT+/OUT- to boost module.</li>
+      <li><b>Use ESP32 onboard regulator:</b> Power ESP32 VIN pin with 5V from MT3608 boost. Do NOT power the 3.3V pin directly.</li>
       <li><b>I²C pull-up resistors:</b> Most breakout boards include 4.7kΩ pull-ups on SDA/SCL. If yours don't, add them between SDA→3.3V and SCL→3.3V.</li>
-      <li><b>Decoupling capacitors:</b> Place C1/C2 as close as possible to the AP2112K pins (within 5mm). Use ceramic caps (X5R or X7R).</li>
+      <li><b>Decoupling capacitors:</b> Place C1/C2 as close as possible to the MT3608 pins (within 5mm). Use ceramic caps (X5R or X7R).</li>
       <li><b>Wire length:</b> Keep I²C wires under 15cm. Longer wires cause signal degradation at 400kHz.</li>
       <li><b>Star ground:</b> Connect all GND wires to a single point to avoid ground loops.</li>
-      <li><b>Test sequence:</b> Power → verify 3.3V → connect ESP32 → test I²C scan → connect IMUs one by one.</li>
+      <li><b>Test sequence:</b> Power → verify 5V from boost → verify 3.3V from ESP32 → test I²C scan → connect IMUs one by one.</li>
     </ul>
   </div>
 
@@ -485,10 +490,15 @@
       <tr><th>Net</th><th>From</th><th>To</th><th>Wire Color</th><th>Notes</th></tr>
     </thead>
     <tbody>
-      <tr><td>USB_5V</td><td>J1 VBUS</td><td>U7 VBUS</td><td><span class="wire-cell"><span class="wire-swatch" style="border-color:#e03131;"></span>Red</span></td><td>Charging only</td></tr>
-      <tr><td>VBAT</td><td>U7 VBAT</td><td>BT1 (+), U8 VIN</td><td><span class="wire-cell"><span class="wire-swatch" style="border-color:#e03131;"></span>Red</span></td><td>Battery positive</td></tr>
-      <tr><td>3.3V</td><td>U8 VOUT</td><td>ESP32 3.3V, U2 VIN, U3-U6 VCC</td><td><span class="wire-cell"><span class="wire-swatch" style="border-color:#e03131;"></span>Red</span></td><td>Regulated output</td></tr>
-      <tr><td>GND</td><td>J1 GND, U7 GND, U8 GND, BT1 (-)</td><td>Common GND</td><td><span class="wire-cell"><span class="wire-swatch" style="border-color:#1a1a1a;"></span>Black</span></td><td>Star topology</td></tr>
+      <tr><td>USB_5V</td><td>J1 VBUS</td><td>U7 IN+</td><td><span class="wire-cell"><span class="wire-swatch" style="border-color:#e03131;"></span>Red</span></td><td>Charging only</td></tr>
+      <tr><td>GND</td><td>J1 GND</td><td>U7 IN-</td><td><span class="wire-cell"><span class="wire-swatch" style="border-color:#1a1a1a;"></span>Black</span></td><td>USB ground</td></tr>
+      <tr><td>VBAT</td><td>U7 B+</td><td>BT1 (+)</td><td><span class="wire-cell"><span class="wire-swatch" style="border-color:#e03131;"></span>Red</span></td><td>Battery positive</td></tr>
+      <tr><td>GND</td><td>U7 B-</td><td>BT1 (-)</td><td><span class="wire-cell"><span class="wire-swatch" style="border-color:#1a1a1a;"></span>Black</span></td><td>Battery negative</td></tr>
+      <tr><td>VBAT</td><td>U7 OUT+</td><td>U8 IN+</td><td><span class="wire-cell"><span class="wire-swatch" style="border-color:#e03131;"></span>Red</span></td><td>Load-sharing output</td></tr>
+      <tr><td>GND</td><td>U7 OUT-</td><td>U8 IN-</td><td><span class="wire-cell"><span class="wire-swatch" style="border-color:#1a1a1a;"></span>Black</span></td><td>Output ground</td></tr>
+      <tr><td>5V</td><td>U8 OUT+</td><td>ESP32 VIN</td><td><span class="wire-cell"><span class="wire-swatch" style="border-color:#e03131;"></span>Red</span></td><td>Boost output</td></tr>
+      <tr><td>GND</td><td>U8 OUT-</td><td>Common GND</td><td><span class="wire-cell"><span class="wire-swatch" style="border-color:#1a1a1a;"></span>Black</span></td><td>Boost ground</td></tr>
+      <tr><td>3.3V</td><td>ESP32 3.3V</td><td>U2 VIN, U3-U6 VCC</td><td><span class="wire-cell"><span class="wire-swatch" style="border-color:#e03131;"></span>Red</span></td><td>Onboard regulator output</td></tr>
       <tr><td>SDA21</td><td>ESP32 GPIO21</td><td>U2 SDA</td><td><span class="wire-cell"><span class="wire-swatch" style="border-color:#2f9e44;"></span>Green</span></td><td>I²C0 data</td></tr>
       <tr><td>SCL22</td><td>ESP32 GPIO22</td><td>U2 SCL</td><td><span class="wire-cell"><span class="wire-swatch" style="border-color:#1971c2;"></span>Blue</span></td><td>I²C0 clock</td></tr>
       <tr><td>CH0</td><td>U2 SD0/SC0</td><td>U3 SDA/SCL</td><td><span class="wire-cell"><span class="wire-swatch" style="border-color:#2f9e44;"></span>Green/<span class="wire-swatch" style="border-color:#1971c2;"></span>Blue</span></td><td>Dorsal wrist</td></tr>
@@ -508,8 +518,8 @@
       <tr><td>U1</td><td>ESP32-DevKitC V4</td><td>Module</td><td>1</td><td>Power 3.3V pin directly</td></tr>
       <tr><td>U2</td><td>TCA9548A Breakout</td><td>TSSOP-24</td><td>1</td><td>@0x70, A0/A1/A2→GND</td></tr>
       <tr><td>U3-U6</td><td>GY-521 (MPU6050)</td><td>QFN-24</td><td>4</td><td>@0x68, AD0→GND</td></tr>
-      <tr><td>U7</td><td>MCP73831</td><td>SOT-23-5</td><td>1</td><td>LiPo charger, 500mA</td></tr>
-      <tr><td>U8</td><td>AP2112K-3.3</td><td>SOT-23-5</td><td>1</td><td>LDO 3.3V, 600mA</td></tr>
+      <tr><td>U7</td><td>TP4056 Module</td><td>Module (SOP-8)</td><td>1</td><td>LiPo charger 1A, DW01 protection</td></tr>
+      <tr><td>U8</td><td>MT3608 Boost Module</td><td>Module</td><td>1</td><td>LiPo → 5V, 2A</td></tr>
       <tr><td>BT1</td><td>LiPo Battery</td><td>Pouch</td><td>1</td><td>3.7V, 500mAh+, JST-PH 2.0</td></tr>
       <tr><td>J1</td><td>Micro-USB Connector</td><td>SMD</td><td>1</td><td>Charging only</td></tr>
       <tr><td>C1, C2</td><td>Ceramic Capacitor</td><td>0805</td><td>2</td><td>4.7µF, X5R/X7R</td></tr>

@@ -14,12 +14,11 @@ Plan B = thin wiring only. DSP math lives in `firmware/common/` and
 | b3_current_best | DNN | full PLL + adaptive gain | `common/model_dnn.py` | reference best |
 | b4_pll_only | none | full PLL + adaptive gain | no | no classifier |
 | b5_fixed_gain | DNN gate | fixed-gain PLL | `common/model_dnn.py` | no adaptation |
-| b6_cnn_future | CNN | PLL | `common/model_cnn.py` | QUARANTINED, host-only (CV 0.597 < 0.750) |
 | b7_fit | none (amp + lock gates) | PLL, fused multi-IMU, dominant-axis, normalized drive | no | DevKitC fit build (device entry `fit_main.py`, not versioned here) |
 
 Select: `from plan_b.runner import load, run_with_fallback`.
-Fallback chain: b3 -> b5 -> b2 -> b4 -> b1 (b6 never auto-selected;
-b7 is a separate fit entry, not in the chain).
+Fallback chain: b3 -> b5 -> b2 -> b4 -> b1
+(b7 is a separate fit entry, not in the chain).
 
 ## Plan A vs Plan B
 

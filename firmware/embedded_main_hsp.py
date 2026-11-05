@@ -9,14 +9,17 @@ import time
 import sys
 
 from common.config import (
-    SAMPLES, SAMPLE_INTERVAL_US, LED_PIN, LRA_PIN, LRA_FREQ,
-    LRA_PINS, USE_LRA_ARRAY, I2C_BUS, I2C_SCL_PIN, I2C_SDA_PIN,
+    SAMPLES, SAMPLE_INTERVAL_US, LED_PIN,
+    TB6612FNG_PIN_AIN1, TB6612FNG_PIN_AIN2,
+    TB6612FNG_PIN_PWMA, TB6612FNG_PIN_STBY,
+    TB6612FNG_DUTY_ON, TB6612FNG_DUTY_OFF,
+    I2C_BUS, I2C_SCL_PIN, I2C_SDA_PIN,
     I2C_FREQ, AUDIT_CAPACITY,
-    CONF_THRESH_KINETIC, CONF_THRESH_POSTURAL,
-    STATE_CONFIRM_WINDOWS, STATE_COOLDOWN_WINDOWS,
-    STATE_MAX_TREMOR_BEFORE_COOLDOWN,
-    QUALITY_FALLBACK_THRESH, QUALITY_FLAT_VAR_THRESH,
     TCA9548A_ADDR, NUM_IMUS, I2C_MUX_ENABLED, IMU_CHANNELS, IMU_LOCATIONS,
+    BANDPASS_LOW_HZ, BANDPASS_HIGH_HZ,
+    USE_STFT, STFT_FRAME_LEN, STFT_HOP,
+    SAMPLE_RATE_HZ,
+    QUALITY_FALLBACK_THRESH, QUALITY_FLAT_VAR_THRESH,
 )
 from common.gy521 import GY521
 try:
@@ -26,15 +29,23 @@ except ImportError:
 
 # ---- HARDWARE ----
 led = Pin(LED_PIN, Pin.OUT)
-# LRAs deferred for 4-IMU build 2026-08-27 — leave NC, haptic stage will no-op
-lra = PWM(Pin(LRA_PIN), freq=LRA_FREQ, duty=0)
-lra.duty(0)
-if USE_LRA_ARRAY:
-    lra_array = [PWM(Pin(pin), freq=LRA_FREQ, duty=0) for pin in LRA_PINS]
-    for d in lra_array:
-        d.duty(0)
-else:
-    lra_array = []
+
+# TB6612FNG dual H-bridge motor driver for ERM (replaces LRA PWM)
+# Channel A: AIN1, AIN2, PWMA, STBY
+# VMOT: external motor power (2.5-5.5V) — NOT from ESP32 GPIO
+# VCC: logic power (3.3V from ESP32 or separate)
+# GND: common ground (ESP32 GND + VMOT GND must be common)
+tb6612 = {
+    "ain1": Pin(TB6612FNG_PIN_AIN1, Pin.OUT),
+    "ain2": Pin(TB6612FNG_PIN_AIN2, Pin.OUT),
+    "pwma": PWM(Pin(TB6612FNG_PIN_PWMA), freq=1000, duty=0),  # 1kHz PWM for ERM
+    "stby": Pin(TB6612FNG_PIN_STBY, Pin.OUT),
+}
+# Enable driver: STBY high, direction set, PWM off initially
+tb6612["stby"].value(1)  # enable
+tb6612["ain1"].value(1)  # direction (unidirectional for ERM)
+tb6612["ain2"].value(0)
+tb6612["pwma"].duty(0)   # start with motor off
 
 i2c = I2C(I2C_BUS, scl=Pin(I2C_SCL_PIN), sda=Pin(I2C_SDA_PIN), freq=I2C_FREQ)
 
@@ -82,11 +93,10 @@ from stages.safety import SafetyStage
 from stages.sensor import SensorStage
 from stages.stationarity import StationarityStage
 from stages.quality import QualityStage
+from stages.bandpass import BandpassStage
 from stages.fft import FFTStage
+from stages.stft import STFTStage
 from stages.features import FeaturesStage
-from stages.classify import ClassifyStage
-from stages.state_machine import TremorStateMachine
-from stages.haptic import HapticStage
 from stages.audit import AuditStage
 
 # Shared frame dict passed through pipeline
@@ -98,9 +108,7 @@ frame = {
     "window": [[0.0, 0.0, 0.0] for _ in range(SAMPLES)],
     "multi_window": [[[0.0, 0.0, 0.0] for _ in range(SAMPLES)] for _ in range(max(1, len(sensors)))],
     "led": led,
-    "lra": lra,
-    "lra_array": lra_array,
-    "use_lra_array": USE_LRA_ARRAY,
+    "tb6612": tb6612,  # TB6612FNG motor driver controls (replaces lra/lra_array)
     "sensor": sensor,
     "sensors": sensors,
     "mux": mux,
@@ -116,17 +124,13 @@ stages = {
         fallback_thresh=QUALITY_FALLBACK_THRESH,
         flat_thresh=QUALITY_FLAT_VAR_THRESH,
     ),
-    "fft": FFTStage(samples=SAMPLES, fs=100.0),
-    "features": FeaturesStage(fs=100.0, n=SAMPLES),
-    "classify": ClassifyStage(samples=SAMPLES, fs=100.0),
-    "state_machine": TremorStateMachine(
-        confirm_windows=STATE_CONFIRM_WINDOWS,
-        cooldown_windows=STATE_COOLDOWN_WINDOWS,
-        conf_thresh_kinetic=CONF_THRESH_KINETIC,
-        conf_thresh_postural=CONF_THRESH_POSTURAL,
-        max_tremor_before_cooldown=STATE_MAX_TREMOR_BEFORE_COOLDOWN,
-    ),
-    "haptic": HapticStage(),
+    "bandpass": BandpassStage(fs=SAMPLE_RATE_HZ, low_hz=BANDPASS_LOW_HZ,
+                              high_hz=BANDPASS_HIGH_HZ),
+    "fft": (STFTStage(samples=SAMPLES, fs=SAMPLE_RATE_HZ,
+                      frame_len=STFT_FRAME_LEN, hop=STFT_HOP)
+            if USE_STFT else
+            FFTStage(samples=SAMPLES, fs=SAMPLE_RATE_HZ)),
+    "features": FeaturesStage(fs=SAMPLE_RATE_HZ, n=SAMPLES),
     "audit": AuditStage(capacity=AUDIT_CAPACITY),
 }
 

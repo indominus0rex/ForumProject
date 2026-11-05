@@ -62,7 +62,7 @@ Wearable glove-based systems for tremor suppression combine inertial measurement
 
 ### 5c. TCA9548A Feasibility for 4× MPU6050 on ESP32
 - **RandomNerd TCA9548A ESP32 — https://randomnerdtutorials.com/tca9548a-i2c-multiplexer-esp32-esp8266-arduino/** , **MicrocontrollersLab — https://microcontrollerslab.com/tca9548a-i2c-multiplexer-esp32-multiple-devices/** , **componentindex — https://componentindex.net/components/tca9548a/** : TI 8-channel mux, **single byte to 0x70 with bit `1<<ch`** selects channel. Standard for motion-capture suits with same-address sensors. ESP32 `Wire.begin(SDA21,SCL22)` short <15cm to avoid WiFi I2C glitches.
-- **tuxmountain/TCA9548A — https://github.com/tuxmountain/TCA9548A** : Library `multiplexer.selectChannel(0..7)` → normal Wire transactions — maps to MicroPython `i2c.writeto(0x70, bytes([1<<ch]))` already used in `RawDataCollection.py:48`.
+- **tuxmountain/TCA9548A — https://github.com/tuxmountain/TCA9548A** : Library `multiplexer.selectChannel(0..7)` → normal Wire transactions — maps to MicroPython `i2c.writeto(0x70, bytes([1<<ch]))` already used in `raw_data_collection.py:48`.
 - **Zbotic MPU6050 complete tutorial — https://zbotic.in/mpu6050-imu-sensor-complete-tutorial-with-arduino-python**: Confirms AD0 `GND=0x68 / 3.3V=0x69` gives only 2 addresses — mux required for 4. GY-521 pullups onboard, no external needed for 1-2 devices.
 
 ### 5d. Soft-Mount Artifact Management

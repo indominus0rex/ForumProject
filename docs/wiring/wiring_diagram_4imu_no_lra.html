@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>4-IMU Tremor Monitor — Wiring Diagram (no-LRA build, Option A+ET lock 2026-08-27)</title>
+<style>
+  body { font-family: Arial, Helvetica, sans-serif; margin: 24px; color: #111; }
+  h1 { font-size: 22px; margin-bottom: 2px; }
+  .sub { color: #444; margin-bottom: 16px; }
+  svg { border: 1px solid #999; background: #fff; max-width: 100%; height: auto; }
+  table { border-collapse: collapse; margin-top: 18px; font-size: 14px; }
+  th, td { border: 1px solid #999; padding: 6px 10px; text-align: left; }
+  th { background: #eee; }
+  .warn { background: #fff3cd; border: 1px solid #cc9; padding: 10px; margin-top: 16px; }
+  code { background: #f4f4f4; padding: 1px 5px; }
+  .swatch { display: inline-block; width: 14px; height: 14px; vertical-align: -2px; margin-right: 6px; border: 1px solid #555; }
+</style>
+</head>
+<body>
+<h1>Wearable Tremor Monitor — 4-IMU Wiring (no-LRA build)</h1>
+<div class="sub">Lock: 2026-08-27 Option A + ET (thumb + index phalanx) · LRAs deferred, GPIO25/18/19/20 NC · I2C 400 kHz · 100 Hz sampling · Source of truth: <code>firmware/common/config.py</code>, <code>docs/pin_assignments.md</code></div>
+
+<svg viewBox="0 0 1200 780" width="1200" height="780" xmlns="http://www.w3.org/2000/svg" font-family="Arial" font-size="12">
+  <!-- rails -->
+  <line x1="60" y1="60" x2="1140" y2="60" stroke="#c00" stroke-width="3"/>
+  <text x="65" y="52" fill="#c00" font-weight="bold">3V3 rail (from ESP32 onboard regulator)</text>
+  <line x1="60" y1="720" x2="1140" y2="720" stroke="#000" stroke-width="3"/>
+  <text x="65" y="740" font-weight="bold">GND rail (star ground)</text>
+
+  <!-- POWER BLOCK -->
+  <rect x="60" y="300" width="160" height="80" fill="#f9f9f9" stroke="#000" stroke-width="2"/>
+  <text x="140" y="325" text-anchor="middle" font-weight="bold">LiPo 3.7V</text>
+  <text x="140" y="345" text-anchor="middle">BAT+ (top)</text>
+  <text x="140" y="362" text-anchor="middle">BAT- (bottom)</text>
+  <rect x="60" y="430" width="160" height="80" fill="#f9f9f9" stroke="#000" stroke-width="2"/>
+  <text x="140" y="455" text-anchor="middle" font-weight="bold">MT3608 boost</text>
+  <text x="140" y="475" text-anchor="middle">IN+ IN- (left)</text>
+  <text x="140" y="492" text-anchor="middle">OUT+ OUT- (right)</text>
+  <line x1="220" y1="320" x2="260" y2="320" stroke="#c00" stroke-width="2"/>
+  <text x="222" y="314" fill="#c00">BAT+</text>
+  <line x1="220" y1="360" x2="260" y2="360" stroke="#000" stroke-width="2"/>
+  <line x1="260" y1="320" x2="260" y2="450" stroke="#c00" stroke-width="2"/>
+  <line x1="260" y1="360" x2="260" y2="490" stroke="#000" stroke-width="2"/>
+  <text x="140" y="345" text-anchor="middle"></text>
+  <line x1="220" y1="450" x2="260" y2="450" stroke="#c00" stroke-width="2"/>
+  <line x1="220" y1="490" x2="260" y2="490" stroke="#000" stroke-width="2"/>
+  <text x="130" y="560" text-anchor="middle">BAT+→IN+ / BAT-→IN-</text>
+  <text x="130" y="576" text-anchor="middle">(short twisted pair)</text>
+
+  <!-- ESP32 -->
+  <rect x="320" y="140" width="170" height="500" fill="#eef3ff" stroke="#000" stroke-width="2"/>
+  <text x="405" y="162" text-anchor="middle" font-weight="bold">ESP32-DevKitC</text>
+  <text x="405" y="178" text-anchor="middle">38-pin, I2C bus 0</text>
+  <!-- left pins -->
+  <circle cx="320" cy="220" r="4" fill="#c00"/><text x="330" y="224">VIN (5V) ← MT3608 OUT+</text>
+  <circle cx="320" cy="260" r="4" fill="#c00"/><text x="330" y="264">3V3 → rail</text>
+  <circle cx="320" cy="300" r="4" fill="#000"/><text x="330" y="304">GND → rail</text>
+  <circle cx="320" cy="360" r="4" fill="#00c"/><text x="330" y="364">GPIO22 = SCL → mux</text>
+  <circle cx="320" cy="400" r="4" fill="#093"/><text x="330" y="404">GPIO21 = SDA → mux</text>
+  <circle cx="320" cy="460" r="4" fill="#a0a"/><text x="330" y="464">GPIO2 → LED (220Ω)</text>
+  <!-- right NC pads -->
+  <circle cx="490" cy="360" r="4" fill="#999"/><text x="480" y="364" text-anchor="end">GPIO25 NC (LRA deferred)</text>
+  <circle cx="490" cy="400" r="4" fill="#999"/><text x="480" y="404" text-anchor="end">GPIO18 NC</text>
+  <circle cx="490" cy="440" r="4" fill="#999"/><text x="480" y="444" text-anchor="end">GPIO19 NC</text>
+  <circle cx="490" cy="480" r="4" fill="#999"/><text x="480" y="484" text-anchor="end">GPIO20 NC</text>
+  <!-- ESP32 power feeds -->
+  <line x1="260" y1="450" x2="300" y2="450" stroke="#c00" stroke-width="2"/>
+  <line x1="300" y1="450" x2="300" y2="220" stroke="#c00" stroke-width="2"/>
+  <line x1="300" y1="220" x2="320" y2="220" stroke="#c00" stroke-width="2"/>
+  <text x="272" y="340" fill="#c00">5V</text>
+  <line x1="320" y1="260" x2="320" y2="60" stroke="#c00" stroke-width="2"/>
+  <line x1="320" y1="300" x2="320" y2="720" stroke="#000" stroke-width="2"/>
+
+  <!-- LED -->
+  <line x1="320" y1="460" x2="250" y2="460" stroke="#a0a" stroke-width="2"/>
+  <rect x="200" y="452" width="50" height="16" fill="#fff" stroke="#a0a" stroke-width="2"/>
+  <text x="225" y="445" text-anchor="middle" fill="#a0a">220Ω</text>
+  <line x1="200" y1="460" x2="170" y2="460" stroke="#a0a" stroke-width="2"/>
+  <polygon points="170,450 150,470 170,470" fill="none" stroke="#a0a" stroke-width="2"/>
+  <line x1="160" y1="470" x2="160" y2="720" stroke="#000" stroke-width="2"/>
+  <text x="120" y="500">Status LED</text>
+  <text x="120" y="516">(anode→G2, cathode→GND)</text>
+
+  <!-- TCA9548A -->
+  <rect x="580" y="140" width="180" height="500" fill="#fff8ee" stroke="#000" stroke-width="2"/>
+  <text x="670" y="162" text-anchor="middle" font-weight="bold">TCA9548A @0x70</text>
+  <text x="670" y="178" text-anchor="middle">A0=A1=A2=GND, EN=3V3</text>
+  <circle cx="580" cy="220" r="4" fill="#c00"/><text x="590" y="224">VCC → 3V3 (+0.1µF)</text>
+  <circle cx="580" cy="260" r="4" fill="#000"/><text x="590" y="264">GND → rail</text>
+  <circle cx="580" cy="320" r="4" fill="#00c"/><text x="590" y="324">SCL ← GPIO22</text>
+  <circle cx="580" cy="360" r="4" fill="#093"/><text x="590" y="364">SDA ← GPIO21</text>
+  <circle cx="760" cy="240" r="4" fill="#00c"/><text x="770" y="244">CH0 → wrist (blue)</text>
+  <circle cx="760" cy="330" r="4" fill="#093"/><text x="770" y="334">CH1 → thenar (green)</text>
+  <circle cx="760" cy="420" r="4" fill="#990"/><text x="770" y="424">CH2 → thumb (yellow)</text>
+  <circle cx="760" cy="510" r="4" fill="#c60"/><text x="770" y="514">CH3 → index (orange)</text>
+  <text x="670" y="580" text-anchor="middle">A0/A1/A2 → GND (stub)</text>
+  <text x="670" y="596" text-anchor="middle">EN → 3V3 · CH4-7 NC</text>
+  <!-- bus ESP32->mux -->
+  <line x1="490" y1="360" x2="530" y2="360" stroke="#999" stroke-width="1" stroke-dasharray="4 3"/>
+  <line x1="320" y1="360" x2="320" y2="360" stroke="#00c" stroke-width="2"/>
+  <line x1="320" y1="360" x2="560" y2="360" stroke="#00c" stroke-width="0"/>
+  <polyline points="330,360 540,360 540,320 580,320" fill="none" stroke="#00c" stroke-width="2"/>
+  <polyline points="330,400 555,400 555,360 580,360" fill="none" stroke="#093" stroke-width="2"/>
+  <text x="430" y="352" fill="#00c">SCL</text>
+  <text x="430" y="415" fill="#093">SDA</text>
+  <!-- pull-ups -->
+  <line x1="540" y1="320" x2="540" y2="120" stroke="#00c" stroke-width="1"/>
+  <rect x="528" y="120" width="24" height="40" fill="#fff" stroke="#00c" stroke-width="2"/>
+  <line x1="540" y1="120" x2="540" y2="60" stroke="#c00" stroke-width="1"/>
+  <text x="548" y="145" fill="#00c">4.7k</text>
+  <line x1="555" y1="360" x2="555" y2="120" stroke="#093" stroke-width="1"/>
+  <rect x="543" y="120" width="24" height="40" fill="#fff" stroke="#093" stroke-width="2"/>
+  <line x1="555" y1="120" x2="555" y2="60" stroke="#c00" stroke-width="1"/>
+  <text x="500" y="110">pull-ups 4.7k → 3V3</text>
+  <!-- mux power -->
+  <line x1="580" y1="220" x2="580" y2="60" stroke="#c00" stroke-width="2"/>
+  <line x1="580" y1="260" x2="580" y2="720" stroke="#000" stroke-width="2"/>
+  <line x1="620" y1="600" x2="620" y2="720" stroke="#000" stroke-width="1"/>
+  <text x="624" y="660">A0-A2</text>
+  <line x1="700" y1="600" x2="700" y2="60" stroke="#c00" stroke-width="1"/>
+  <text x="704" y="630" fill="#c00">EN</text>
+
+  <!-- IMUs -->
+  <g>
+    <rect x="880" y="190" width="220" height="90" fill="#fff" stroke="#00c" stroke-width="2"/>
+    <text x="990" y="212" text-anchor="middle" font-weight="bold">IMU0 GY-521 @0x68</text>
+    <text x="990" y="228" text-anchor="middle">dorsal wrist proximal (primary)</text>
+    <text x="990" y="244" text-anchor="middle">VCC→3V3 · GND→rail · AD0→GND</text>
+    <text x="990" y="260" text-anchor="middle" fill="#00c">SCL/SDA ← CH0 (blue)</text>
+    <line x1="760" y1="240" x2="880" y2="240" stroke="#00c" stroke-width="2"/>
+    <line x1="940" y1="280" x2="940" y2="60" stroke="#c00" stroke-width="1"/>
+    <line x1="980" y1="280" x2="980" y2="720" stroke="#000" stroke-width="1"/>
+    <line x1="1020" y1="280" x2="1020" y2="300" stroke="#000" stroke-width="1"/>
+    <text x="1024" y="296">AD0</text>
+  </g>
+  <g>
+    <rect x="880" y="300" width="220" height="90" fill="#fff" stroke="#093" stroke-width="2"/>
+    <text x="990" y="322" text-anchor="middle" font-weight="bold">IMU1 GY-521 @0x68</text>
+    <text x="990" y="338" text-anchor="middle">thenar eminence, volar</text>
+    <text x="990" y="354" text-anchor="middle">VCC→3V3 · GND→rail · AD0→GND</text>
+    <text x="990" y="370" text-anchor="middle" fill="#093">SCL/SDA ← CH1 (green)</text>
+    <line x1="760" y1="330" x2="880" y2="345" stroke="#093" stroke-width="2"/>
+    <line x1="940" y1="300" x2="940" y2="60" stroke="#c00" stroke-width="1"/>
+    <line x1="980" y1="390" x2="980" y2="720" stroke="#000" stroke-width="1"/>
+  </g>
+  <g>
+    <rect x="880" y="410" width="220" height="90" fill="#fff" stroke="#990" stroke-width="2"/>
+    <text x="990" y="432" text-anchor="middle" font-weight="bold">IMU2 GY-521 @0x68</text>
+    <text x="990" y="448" text-anchor="middle">thumb prox. phalanx, 20° tilt</text>
+    <text x="990" y="464" text-anchor="middle">pill-rolling 4–6 Hz · AD0→GND</text>
+    <text x="990" y="480" text-anchor="middle" fill="#990">SCL/SDA ← CH2 (yellow)</text>
+    <line x1="760" y1="420" x2="880" y2="450" stroke="#990" stroke-width="2"/>
+    <line x1="940" y1="410" x2="940" y2="60" stroke="#c00" stroke-width="1"/>
+    <line x1="980" y1="500" x2="980" y2="720" stroke="#000" stroke-width="1"/>
+  </g>
+  <g>
+    <rect x="880" y="520" width="220" height="90" fill="#fff" stroke="#c60" stroke-width="2"/>
+    <text x="990" y="542" text-anchor="middle" font-weight="bold">IMU3 GY-521 @0x68</text>
+    <text x="990" y="558" text-anchor="middle">index prox. phalanx, dorsal</text>
+    <text x="990" y="574" text-anchor="middle">ET postural 6–8 Hz · AD0→GND</text>
+    <text x="990" y="590" text-anchor="middle" fill="#c60">SCL/SDA ← CH3 (orange)</text>
+    <line x1="760" y1="510" x2="880" y2="555" stroke="#c60" stroke-width="2"/>
+    <line x1="940" y1="520" x2="940" y2="60" stroke="#c00" stroke-width="1"/>
+    <line x1="980" y1="610" x2="980" y2="720" stroke="#000" stroke-width="1"/>
+  </g>
+  <text x="990" y="640" text-anchor="middle">INT pins NC on all IMUs · stubs &lt; 15 cm</text>
+</svg>
+
+<h2>Legend</h2>
+<div><span class="swatch" style="background:#c00"></span>3V3 / 5V power
+<span class="swatch" style="background:#000"></span>GND
+<span class="swatch" style="background:#00c"></span>SCL / CH0
+<span class="swatch" style="background:#093"></span>SDA / CH1
+<span class="swatch" style="background:#990"></span>CH2
+<span class="swatch" style="background:#c60"></span>CH3
+<span class="swatch" style="background:#a0a"></span>LED
+<span class="swatch" style="background:#999"></span>NC / deferred</div>
+
+<h2>Connection table</h2>
+<table>
+<tr><th>From</th><th>To</th><th>Wire</th><th>Notes</th></tr>
+<tr><td>LiPo BAT+</td><td>MT3608 IN+</td><td>red</td><td>short twisted pair</td></tr>
+<tr><td>LiPo BAT-</td><td>MT3608 IN- + GND rail</td><td>black</td><td>single ground point</td></tr>
+<tr><td>MT3608 OUT+</td><td>ESP32 VIN</td><td>red</td><td>5V into devkit</td></tr>
+<tr><td>MT3608 OUT-</td><td>GND rail</td><td>black</td><td></td></tr>
+<tr><td>ESP32 3V3</td><td>3V3 rail → mux VCC, 4× IMU VCC, EN, pull-ups</td><td>red</td><td>0.1µF at mux + each IMU</td></tr>
+<tr><td>ESP32 GND</td><td>GND rail → mux, 4× IMU, LED, A0-A2, AD0s</td><td>black</td><td>star, not daisy chain</td></tr>
+<tr><td>ESP32 GPIO22</td><td>TCA9548A SCL</td><td>blue</td><td>400 kHz, 4.7k pull-up to 3V3</td></tr>
+<tr><td>ESP32 GPIO21</td><td>TCA9548A SDA</td><td>green</td><td>4.7k pull-up to 3V3</td></tr>
+<tr><td>TCA9548A A0/A1/A2</td><td>GND</td><td>black stub</td><td>address 0x70</td></tr>
+<tr><td>TCA9548A EN</td><td>3V3 rail</td><td>red stub</td><td>enabled</td></tr>
+<tr><td>TCA9548A CH0 (SD0/SC0)</td><td>IMU0 SCL/SDA (dorsal wrist)</td><td>blue pair</td><td>primary, AD0→GND (0x68)</td></tr>
+<tr><td>TCA9548A CH1</td><td>IMU1 SCL/SDA (thenar)</td><td>green pair</td><td>AD0→GND</td></tr>
+<tr><td>TCA9548A CH2</td><td>IMU2 SCL/SDA (thumb phalanx 20°)</td><td>yellow pair</td><td>AD0→GND</td></tr>
+<tr><td>TCA9548A CH3</td><td>IMU3 SCL/SDA (index phalanx)</td><td>orange pair</td><td>AD0→GND</td></tr>
+<tr><td>ESP32 GPIO2</td><td>LED anode via 220Ω, cathode → GND</td><td>purple</td><td>see boot warning below</td></tr>
+<tr><td>GPIO25/18/19/20</td><td>NC pads</td><td>grey</td><td>LRA deferred this build</td></tr>
+<tr><td>IMU INT ×4, mux CH4-7</td><td>NC</td><td>—</td><td>not used by firmware</td></tr>
+</table>
+
+<div class="warn"><b>GPIO2 boot warning (strapping pin MTDI):</b> the 220Ω LED to GND can hold GPIO2 LOW at reset and force UART download mode. If the board fails to boot with the LED connected, buffer with a transistor or move the LED to GPIO4/GPIO5.</div>
+
+<h2>Build notes</h2>
+<ol>
+<li>Never wire multiple 0x68 IMUs in parallel — each sits behind its own mux channel.</li>
+<li>Keep mux→IMU stubs under 15 cm to avoid I2C glitches.</li>
+<li>Star ground per IMU; 0.1µF ceramic at mux and each IMU VCC, bulk 10–100µF on the 3V3 bus.</li>
+<li>Bring up incrementally: validate CH0 alone, then add CH1→CH3 (NUM_IMUS 1→4).</li>
+<li>Firmware selects channels with <code>i2c.writeto(0x70, bytes([1&lt;&lt;ch]))</code> then <code>readfrom_mem(0x68, 0x3B, 6)</code>.</li>
+<li>Haptic stage no-ops (duty 0) with no LRA populated — expected.</li>
+</ol>
+</body>
+</html>

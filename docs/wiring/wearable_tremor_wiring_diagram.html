@@ -40,7 +40,7 @@
 </head>
 <body>
     <h1>ESP32 4-IMU Tremor Monitor — Minimalist Box + Visible Volar Ghost</h1>
-    <p class="subtitle">Option A + ET: thumb proximal phalanx 20° tilt (CH2 yellow pill 4-6Hz) + index proximal phalanx (CH3 orange ET 6-8Hz), thumb-index coherence 0.6 &amp; finger-wrist 0.6 balanced. Locked 2026-08-27 Option A. File <code>cad/connections_4imu.csv</code> · <code>PIN_ASSIGNMENTS.md:48</code> · prompts <code>wiring_diagram_prompt_4imu_minimalist.txt</code></p>
+    <p class="subtitle">Option A + ET: thumb proximal phalanx 20° tilt (CH2 yellow pill 4-6Hz) + index proximal phalanx (CH3 orange ET 6-8Hz), thumb-index coherence 0.6 &amp; finger-wrist 0.6 balanced. Locked 2026-08-27 Option A. File <code>cad/connections_4imu.csv</code> · <code>pin_assignments.md:48</code> · prompts <code>wiring_diagram_prompt_4imu_minimalist.txt</code></p>
     <div class="diagram-container">
         <svg viewBox="0 0 1200 560" xmlns="http://www.w3.org/2000/svg">
             <!-- Power buses horizontal  -->
@@ -177,7 +177,7 @@
         <div class="legend-item"><span class="legend-swatch" style="background:#95a5a6; border:1px dashed #666;"></span> DEFERRED GPIO25/18/19/20 NC</div>
     </div>
     <div class="notes">
-        <b>Build Note 2026-08-27 Option A + ET — Thumb+Index Phalanx:</b> Option A <code>0 wrist /1 thenar/2 thumb phalanx 20° /3 index phalanx</code> replaces <code>CMC+forearm</code> for pill-rolling <code>4-6Hz</code> + ET <code>6-8Hz</code> with balanced cohernce <code>0.6</code> (<code>firmware/common/config.py:64 COH_THUMB_INDEX/_FINGER_WRIST</code>) and <code>pill_power/et_power</code> in <code>stages/features.py</code>. Inset now shows <code>DOT2 thumb phalanx 20°</code> + <code>DOT3 index phalanx</code> with volar ghost still visible. LRAs <b>DEFERRED</b>. Prompts: <code>wiring_diagram_prompt_4imu_no_lra.txt</code> + <code>wiring_diagram_prompt_4imu_minimalist.txt</code> (box+visible volar). Pins <code>PIN_ASSIGNMENTS.md:48</code>, wires <code>cad/connections_4imu.csv</code>.
+        <b>Build Note 2026-08-27 Option A + ET — Thumb+Index Phalanx:</b> Option A <code>0 wrist /1 thenar/2 thumb phalanx 20° /3 index phalanx</code> replaces <code>CMC+forearm</code> for pill-rolling <code>4-6Hz</code> + ET <code>6-8Hz</code> with balanced cohernce <code>0.6</code> (<code>firmware/common/config.py:64 COH_THUMB_INDEX/_FINGER_WRIST</code>) and <code>pill_power/et_power</code> in <code>stages/features.py</code>. Inset now shows <code>DOT2 thumb phalanx 20°</code> + <code>DOT3 index phalanx</code> with volar ghost still visible. LRAs <b>DEFERRED</b>. Prompts: <code>wiring_diagram_prompt_4imu_no_lra.txt</code> + <code>wiring_diagram_prompt_4imu_minimalist.txt</code> (box+visible volar). Pins <code>pin_assignments.md:48</code>, wires <code>cad/connections_4imu.csv</code>.
     </div>
     <table class="specs-table">
         <tr><th>Block</th><th>Component</th><th>Qty</th><th>Connection</th></tr>

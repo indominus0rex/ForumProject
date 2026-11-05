@@ -41,7 +41,7 @@ Consolidated web search performed before 4-IMU build (thumb CMC locked). Raw exc
 **Zbotic MPU6050 Tutorial**
 - URL: https://zbotic.in/mpu6050-imu-sensor-complete-tutorial-with-arduino-python
 - Excerpt: "Two — one at address 0x68 (AD0=GND) and one at 0x69 (AD0=3.3V). For more than two, use a TCA9548A."
-- Relevance to project: Confirms `firmware/RawDataCollection.py:48` `mux.writeto(0x70, 1<<ch)` and pullups on GY-521. Keep wires <15cm to avoid WiFi I2C glitches.
+- Relevance to project: Confirms `firmware/raw_data_collection.py:48` `mux.writeto(0x70, 1<<ch)` and pullups on GY-521. Keep wires <15cm to avoid WiFi I2C glitches.
 
 ### 3. Multi-IMU Fusion Benefit
 **schoi355/multi_imu_fusion (AAS 2025)**

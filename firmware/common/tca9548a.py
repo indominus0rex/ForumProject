@@ -6,8 +6,10 @@ MicroPython usage (matches web tutorials https://randomnerdtutorials.com/tca9548
     mux.select_channel(0)  # -> i2c.writeto(0x70, b'\\x01')
     # then normal i2c.readfrom_mem(0x68, 0x3B, 6)
 
-For 4-IMU build 2026-08-27 (thumb CMC lock):
-  ch0 = dorsal wrist proximal, ch1 = thenar, ch2 = thumb CMC, ch3 = forearm proximal.
+For 4-IMU build 2026-08-27 (Option A + ET lock):
+  ch0 = dorsal wrist proximal, ch1 = thenar eminence volar,
+  ch2 = thumb proximal phalanx (dorsal-radial 20° tilt),
+  ch3 = index proximal phalanx (dorsal).
 """
 
 from machine import I2C

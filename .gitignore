@@ -65,6 +65,9 @@ host_scripts/sessions/*.csv
 *.bak
 *~
 
+# Local run logs (regenerable training output)
+logs/
+
 # Keep these tracked (sample data + wiring prompts are intentional)
 # data.txt
 # graph_1.png

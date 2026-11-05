@@ -120,4 +120,4 @@ NEGATIVE PROMPT (do NOT include):
 - No soldering, no flux residue, no messy wiring
 - No fingers touching components, no hand covering sensors
 
-Ref: firmware/common/config.py (SDA21/SCL22, 0x70, NUM_IMUS 4, IMU_CHANNELS [0,1,2,3], SAMPLES 128 @100Hz), cad/connections_4imu.csv, PIN_ASSIGNMENTS.md:48
+Ref: firmware/common/config.py (SDA21/SCL22, 0x70, NUM_IMUS 4, IMU_CHANNELS [0,1,2,3], SAMPLES 128 @100Hz), cad/connections_4imu.csv, pin_assignments.md:48

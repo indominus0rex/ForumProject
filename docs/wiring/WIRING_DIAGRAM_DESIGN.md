@@ -3,42 +3,43 @@
 ## Functional Blocks
 
 1. **Power Management**
-   - Components: Battery (LiPo, 3.7V), Voltage Regulator (AMS1117-3.3 or similar to provide 3.3V), Power distribution rails (3.3V and GND)
+   - Components: Battery (LiPo, 3.7V), MT3608 Boost Converter (3.7V→5V), ESP32-DevKitC 38-pin (onboard AMS1117-3.3 for 3.3V), Power distribution rails (3.3V and GND)
    - Connections: 
-     - Battery + → Voltage Regulator VIN
-     - Battery - → Voltage Regulator GND and system GND
-     - Voltage Regulator VOUT → 3.3V rail
-     - Voltage Regulator GND → system GND
+     - Battery + → MT3608 IN+
+     - Battery - → MT3608 IN- and system GND
+     - MT3608 OUT+ → ESP32 VIN pin (5V)
+     - MT3608 OUT- → system GND
+     - ESP32 3.3V (from onboard AMS1117) → 3.3V rail
      - 3.3V rail → ESP32 VCC, TCA9548A VCC, IMUs VCC, LRA (via driver if needed), LED anode (via resistor)
      - GND rail → ESP32 GND, TCA9548A GND, IMUs GND, LRA cathode, LED cathode
 
 2. **Microcontroller (ESP32)**
-   - Component: ESP32-WROOM-32 or similar
+   - Component: ESP32-DevKitC 38-pin (ESP32-WROOM-32 module on dev board)
    - Key Pins:
      - GPIO2: LED output (active high)
      - GPIO21: I2C SDA
      - GPIO22: I2C SCL
      - GPIO25: Main LRA PWM output
      - GPIO18,19,20: Optional LRA array PWM outputs (for proximial, middle, distal LRAs if used)
-     - VCC: 3.3V power input
+     - VIN: 5V power input (from MT3608 boost)
      - GND: Ground
 
 3. **Sensing Block (IMUs via Multiplexer) — LOCKED 2026-08-27 Option A + ET: thumb+index phalanx, LRAs deferred**
    - Components:
      - TCA9548A I2C Multiplexer (1-to-8) @0x70 (A0/A1/A2→GND)
      - 4× MPU-6050 GY-521 @0x68 each, isolated per channel (scalable 1→4, validate incrementally)
-     - Channel map per `PIN_ASSIGNMENTS.md:48` + `cad/connections_4imu.csv:10` + `knowledge.md:5a`: CH0=dorsal wrist proximal (primary, Keba 2025 rubber band 100Hz), CH1=thenar volar, CH2=thumb proximal phalanx dorsal-radial 20° tilt (pill-rolling 4–6Hz, was CMC), CH3=index proximal phalanx dorsal (ET postural 6–8Hz, thumb-index coherence 0.6 balanced)
+     - Channel map per `pin_assignments.md:48` + `cad/connections_4imu.csv:10` + `knowledge.md:5a`: CH0=dorsal wrist proximal (primary, Keba 2025 rubber band 100Hz), CH1=thenar volar, CH2=thumb proximal phalanx dorsal-radial 20° tilt (pill-rolling 4–6Hz, was CMC), CH3=index proximal phalanx dorsal (ET postural 6–8Hz, thumb-index coherence 0.6 balanced)
    - Connections:
      - TCA9548A:
        - VCC → 3.3V rail (with 0.1µF decoupling at mux)
        - GND → system GND (star)
        - SCL → ESP32 GPIO22 (I2C SCL @400kHz)
        - SDA → ESP32 GPIO21 (I2C SDA)
-       - A0, A1, A2 → GND (to set I2C address 0x70 per `PIN_ASSIGNMENTS.md:45`)
+       - A0, A1, A2 → GND (to set I2C address 0x70 per `pin_assignments.md:45`)
        - EN → 3.3V rail (enabled)
        - CH0→IMU0 (dorsal wrist), CH1→IMU1 (thenar), CH2→IMU2 (thumb phalanx 20° pill), CH3→IMU3 (index phalanx ET) — each channel's SCL/SDA routed to corresponding IMU; CH4-7 NC (forearm optional CH4 if re-added)
          - Wire colors for diagram: CH0 blue, CH1 green, CH2 yellow (thumb phalanx pill), CH3 orange (index phalanx ET) per `cad/connections_4imu.csv:10` — coherence 0.6 thresholds in `firmware/common/config.py:64`
-       - Selection in firmware: `i2c.writeto(0x70, bytes([1<<ch]))` then `readfrom_mem(0x68, 0x3B, 6)` as in `firmware/RawDataCollection.py:48` and web tutorial `https://randomnerdtutorials.com/tca9548a-i2c-multiplexer-esp32-esp8266-arduino/`
+       - Selection in firmware: `i2c.writeto(0x70, bytes([1<<ch]))` then `readfrom_mem(0x68, 0x3B, 6)` as in `firmware/raw_data_collection.py:48` and web tutorial `https://randomnerdtutorials.com/tca9548a-i2c-multiplexer-esp32-esp8266-arduino/`
      - Each MPU-6050:
        - VCC → 3.3V rail + 0.1µF ceramic decoupling at IMU, 10-100µF bulk on 3.3V bus
        - GND → system GND (star per IMU, not daisy chain)
@@ -48,7 +49,7 @@
        - INT (optional) → not connected or to ESP32 GPIO for interrupt (not used in current firmware; selection via mux makes INT less useful)
 
 4. **Actuation Block (LRA Vibration Motors) — DEFERRED FOR CURRENT 4-IMU BUILD (2026-08-27)**
-   - Components: **None populated for this build** — GPIOs 25/18/19/20 left NC as grey pads per `cad/connections_4imu.csv:29` and `PIN_ASSIGNMENTS.md:55`. HSP `haptic` stage no-ops with duty 0. For reference only:
+   - Components: **None populated for this build** — GPIOs 25/18/19/20 left NC as grey pads per `cad/connections_4imu.csv:29` and `pin_assignments.md:55`. HSP `haptic` stage no-ops with duty 0. For reference only:
      - Linear Resonant Actuator (LRA) - main vibration motor (future)
      - Optional: Additional LRAs for array configuration (proximal, middle, distal)
      - Note: LRAs typically require a driver circuit (like DRV2605) for optimal performance, but for simplicity we assume direct PWM drive with low-side MOSFET + flyback diode in practice

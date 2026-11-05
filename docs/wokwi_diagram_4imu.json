@@ -1,0 +1,187 @@
+{
+  "version": 1,
+  "author": "Hermes Agent",
+  "editor": "wokwi",
+  "parts": [
+    {
+      "type": "wokwi-esp32-devkit-v1",
+      "id": "esp",
+      "top": -100,
+      "left": -50,
+      "attrs": {
+        "notes": "ESP32-DevKitC 38-pin: VIN from MT3608 boost (5V) → onboard AMS1117-3.3 → 3.3V. See power section notes."
+      }
+    },
+    {
+      "type": "wokwi-tca9548a",
+      "id": "mux",
+      "top": -80,
+      "left": 300,
+      "attrs": {
+        "notes": "TCA9548A @0x70. A0-A2->GND, EN->3.3V, VCC->3.3V, GND->GND"
+      }
+    },
+    {
+      "type": "wokwi-mpu6050",
+      "id": "imu0",
+      "top": -250,
+      "left": 650,
+      "attrs": {
+        "notes": "GY-521 MPU6050 | CH0 @0x68 | Dorsal Wrist | AD0->GND | 0.1uF decap"
+      }
+    },
+    {
+      "type": "wokwi-mpu6050",
+      "id": "imu1",
+      "top": -100,
+      "left": 650,
+      "attrs": {
+        "notes": "GY-521 MPU6050 | CH1 @0x68 | Thenar Volar | AD0->GND | 0.1uF decap"
+      }
+    },
+    {
+      "type": "wokwi-mpu6050",
+      "id": "imu2",
+      "top": 50,
+      "left": 650,
+      "attrs": {
+        "notes": "GY-521 MPU6050 | CH2 @0x68 | Thumb Phalanx 20deg | AD0->GND | 0.1uF decap"
+      }
+    },
+    {
+      "type": "wokwi-mpu6050",
+      "id": "imu3",
+      "top": 200,
+      "left": 650,
+      "attrs": {
+        "notes": "GY-521 MPU6050 | CH3 @0x68 | Index Phalanx | AD0->GND | 0.1uF decap"
+      }
+    },
+    {
+      "type": "wokwi-led",
+      "id": "led",
+      "top": 100,
+      "left": -80,
+      "attrs": {
+        "color": "red",
+        "label": "D2 LED"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "rled",
+      "top": 110,
+      "left": -20,
+      "attrs": {
+        "resistance": "220"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "rsda",
+      "top": -170,
+      "left": 180,
+      "rotate": 90,
+      "attrs": {
+        "resistance": "4.7k"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "rscl",
+      "top": -170,
+      "left": 220,
+      "rotate": 90,
+      "attrs": {
+        "resistance": "4.7k"
+      }
+    },
+    {
+      "type": "wokwi-gnd",
+      "id": "gnd",
+      "top": 270,
+      "left": 100,
+      "attrs": {}
+    },
+    {
+      "type": "wokwi-gnd",
+      "id": "gnd2",
+      "top": 270,
+      "left": 350,
+      "attrs": {}
+    },
+    {
+      "type": "wokwi-gnd",
+      "id": "gnd3",
+      "top": 270,
+      "left": 750,
+      "attrs": {}
+    },
+    {
+      "type": "wokwi-gnd",
+      "id": "gnd4",
+      "top": -200,
+      "left": 750,
+      "attrs": {}
+    },
+    {
+      "type": "wokwi-gnd",
+      "id": "gnd5",
+      "top": -50,
+      "left": 750,
+      "attrs": {}
+    },
+    {
+      "type": "wokwi-gnd",
+      "id": "gnd6",
+      "top": 100,
+      "left": 750,
+      "attrs": {}
+    },
+    {
+      "type": "wokwi-gnd",
+      "id": "gnd7",
+      "top": 250,
+      "left": 750,
+      "attrs": {}
+    }
+  ],
+  "connections": [
+    ["esp:D21", "mux:SDA", "green", ["v0"]],
+    ["esp:D22", "mux:SCL", "green", ["v0"]],
+    ["mux:SD0", "imu0:SDA", "blue", ["v0"]],
+    ["mux:SC0", "imu0:SCL", "blue", ["v0"]],
+    ["mux:SD1", "imu1:SDA", "blue", ["v0"]],
+    ["mux:SC1", "imu1:SCL", "blue", ["v0"]],
+    ["mux:SD2", "imu2:SDA", "blue", ["v0"]],
+    ["mux:SC2", "imu2:SCL", "blue", ["v0"]],
+    ["mux:SD3", "imu3:SDA", "blue", ["v0"]],
+    ["mux:SC3", "imu3:SCL", "blue", ["v0"]],
+    ["esp:D2", "led:A", "orange", ["v0"]],
+    ["led:C", "rled:1", "orange", ["v0"]],
+    ["rled:2", "gnd:0", "black", ["v0"]],
+    ["esp:3V3", "mux:VCC", "red", ["v0"]],
+    ["esp:3V3", "imu0:VCC", "red", ["v0"]],
+    ["esp:3V3", "imu1:VCC", "red", ["v0"]],
+    ["esp:3V3", "imu2:VCC", "red", ["v0"]],
+    ["esp:3V3", "imu3:VCC", "red", ["v0"]],
+    ["rsda:2", "esp:3V3", "red", ["v0"]],
+    ["rscl:2", "esp:3V3", "red", ["v0"]],
+    ["rsda:1", "mux:SDA", "green", ["v0"]],
+    ["rscl:1", "mux:SCL", "green", ["v0"]],
+    ["esp:GND.1", "mux:GND", "black", ["v0"]],
+    ["esp:GND.2", "gnd:0", "black", ["v0"]],
+    ["mux:GND", "imu0:GND", "black", ["v0"]],
+    ["mux:GND", "imu1:GND", "black", ["v0"]],
+    ["mux:GND", "imu2:GND", "black", ["v0"]],
+    ["mux:GND", "imu3:GND", "black", ["v0"]],
+    ["mux:GND", "gnd:0", "black", ["v0"]],
+    ["imu0:GND", "gnd4:0", "black", ["v0"]],
+    ["imu1:GND", "gnd5:0", "black", ["v0"]],
+    ["imu2:GND", "gnd6:0", "black", ["v0"]],
+    ["imu3:GND", "gnd7:0", "black", ["v0"]],
+    ["esp:3V3", "rsda:2", "red", ["v0"]],
+    ["esp:3V3", "rscl:2", "red", ["v0"]]
+  ],
+  "dependencies": {}
+}

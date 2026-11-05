@@ -14,8 +14,8 @@ Two plans, one shared core. Nothing moved — this file is only a map.
   anticancel, adaptive_gain, fft, feature_extract, dnn/logreg/scaler,
   gy521, tca9548a, baked `model*.py`). Imported by both plans.
 - `firmware/archive/` — superseded mains (`embedded_main.py`,
-  `RawDataCollection.py`, old `collect_pilot.py`). Reference only.
-- `firmware/collect_pilot.py`, `firmware/RawDataCollection.py` — host-side
+  `raw_data_collection.py`, old `collect_pilot.py`). Reference only.
+- `firmware/collect_pilot.py`, `firmware/raw_data_collection.py` — host-side
   data-capture helpers (root copies). Not flashed.
 
 Rule for both plans: no numpy/scipy in `firmware/` (MicroPython).

@@ -5,7 +5,7 @@ Use this checklist to build a practical first prototype for the Forum Project we
 Current repo baseline:
 - IMU: four GY-521 / MPU6050 via TCA9548A I2C multiplexer on I2C0, SDA=GPIO21, SCL=GPIO22.
 - Status LED: GPIO2.
-- Haptic output: **deferred — no LRA this build.** GPIO25/18/19/20 left unpopulated.
+- Haptic output: **TB6612FNG dual H-bridge + ERM vibration motor**. GPIO25/AIN1, GPIO26/AIN2, GPIO27/PWMA, GPIO28/STBY. VMOT from external supply (NOT ESP32 GPIO).
 - 0.1 µF decoupling capacitors near each IMU's VCC pin (×4).
 
 Materials note: this checklist keeps the existing material choices unchanged: elastic nylon/spandex, breathable mesh / 3D spacer mesh, sew-on Velcro, flexible silicone wire, and polyester/nylon thread.
@@ -16,9 +16,9 @@ Materials note: this checklist keeps the existing material choices unchanged: el
 
 | ☐ | Decision |
 |---|---|
-| ☐ | **Recommended first build:** 4 IMUs via TCA9548A I2C multiplexer, no LRA (matching `connections_4imu.csv`) |
-| ☐ | Minimal smoke-test only: 1 ESP32 + 1 MPU6050 (no multiplexer) — for verifying basic IMU readout before committing to 4-IMU build |
-| ☐ | Multi-LRA build **deferred** — only if actuators are later procured and `USE_LRA_ARRAY = True` is tested |
+|| ☐ | **Recommended first build:** 4 IMUs via TCA9548A I2C multiplexer + TB6612FNG + ERM motor (matching `connections_4imu.csv` + `docs/erm_tb6612fng_wiring.md`) |
+|| ☐ | Minimal smoke-test only: 1 ESP32 + 1 MPU6050 (no multiplexer) — for verifying basic IMU readout before committing to 4-IMU build |
+|| ☐ | Multi-ERM build **optional** — only if additional actuators are procured and TB6612FNG channel B is wired |
 
 Notes:
 - Do **not** connect 3 MPU6050 boards all with AD0 tied to GND. They will all use address `0x68` and conflict on the same I2C bus.
@@ -27,24 +27,51 @@ Notes:
 
 ---
 
-## Phase 2 — Parts Check
+## Phase 2 — Power Section
+
+Wire the power chain before connecting any ICs. Reference `cad/connections_4imu.csv:35-38`.
+
+**Power path:** `LiPo+ → PPTC_900mA (in→out) → SW_3A (COM→NO) → MT3608 IN+`
+
+|| ☐ | Connection |
+||---|---|
+|| ☐ | LiPo battery (+) → PPTC_900mA `IN` pad (red wire) |
+|| ☐ | PPTC_900mA `OUT` → SW_3A slide switch `COM` terminal (red wire) |
+|| ☐ | SW_3A slide switch `NO` → MT3608 `IN+` (red wire) |
+|| ☐ | LiPo battery (−) → common GND rail (black wire) |
+|| ☐ | Add 10 µF capacitor across MT3608 `IN+`/`IN−` (input bulk) |
+|| ☐ | Add 10 µF capacitor across MT3608 `OUT+`/`OUT−` (output bulk) |
+|| ☐ | Verify 5V output from MT3608 with multimeter before connecting ESP32 |
+
+Notes:
+- PPTC must come **before** the switch so the switch does not bypass overcurrent protection.
+- Switch is SS22D07 3A SPDT; common terminal (COM) is center pin.
+
+---
+
+## Phase 3 — Parts Check
 
 | ☐ | Item |
 |---|---|
-| ☐ | ESP32-DevKitC or compatible ESP32 board |
-| ☐ | 4 × MPU6050 / GY-521 (one per IMU channel) |
-| ☐ | 1 × TCA9548A I2C multiplexer breakout board |
-| ☐ | 0.1 µF ceramic capacitors ×4 (one per IMU VCC) |
-| ☐ | 4.7 kΩ I2C pull-up resistors for SDA/SCL if your GY-521 board does not already include them |
-| ☐ | 10-100 µF bulk capacitor near ESP32 power rail, recommended |
-| ☐ | 30 AWG flexible silicone wire |
-| ☐ | Elastic nylon/spandex fabric |
-| ☐ | Breathable mesh / 3D spacer mesh |
-| ☐ | Sew-on Velcro hook and loop |
-| ☐ | Polyester/nylon thread |
-| ☐ | Heat-shrink tubing or electrical insulation |
-| ☐ | Power source: USB power bank for first test, or LiPo + proper charger + boost/regulator for wearable use |
-| ☐ | **Deferred (not this build):** LRA coin actuator or ERM motor, logic-level MOSFET, flyback diode, gate resistor, gate pulldown, JST-PH connectors |
+|| ☐ | ESP32-DevKitC or compatible ESP32 board |
+|| ☐ | 4 × MPU6050 / GY-521 (one per IMU channel) |
+|| ☐ | 1 × TCA9548A I2C multiplexer breakout board |
+|| ☐ | 1 × PPTC_900mA resettable fuse (900mA hold / ~1.8A trip) |
+|| ☐ | 1 × SW_3A slide switch (SS22D07 3A, SPDT) |
+|| ☐ | 0.1 µF ceramic capacitors ×5 (one per IMU VCC + one for MT3608) |
+|| ☐ | 10 µF ceramic capacitors ×2 (MT3608 boost input/output bulk) |
+|| ☐ | 4.7 kΩ I2C pull-up resistors for SDA/SCL if no breakout board already has them installed |
+|| ☐ | 10-100 µF bulk capacitor near ESP32 power rail, recommended |
+|| ☐ | 30 AWG flexible silicone wire |
+|| ☐ | Elastic nylon/spandex fabric |
+|| ☐ | Breathable mesh / 3D spacer mesh |
+|| ☐ | Sew-on Velcro hook and loop |
+|| ☐ | Polyester/nylon thread |
+|| ☐ | Heat-shrink tubing or electrical insulation |
+|| ☐ | Power source: USB power bank for first test, or LiPo + proper charger + boost/regulator for wearable use |
+|| ☐ | **TB6612FNG dual H-bridge breakout board** |
+|| ☐ | **ERM vibration motor** (coin type, 10mm × 3mm, 1.5V-3V rated) |
+|| ☐ | **VMOT power supply** for ERM (3V-5V, able to deliver 100-200mA) — can be separate battery or boost regulator |
 
 Power warning:
 - A single 3.7 V LiPo into ESP32 `VIN` is often not reliable because many dev boards expect ~5 V on VIN/5V.
@@ -129,28 +156,33 @@ Before continuing:
 
 ---
 
-## Phase 6 — Build One Haptic Driver Channel
+## Phase 6 — Build Haptic Driver (TB6612FNG + ERM)
 
-> **DEFERRED — no LRA this build.** Retain for when actuators are procured.
+Use the TB6612FNG dual H-bridge to drive the ERM vibration motor. The TB6612FNG provides built-in flyback protection (no external diode needed) and accepts PWM speed control via PWMA pin.
 
-Use this for either a true LRA or the ERM phone vibration motor you found. A true LRA gives cleaner haptic pulses; an ERM works for simpler buzzing but needs longer pulse timing.
+**TB6612FNG wiring:**
 
-Low-side MOSFET wiring:
+|| ☐ | Connection |
+||---|---|
+|| ☐ | ESP32 3V3 → TB6612FNG VCC (logic power) |
+|| ☐ | ESP32 GND → TB6612FNG GND (common ground) |
+|| ☐ | ESP32 GPIO28 → TB6612FNG STBY (pulled HIGH to enable) |
+|| ☐ | ESP32 GPIO25 → TB6612FNG AIN1 (direction) |
+|| ☐ | ESP32 GPIO26 → TB6612FNG AIN2 (direction) |
+|| ☐ | ESP32 GPIO27 → TB6612FNG PWMA (PWM speed control) |
+|| ☐ | ERM motor (+) → TB6612FNG VMOT (motor power, 3V-5V external supply) |
+|| ☐ | ERM motor (-) → common GND (same as ESP32 GND + TB6612FNG GND) |
+|| ☐ | VMOT supply: separate 3V-5V source capable of 100-200mA (NOT from ESP32 GPIO) |
+|| ☐ | Add heat-shrink over ESP32 solder joints |
+|| ☐ | Add strain relief loop where wires enter ERM pocket |
 
-| ☐ | Connection |
-|---|---|
-| ☐ | Actuator + -> actuator supply voltage, usually 3 V to 5 V depending on part |
-| ☐ | Actuator - -> MOSFET drain |
-| ☐ | MOSFET source -> GND |
-| ☐ | MOSFET gate -> ESP32 GPIO25 for first prototype |
-| ☐ | ESP32 GND and actuator supply GND are common |
-| ☐ | Flyback diode across actuator: cathode to actuator +, anode to actuator - / MOSFET drain |
-| ☐ | Optional 100 Ω resistor between ESP32 GPIO and MOSFET gate |
-| ☐ | Optional 10 kΩ pulldown from MOSFET gate to GND so motor stays off at boot |
-| ☐ | Add heat-shrink over solder joints |
-| ☐ | Add strain relief loop where wires enter actuator pocket |
+**Direction configuration (unidirectional for ERM):**
+- AIN1 = HIGH (GPIO25 → 1), AIN2 = LOW (GPIO26 → 0) → motor spins one way
+- For ERM vibration, only one direction is needed.
 
-Do not power an actuator directly from an ESP32 GPIO pin. The GPIO controls the MOSFET gate only.
+**Do NOT power the ERM from ESP32 GPIO.** The TB6612FNG amplifies the PWM signal from PWMA using VMOT power. ESP32 GPIO only controls the logic pins.
+
+**VMOT and ESP32 GND MUST share a common ground** for the H-bridge to function correctly.
 
 ---
 
@@ -190,32 +222,40 @@ Per project docs, firmware files are flashed to ESP32 using Thonny.
 | ☐ | IMU initializes without error |
 | ☐ | Still sensor gives stable acceleration around gravity |
 | ☐ | Moving sensor changes x/y/z readings |
-| ☐ | GPIO2 LED behavior works |
-| ☐ | Actuator stays off at boot |
-| ☐ | Actuator turns on only when commanded |
-| ☐ | MOSFET does not get hot during a short 1-2 second test |
-| ☐ | ESP32 does not reset when actuator turns on |
+|| ☐ | GPIO2 LED behavior works |
+|| ☐ | ERM stays off at boot (STBY checked, PWMA duty=0) |
+|| ☐ | ERM turns on only when commanded |
+|| ☐ | TB6612FNG does not get hot during a short 1-2 second test |
+|| ☐ | ESP32 does not reset when ERM turns on |
 
-Simple actuator test in Thonny for LRA on GPIO25:
+Simple ERM test in Thonny for TB6612FNG on GPIO25/26/27/28:
 
 ```python
 from machine import Pin, PWM
 import time
-m = PWM(Pin(25), freq=200, duty=0)
-m.duty(512)
+
+# Setup (match config.py)
+ain1 = Pin(25, Pin.OUT)
+ain2 = Pin(26, Pin.OUT)
+pwma = PWM(Pin(27), freq=1000, duty=0)
+stby = Pin(28, Pin.OUT)
+
+# Enable driver
+stby.value(1)
+ain1.value(1)  # direction
+ain2.value(0)
+
+# Test vibration patterns
+pwma.duty(512)   # 50% duty — moderate vibration
+time.sleep_ms(500)
+pwma.duty(0)     # off
 time.sleep_ms(200)
-m.duty(0)
-```
+pwma.duty(1023)  # full speed
+time.sleep_ms(500)
+pwma.duty(0)     # off
 
-For ERM phone motor, a longer on-time may feel better:
-
-```python
-from machine import Pin
-import time
-m = Pin(25, Pin.OUT)
-m.value(1)
-time.sleep_ms(100)
-m.value(0)
+# Disable driver
+stby.value(0)
 ```
 
 ---
@@ -252,21 +292,18 @@ Important:
 
 ---
 
-## Phase 12 — Optional Multi-LRA Upgrade
+## Phase 12 — Optional Multi-ERM Upgrade
 
 Only do this after the single-channel build works.
 
-| ☐ | Step |
-|---|---|
-| ☐ | Confirm your ESP32 board exposes the chosen GPIO pins |
-| ☐ | Avoid boot-strapping pins and pins not present on your board |
-| ☐ | Prefer known safe PWM-capable pins such as GPIO25/26/27/32/33 if available |
-| ☐ | Build one MOSFET driver channel per actuator |
-| ☐ | Update `LRA_PINS` in `embedded_main.py` to match actual pins |
-| ☐ | Set `USE_LRA_ARRAY = True` only after each channel is bench-tested |
-| ☐ | Test proximal-to-distal pattern slowly before wearing |
-
-Note: the earlier GPIO18/19/20 mapping is conceptual. GPIO20 is not available on many ESP32 DevKit boards, so verify your exact board pinout.
+|| ☐ | Step |
+||---|---|
+|| ☐ | Confirm your ESP32 board exposes the chosen GPIO pins for TB6612FNG channel B |
+|| ☐ | Use TB6612FNG channel B: BIN1, BIN2, PWMB (additional GPIO pins needed) |
+|| ☐ | Add second ERM motor with its own VMOT or share VMOT if current budget allows |
+|| ☐ | Wire channel B with same logic: BIN1=HIGH, BIN2=LOW, PWMB=PWM, STBY shared |
+|| ☐ | Test channel B independently before combining with channel A |
+|| ☐ | Update haptic stage if spatial sequencing is desired |
 
 ---
 
@@ -280,14 +317,16 @@ Note: the earlier GPIO18/19/20 mapping is conceptual. GPIO20 is not available on
 
 | ☐ | Requirement |
 |---|---|
-| ☐ | Strap fits comfortably and does not slip |
-| ☐ | IMU initializes reliably |
-| ☐ | Actuator is driven through MOSFET, not directly by GPIO |
-| ☐ | Common ground is connected between ESP32 and actuator supply |
-| ☐ | No exposed wires touch skin |
-| ☐ | ESP32 does not brown out when actuator turns on |
-| ☐ | First data collection is done with actuator off |
-| ☐ | Firmware is tested manually before saving as `main.py` |
+|| ☐ | Strap fits comfortably and does not slip |
+|| ☐ | IMU initializes reliably |
+|| ☐ | ERM is driven through TB6612FNG (not directly by GPIO) |
+|| ☐ | VMOT supply is separate from ESP32 (3V-5V, adequate current) |
+|| ☐ | Common GND between ESP32, TB6612FNG, and VMOT |
+|| ☐ | STBY pulled HIGH to enable driver |
+|| ☐ | No exposed wires touch skin |
+|| ☐ | ESP32 does not brown out when ERM turns on |
+|| ☐ | First data collection is done with actuator off |
+|| ☐ | Firmware is tested manually before saving as `main.py` |
 
 ---
 
@@ -297,8 +336,9 @@ Note: the earlier GPIO18/19/20 mapping is conceptual. GPIO20 is not available on
 |---|---|---|
 | IMU always reads fallback `(0,0,1)` | SDA/SCL swapped, bad power, address conflict | Check GPIO21/22, 3V3/GND, AD0/address |
 | Multiple IMUs do not work | Same I2C address conflict | Use AD0 split for 2 IMUs or TCA9548A for 3+ |
-| Motor/LRA does not vibrate | MOSFET wiring wrong or no common ground | Check source/drain/gate and shared GND |
-| Motor vibrates at boot | Floating MOSFET gate | Add 10 kΩ pulldown gate -> GND |
-| ESP32 resets when motor starts | Brownout / supply sag | Use stronger supply and add 10-100 µF bulk capacitor |
-| Vibration weak | Wrong drive voltage/frequency or loose pocket | Check actuator spec, pocket contact, PWM freq |
-| Strap slips | Too loose, no grip/stabilizer, Velcro dirty | Tighten, add silicone dots/stabilizer, clean Velcro |
+|| ERM does not vibrate | STBY low, wrong direction, no VMOT power, no common GND | Check STBY=HIGH, AIN1/AIN2, VMOT connected, GND common |
+|| ERM spins but no vibration feel | Wrong motor terminal polarity | Swap ERM wires (+/-) |
+|| ERM vibration weak | Low duty, poor skin contact, low VMOT voltage | Increase duty, reposition pocket, check VMOT voltage |
+|| TB6612FNG hot | High duty sustained, insufficient VMOT | Reduce duty, add heatsink, check VMOT supply |
+|| ESP32 resets when ERM starts | Brownout from VMOT supply sag | Add bulk cap on VMOT, use stronger supply, check common GND |
+|| Intermittent vibration | Loose connection, missing strain relief | Check solder joints, add strain relief loop |

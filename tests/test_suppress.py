@@ -94,12 +94,40 @@ def test_x_only_tremor_tracks_6hz():
     assert abs(stage.pll.freq - 6.0) < 0.5
 
 
+def test_chain_4hz_locks_in_budget():
+    stage = SuppressStage(fs=100.0, pll_bandwidth=1.0)
+    locked_at = None
+    for i in range(1200):
+        t = i / 100.0
+        stage.process_sample(0.15 * math.sin(2 * math.pi * 4.0 * t), 0.0, 1.0)
+        if stage.pll.locked:
+            locked_at = i + 1
+            break
+    assert locked_at is not None and locked_at <= 900, "chain 4 Hz locked at %s" % locked_at
+    assert abs(stage.pll.freq - 4.0) < 0.5
+
+
+def test_chain_8hz_locks_in_budget():
+    stage = SuppressStage(fs=100.0, pll_bandwidth=1.0)
+    locked_at = None
+    for i in range(1400):
+        t = i / 100.0
+        stage.process_sample(0.15 * math.sin(2 * math.pi * 8.0 * t), 0.0, 1.0)
+        if stage.pll.locked:
+            locked_at = i + 1
+            break
+    assert locked_at is not None and locked_at <= 1100, "chain 8 Hz locked at %s" % locked_at
+    assert abs(stage.pll.freq - 8.0) < 0.5
+
+
 if __name__ == "__main__":
     test_suppress_initialization()
     test_process_sample_returns_duty()
     test_process_frame()
     test_pll_tracks_tremor()
     test_x_only_tremor_tracks_6hz()
+    test_chain_4hz_locks_in_budget()
+    test_chain_8hz_locks_in_budget()
     test_reset()
     test_get_status()
     print("All suppress stage tests passed!")

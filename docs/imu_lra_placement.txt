@@ -37,9 +37,9 @@ General Guidelines:
 - Ensure the LRA is driven at its resonant frequency (typically around 150-250 Hz) for efficient haptic feedback.
 - Test for perceptual threshold and comfort; avoid prolonged high-amplitude vibration that could cause fatigue or skin irritation.
 
-Summary (LOCKED 2026-08-27 Option A + ET — 4 IMU, LRAs deferred, balance 0.6):
+Summary (LOCKED 2026-08-27 Option A + ET — 4 IMU, TB6612FNG + ERM, balance 0.6):
 - IMUs (4 via TCA9548A ch0-3): Dorsal wrist proximal ch0 (rest baseline), thenar volar ch1, thumb proximal phalanx 20° tilt ch2 (pill 4–6Hz), index proximal phalanx dorsal ch3 (ET 6–8Hz) — orientation Z-up X-radial Y-proximal per `component_positions.txt:22` with 20° thumb tilt, mux `0x70` channels `1<<ch`, pill/finger coherence 0.6 each (`firmware/common/config.py:64`).
-- LRA: **Deferred** for this build — GPIOs 25/18/19/20 unpopulated; when procured, dorsum distal to wrist IMU (MC2-3) remains optimal per above, per `PIN_ASSIGNMENTS.md:9`.
+- ERM + TB6612FNG: **Single ERM via TB6612FNG channel A** — GPIO25/AIN1, GPIO26/AIN2, GPIO27/PWMA, GPIO28/STBY. VMOT from external 3V-5V supply (NOT ESP32 GPIO). Direction: AIN1=1, AIN2=0. PWM duty 0-1023 controls vibration intensity. See `docs/erm_tb6612fng_wiring.md`.
 - Wiring: I2C0 `SDA21/SCL22 @400kHz` star through mux; add 0.1uF per IMU and 10-100uF bulk per `assembly_checklist.md:43`.
 - Research: Keba 2025 100Hz wrist-proximal + FAIRPARK-II 2026 + multi-IMU fusion + ET snuff-box/index finger (PMC10776092) saved in `knowledge.md:5a-c` and `docs/research_web_2026-08-27.md`.
 

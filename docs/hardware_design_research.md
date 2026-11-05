@@ -97,7 +97,7 @@ This document compiles key research sources (2024-2025) that informed the refine
   https://componentindex.net/components/tca9548a/ : TI 8-channel mux explanation.
 
 - **TCA9548A Library — tuxmountain/TCA9548A**  
-  https://github.com/tuxmountain/TCA9548A : `multiplexer.selectChannel(0..7)` → normal Wire; maps to MicroPython `i2c.writeto(0x70, bytes([1<<ch]))` as in `firmware/RawDataCollection.py:48`.
+  https://github.com/tuxmountain/TCA9548A : `multiplexer.selectChannel(0..7)` → normal Wire; maps to MicroPython `i2c.writeto(0x70, bytes([1<<ch]))` as in `firmware/raw_data_collection.py:48`.
 
 - **MPU6050 Complete Tutorial — Zbotic.in**  
   https://zbotic.in/mpu6050-imu-sensor-complete-tutorial-with-arduino-python : AD0 `GND=0x68 / 3.3V=0x69` gives only 2 addresses → mux required for 4. Pullups on GY-521 onboard.

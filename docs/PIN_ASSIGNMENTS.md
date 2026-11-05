@@ -27,6 +27,8 @@ Note: The ESP32 supports up to 16 independent PWM channels. The firmware does no
 - GPIO2 is configured as a digital output (`Pin.OUT`) to drive an LED.
 - The LED is turned on/off via `led.value(1)` or `led.value(0)`.
 
+**⚠️ GPIO2 boot warning:** GPIO2 is an ESP32 strapping pin (MTDI). The 220Ω LED to GND could hold it LOW at boot, forcing UART download mode. Empirically verify boot behavior: if the ESP32 fails to boot with the LED connected, add a buffer transistor or move the LED to a non-strapping pin (e.g., GPIO4, GPIO5). See ESP32 Technical Reference Manual §3.4 Strapping Pins.
+
 ## I2C Bus Configuration
 | Parameter | Value | Description |
 |-----------|-------|-------------|
@@ -51,7 +53,7 @@ Note: The ESP32 supports up to 16 independent PWM channels. The firmware does no
   - IMU 2 (Thumb proximal phalanx, dorsal-radial 20° tilt): Channel 2 — **was CMC, now phalanx** per pill-rolling 4–6Hz optimization; 20° tilt aligns X to flexion, Z still up (`docs/component_positions.txt:13` fallback)
   - IMU 3 (Index proximal phalanx, dorsal): Channel 3 — **was forearm, now index** per ET postural 6–8Hz; thumb-index coherence >0.6 pill-rolling, finger-wrist >0.6 ET postural (`firmware/common/config.py:64`)
   - Channels 4-7: Not used (forearm becomes optional CH4 if re-added)
-- **Selection**: MicroPython `i2c.writeto(0x70, bytes([1<<ch]))` then `readfrom_mem(0x68, 0x3B, 6)` as in `firmware/RawDataCollection.py:48` and web tutorials `https://randomnerdtutorials.com/tca9548a-i2c-multiplexer-esp32-esp8266-arduino/`. All GY-521 at `0x68` isolated.
+- **Selection**: MicroPython `i2c.writeto(0x70, bytes([1<<ch]))` then `readfrom_mem(0x68, 0x3B, 6)` as in `firmware/raw_data_collection.py:48` and web tutorials `https://randomnerdtutorials.com/tca9548a-i2c-multiplexer-esp32-esp8266-arduino/`. All GY-521 at `0x68` isolated.
 - **LRAs**: **Deferred** for this build — `GPIO25/18/19/20` left unpopulated; `USE_LRA_ARRAY=False`. HSP `haptic` stage will no-op with duty 0. When procured, see `docs/imu_lra_placement.txt` dorsum MC2-3.
 
 ## Frequencies and Timing

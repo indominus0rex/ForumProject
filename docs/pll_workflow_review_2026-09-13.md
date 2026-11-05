@@ -31,12 +31,12 @@
 | 12.0 | 5.99 | **True** | **6.01** |
 
 Wider bandwidths don't fix it (`pll_probe2.py` §A: bw=2.0 gives 5.0→5.6, 7.0→8.0; bw=3.0 gives 6.0→5.8 unlocked — worse). Slow drift 6→7 Hz over 6 s ends at 6.60 unlocked (§C).
-**Fix:** port the acquisition aid already proven in `prototype/loop2.py` (G2 coarse zero-crossing seeding recenters `center` when unlocked >1 s; G1 gear-shift wide-while-unlocked) into `PLL` or `combo_b7_fit`, behind existing constructor defaults so 6 Hz behavior is unchanged.
+**Fix:** port the acquisition aid already proven in `prototype/loop_v2.py` (G2 coarse zero-crossing seeding recenters `center` when unlocked >1 s; G1 gear-shift wide-while-unlocked) into `PLL` or `combo_b7_fit`, behind existing constructor defaults so 6 Hz behavior is unchanged.
 
 ### Blocker 2 — Lock detector false-locks (absolute error band)
 **File:** `firmware/common/pll.py:104-111`
-`if abs(phase_error_filtered) < 0.1: lock++` cannot distinguish "tracking well" from "error averaged to ~nothing" (weak signal, far-off beat, 2× image). Evidence: 12 Hz input reports `locked=True` at 5.99 Hz (table above); full `SuppressStage` chain reports `locked=True` at 6.00 for 4 Hz and 8 Hz inputs (`pll_probe2.py` §D). `prototype/loop2.py:9-12` independently confirms: *"False lock on far-off tones was confirmed: 4.2 Hz in, NCO parked at 6.0, duties firing at wrong phase."*
-**Fix:** port loop2's B1 beat detector (fast/slow EMA agreement veto + coarse-vs-NCO disagreement veto, `loop2.py:78-111`) and make the lock threshold relative to smoothed amplitude, e.g. `lock_thresh = max(0.05, 0.3 * amp_smooth)`.
+`if abs(phase_error_filtered) < 0.1: lock++` cannot distinguish "tracking well" from "error averaged to ~nothing" (weak signal, far-off beat, 2× image). Evidence: 12 Hz input reports `locked=True` at 5.99 Hz (table above); full `SuppressStage` chain reports `locked=True` at 6.00 for 4 Hz and 8 Hz inputs (`pll_probe2.py` §D). `prototype/loop_v2.py:9-12` independently confirms: *"False lock on far-off tones was confirmed: 4.2 Hz in, NCO parked at 6.0, duties firing at wrong phase."*
+**Fix:** port loop_v2's B1 beat detector (fast/slow EMA agreement veto + coarse-vs-NCO disagreement veto, `loop_v2.py:78-111`) and make the lock threshold relative to smoothed amplitude, e.g. `lock_thresh = max(0.05, 0.3 * amp_smooth)`.
 
 ### Major 3 — Two canonical frontends disagree (magnitude vs dominant-axis)
 **Files:** `firmware/stages/suppress.py:71-76` (`sqrt(x²+y²+z²)-1.0`) vs `firmware/plan_b/combo_b7_fit.py:75-94` (per-axis DC removal + dominant-axis projection; docstring lines 7–8 cite "magnitude frequency-doubling").
@@ -51,8 +51,8 @@ x-only tremor through the magnitude path is second-order (`|a|²` term → 12 Hz
 **File:** `firmware/common/adaptive_gain.py:81-84` — `self.gain = 0.5` literal. Repro: `AdaptiveGain(initial_gain=0.9).reset().gain` → `0.5` (`pll_probe2.py` §F). Existing `test_reset` passes only because it uses the default 0.5.
 **Fix:** store `self._initial = initial_gain` in `__init__`, reset to it. Extend `test_reset` with a non-default initial gain.
 
-### Minor 6 — loop2 fix never ported; prototype is now the reference impl
-`prototype/loop2.py` (gear-shift + coarse seeding + beat veto) is imported nowhere in `firmware/`/`tests/`/`host_scripts/`. The tested device code is the known-bad loop; the good loop is untested prototype. **Fix:** decide — port loop2 into firmware (recommended, see Blockers) or delete it to stop/Delete confusion. At minimum add a test that fails today: 4.2 Hz in → must not report `locked=True` at 6 Hz.
+### Minor 6 — loop_v2 fix never ported; prototype is now the reference impl
+`prototype/loop_v2.py` (gear-shift + coarse seeding + beat veto) is imported nowhere in `firmware/`/`tests/`/`host_scripts/`. The tested device code is the known-bad loop; the good loop is untested prototype. **Fix:** decide — port loop_v2 into firmware (recommended, see Blockers) or delete it to stop/Delete confusion. At minimum add a test that fails today: 4.2 Hz in → must not report `locked=True` at 6 Hz.
 
 ### Minor 7 — Tunables bypass `common/config.py`; defaults disagree
 `PLL.__init__` defaults `bandwidth=0.5`, but `config.PLL_BANDWIDTH_HZ=1.0` and every caller passes/assumes `1.0`. Nothing imports `config.py` for PLL/predictor/gain values; `PREDICTION_MS=15.0` is still unmeasured (b7 docstring itself says "measure LRA latency"). `prototype/loop.py` hardcodes `AMP_GATE/FIXED_GAIN/PREDICT_S`. **Fix:** single-source defaults from `config.py`; keep TODO markers per user convention; measure and record LRA latency for `PREDICTION_MS`.
@@ -82,13 +82,13 @@ Every sibling test file runs via `python tests/<f>.py`; `test_plan_b.py` ends at
 | B3/B4/B5/b7 consistency | FAIL | Findings 3, 4 |
 | Gate/reset behavior | PASS (cost noted) | Nit 11 |
 | Tunable traceability | FAIL | Finding 7 |
-| Prototype mirror fidelity | PASS loop.py / FAIL loop2 port | Finding 6 |
+| Prototype mirror fidelity | PASS loop.py / FAIL loop_v2 port | Finding 6 |
 | B5 coverage | FAIL | no dedicated test |
 | `AdaptiveGain.reset` | FAIL | Finding 5 |
 
 ## Top-3 fix order
 
-1. Port loop2 acquisition + beat veto into firmware PLL path (fixes Blockers 1–2; add 4.2 Hz no-false-lock + sweep tests first — they fail today).
+1. Port loop_v2 acquisition + beat veto into firmware PLL path (fixes Blockers 1–2; add 4.2 Hz no-false-lock + sweep tests first — they fail today).
 2. Unify frontend on b7 dominant-axis + normalized drive (Finding 3) and window replay across combos (Finding 4).
 3. `AdaptiveGain.reset` one-liner + non-default test; `test_plan_b` runner; `fit_main.py` doc refs (Findings 5, 9, 10 — all <10 min each).
 
@@ -129,16 +129,45 @@ vs pre-fix: NCO parked at 6.0 for every input, with false lock at 12 Hz. Zero fa
 
 Lock horizons (raw): 6 Hz sample 51 (unchanged from baseline), 5 Hz ~470, 4/8/9 Hz ~625–720. Rail edges (3/12 Hz) track accurately but stay honestly unlocked (clamp + coarse-bias deadlock, no false lock).
 
+### Faster-lock + rail-edges update (2026-09-13, branch `fix/pll-acquire-and-lock`, uncommitted)
+
+Follow-up plan (`.hermes/plans/2026-09-13_211912-pll-faster-lock-rail-edges.md`): guardrails + horizon ratchet + honest rail lock + FLL/G2 speedup attempt + chain horizons. Full suite: **100 passed** (89 baseline + 6 guardrails + 1 horizon + 2 rail + 2 chain).
+
+Post-update sweep (raw sine, 600 samples, bw=1.0) — rails now lock honestly:
+
+| target | tracked | locked | err |
+|---|---|---|---|
+| 3.0 | 3.00 | True (was False) | 0.00 |
+| 4.0 | 3.98 | True | 0.02 |
+| 4.2 | 4.20 | True | 0.00 |
+| 5.0 | 4.99 | True | 0.01 |
+| 6.0 | 5.99 | True | 0.01 |
+| 8.0 | 8.01 | False | 0.01 |
+| 9.0 | 9.05 | False | 0.05 |
+| 12.0 | 12.00 | True (was False) | 0.00 |
+
+Lock horizons, raw sine (samples to first `locked`, limit 2000):
+
+| tone | 3 Hz | 4 Hz | 5 Hz | 6 Hz | 7 Hz | 8 Hz | 9 Hz | 12 Hz |
+|---|---|---|---|---|---|---|---|---|
+| horizon | 355 | 549 | 419 | 52 | 554 | 602 | 636 | 482 |
+
+Chain (`SuppressStage`, x-tremor + gravity-z): 4 Hz locks sample 565 (freq 4.01), 8 Hz locks sample 603 (freq 8.02) — inside the 900/1100 budgets.
+
+What changed in `firmware/common/pll.py` (rail fix only; no kp/ki, no signature, no body constants): rail diagnosis showed the `perr > 0.2` reset — not the disagree veto — blocked rail lock (freq converges to the rail but a frozen phase offset parks |perr| at 0.3–0.6; coarse agrees, veto silent). Fix = rail-agreement lock rule (NCO at rail + clamped coarse within 0.5 + wider 0.7 perr band) fenced by a NEW unclamped crossing-rate tracker `_craw` (one float): clamped coarse alone cannot separate 12↔15 Hz (both park at the top rail with small perr — measured 15 Hz best run 892 samples), but raw rate can (|15−12| vs |12−12|). 2/15 Hz verified never-lock over 2500 samples.
+
+Speedup attempt (all reverted per rollback rule — 6 Hz stayed 52, zero false locks throughout): FLL gap-scheduled gain (a) WORSENED horizons (4:549→577, 9:636→675); earlier G2 refire >60 (b) and FLL gate ≥5 (c) neutral singly and combined. Bottleneck is post-G2 PI settle (4 Hz crawls 4.85→4.0 over ~350 samples with ring-back to 3.87), not acquisition — FLL/G2 knobs can't buy the 400-sample goal without touching loop gains. Horizon bounds stay at Task 2 values; 400 remains future work if a product requirement ever demands it.
+
 ### What actually shipped (deviations from the fix plan, all measured)
 
-- **Ported from loop2:** coarse zero-crossing seeding (G2) + disagreement veto (B1 core). **NOT ported:** gear-shift wide loop (measured unstable at unit amplitude) and raw wobble/level thresholds (scale-dependent — true lock shows level 0.24 at unit amplitude).
-- **Added beyond loop2:** amplitude-invariant loop drive (RMS normalization + pi/2 crest compensation), FLL assist into the integrator (maturity-gated, cut on lock — breaks the zero-mean beat stalemate), clamp anti-windup, fast-attack/slow-release level AGC (4x jump relocks).
-- **loop2 verdict:** its "fast lock" (sample ~50 at all freqs) is declaration-before-evidence — measured 0.1–0.4 Hz off while claiming lock, i.e. the exact wrong-phase failure. The firmware port tracks to <=0.06 Hz and refuses to lie.
+- **Ported from loop_v2:** coarse zero-crossing seeding (G2) + disagreement veto (B1 core). **NOT ported:** gear-shift wide loop (measured unstable at unit amplitude) and raw wobble/level thresholds (scale-dependent — true lock shows level 0.24 at unit amplitude).
+- **Added beyond loop_v2:** amplitude-invariant loop drive (RMS normalization + pi/2 crest compensation), FLL assist into the integrator (maturity-gated, cut on lock — breaks the zero-mean beat stalemate), clamp anti-windup, fast-attack/slow-release level AGC (4x jump relocks).
+- **loop_v2 verdict:** its "fast lock" (sample ~50 at all freqs) is declaration-before-evidence — measured 0.1–0.4 Hz off while claiming lock, i.e. the exact wrong-phase failure. The firmware port tracks to <=0.06 Hz and refuses to lie.
 - b3/b4/b5 replay full windows; `SuppressStage` and b7 share `firmware/common/frontend.py` (dominant-axis + normalized drive); `AdaptiveGain.reset` honors its constructor arg; `test_plan_b.py` gained a `__main__` runner (and its dead `import pytest` was removed — the file was unrunnable here); `fit_main.py` refs marked device-side/unversioned (file never in repo — commit it from the ESP32 if it should be versioned).
 - Bench scoring (`bench_plan_b.py`) left alone per YAGNI.
 
 ### Known limitations (honest, measured)
 
-- Off-center lock takes ~470–720 samples (5–7 s); rail edges 3/12 Hz may never assert lock (they track, never false-lock).
+- Off-center lock takes ~420–640 samples (4–5 s); rail edges now lock honestly (3 Hz ~355, 12 Hz ~482 — see update above; previously never asserted lock).
 - Zero-DC synthetic sine into the raw PLL locks slowly (~1000 samples: slow-release AGC converging from init). Real paths carry gravity DC ~= `_rms` init or frontend normalization — unaffected (all chain tests lock in budget).
 - Body constants (`AMP_GATE`, `PREDICTION_MS`, fusion `W`) still untuned — needs on-device validation.

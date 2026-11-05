@@ -3,7 +3,7 @@ import time
 import sys
 
 # ---- 1. HARDWARE & SENSOR CLASS ----
-# Reuses GY521 init sequence from fft.py / RawDataCollection.py:
+# Reuses GY521 init sequence from fft.py / raw_data_collection.py:
 #   reset 0x6B=0x80, wake 0x6B=0x00, +/-2g 0x1C=0x00, DLPF94 0x1A=0x02, div0 0x19=0x00
 
 class GY521:

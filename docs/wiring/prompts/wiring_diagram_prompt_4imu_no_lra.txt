@@ -50,6 +50,6 @@ Style requirements:
 Negative prompt:
   no LRA actuators, no vibration motors, no ERM motors, no MOSFETs, no DRV2605, no battery pack, no photorealistic skin pores, no shadows, no cluttered wire crossings, no missing channel labels, no thumb CMC-only view (use phalanx), no forearm-only CH3 (use index phalanx).
 
-Purpose: research paper figure / assembly guide, must match firmware/common/config.py (SDA21/SCL22, TCA9548A_ADDR 0x70, NUM_IMUS 4, IMU_CHANNELS [0,1,2,3], IMU_LOCATIONS, SAMPLES 128) and PIN_ASSIGNMENTS.md:48 and cad/connections_4imu.csv.
+Purpose: research paper figure / assembly guide, must match firmware/common/config.py (SDA21/SCL22, TCA9548A_ADDR 0x70, NUM_IMUS 4, IMU_CHANNELS [0,1,2,3], IMU_LOCATIONS, SAMPLES 128) and pin_assignments.md:48 and cad/connections_4imu.csv.
 
-Reference: knowledge.md:5a-c, docs/research_web_2026-08-27.md, docs/component_positions.txt:13, docs/imu_lra_placement.txt, WIRING_DIAGRAM_DESIGN.md:28.
+Reference: knowledge.md:5a-c, docs/research_web_2026-08-27.md, docs/component_positions.txt:13, docs/imu_lra_placement.txt, wiring_diagram_design.md:28.

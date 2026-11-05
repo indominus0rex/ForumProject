@@ -1,0 +1,205 @@
+{
+  "main": {
+    "id": "c64232f08c53abf7",
+    "type": "split",
+    "children": [
+      {
+        "id": "672a51fc37310a19",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "df7cca47fc36bc09",
+            "type": "leaf",
+            "state": {
+              "type": "graph",
+              "state": {},
+              "icon": "lucide-git-fork",
+              "title": "Graph view"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "0b93ab3377e9f10b",
+    "type": "split",
+    "children": [
+      {
+        "id": "ffd90508f26e148f",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "8d6cb8e5402f7f94",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical",
+                "autoReveal": false,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-folder-closed",
+              "title": "Files"
+            }
+          },
+          {
+            "id": "61a9e1c5034d1ec2",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              },
+              "icon": "lucide-search",
+              "title": "Search"
+            }
+          },
+          {
+            "id": "0d1cd0df648ab3c2",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-bookmark",
+              "title": "Bookmarks"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "right": {
+    "id": "e270be508a11afbc",
+    "type": "split",
+    "children": [
+      {
+        "id": "19e859cf88cac93d",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "dfc7449f1d26b7fa",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-coming-in",
+              "title": "Backlinks"
+            }
+          },
+          {
+            "id": "5d98b6dc8f50af9d",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-going-out",
+              "title": "Outgoing links"
+            }
+          },
+          {
+            "id": "1c9766276e0707e3",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-tags",
+              "title": "Tags"
+            }
+          },
+          {
+            "id": "96c98a2436062bc3",
+            "type": "leaf",
+            "state": {
+              "type": "all-properties",
+              "state": {
+                "sortOrder": "frequency",
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-archive",
+              "title": "All properties"
+            }
+          },
+          {
+            "id": "fd43820f261b887a",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "followCursor": false,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-list",
+              "title": "Outline"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:Open quick switcher": false,
+      "graph:Open graph view": false,
+      "canvas:Create new canvas": false,
+      "daily-notes:Open today's daily note": false,
+      "templates:Insert template": false,
+      "command-palette:Open command palette": false,
+      "bases:Create new base": false
+    }
+  },
+  "active": "8d6cb8e5402f7f94",
+  "lastOpenFiles": [
+    "firmware/stages/__pycache__/haptic.cpython-311.pyc",
+    "firmware/stages/__pycache__/suppress.cpython-311.pyc",
+    "firmware/stages/__pycache__/__init__.cpython-311.pyc",
+    "tests/test_suppress.py",
+    "firmware/stages/suppress.py",
+    "firmware/common/__pycache__/bandpass.cpython-311.pyc",
+    "tests/test_bandpass.py",
+    "firmware/common/__pycache__/adaptive_gain.cpython-311.pyc",
+    "tests/test_adaptive_gain.py",
+    "firmware/common/adaptive_gain.py",
+    "firmware/common/__pycache__/anticancel.cpython-311.pyc",
+    "research/research-09-hand-wearable-design.md",
+    "research/research-08-cnn-vs-dnn.md",
+    "research/research-07-essential-features-ml.md",
+    "research/research-06-fft-feature-extraction.md",
+    "research/research-05-imu-position-effect.md",
+    "research/research-04-imu-esp32.md",
+    "Datasets/Parkinson's/Parkinson's Tremor Classification Dataset/readme.md"
+  ]
+}

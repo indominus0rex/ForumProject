@@ -17,7 +17,7 @@ This project involves firmware for data collection, feature extraction, and mach
 - Embedded C/C++ (firmware, inferred from file extensions and context)
 - Machine Learning (scikit-learn based on file names: logreg.py, model.py, scaler.py)
 - Signal Processing (FFT via fft.py)
-- Data Collection (RawDataCollection.py, collect_pilot.py)
+- Data Collection (raw_data_collection.py, collect_pilot.py)
 - Feature Extraction (feature_extract.py)
 - Model Training (train_classifier.py)
 - Model Inference (embedded_main.py)
