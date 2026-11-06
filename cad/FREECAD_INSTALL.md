@@ -38,15 +38,14 @@ freecadcmd build_assembly.py  # generates assembly in assembly/
 
 ## Vendor parts
 
-ESP32-DevKitC and GY-521 are not auto-generated — you need real STEPs:
+ESP32-S3-Kaluga-1 and GY-521 are not auto-generated — you need real STEPs:
 
 1. Search GrabCAD or TraceParts for:
-   - "ESP32-DevKitC USB-C" (Espressif official, ~25x55mm)
+   - "ESP32-S3 USB-C" (Espressif official, ~30×26 mm) — optional vendor STEP
    - "GY-521" or "MPU6050 breakout board"
 2. Download STEP files
 3. Save to `parts/_vendor/`:
-   - `parts/_vendor/ESP32-DevKitC.step`
-   - `parts/_vendor/GY-521.step`
+   - `parts/_vendor/ESP32-S3-Kaluga-1.step` (user-supplied; no official STEP)
 4. Re-run `build_assembly.py`
 
 Without vendor STEPs, assembly script still runs but skips those two components (with [SKIP] messages).

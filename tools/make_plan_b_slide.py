@@ -8,7 +8,7 @@ prs.slide_height = Inches(7.5)
 slide = prs.slides.add_slide(prs.slide_layouts[5])  # title only
 
 title = slide.shapes.title
-title.text = "Plan B: small-fit firmware (fits stock ESP32-DevKitC)"
+title.text = "Plan B: small-fit firmware (fits stock ESP32-S3-Kaluga-1)"
 title.text_frame.paragraphs[0].runs[0].font.size = Pt(32)
 
 bullets = [

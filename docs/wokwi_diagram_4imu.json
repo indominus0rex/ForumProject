@@ -9,7 +9,7 @@
       "top": -100,
       "left": -50,
       "attrs": {
-        "notes": "ESP32-DevKitC 38-pin: VIN from MT3608 boost (5V) → onboard AMS1117-3.3 → 3.3V. See power section notes."
+        "notes": "ESP32-S3-Kaluga-1: VIN from MT3608 boost (5V) → onboard AMS1117-3.3 → 3.3V. See power section notes."
       }
     },
     {

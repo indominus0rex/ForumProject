@@ -6,7 +6,7 @@ If you prefer SolidWorks over FreeCAD, follow this. FreeCAD scripts in this fold
 
 - SolidWorks 2020 or newer (your `SolidWorksSetup.exe` is the installer)
 - Vendor STEP files in `parts/_vendor/`:
-  - `ESP32-DevKitC.step` — GrabCAD/TraceParts search "ESP32-DevKitC USB-C"
+  - `ESP32-S3-Kaluga-1.step` — GrabCAD/TraceParts search "ESP32-S3 USB-C" (optional vendor STEP)
   - `GY-521.step` — search "GY-521" or "MPU6050 breakout"
 - Run `perfboard_grid.swp` first (Tools > Macro > Run) to generate perfboard
 
@@ -42,7 +42,7 @@ For each STEP in `parts/_vendor/`:
 ### 4. Place components on perfboard
 
 For each component, use Add Mate to position:
-- ESP32-DevKitC: mate its PCB bottom to perfboard top, distance 1.6mm
+- ESP32-S3-Kaluga-1: mate its PCB bottom to perfboard top, distance 1.6mm
 - GY-521: same, place to the right of ESP32
 - All passives: insert lead ends into perfboard holes
   - Use coincident mate between lead end face and hole axis
@@ -52,7 +52,7 @@ Reference positions (center of each component, in mm from perfboard center):
 
 | Component | X | Y | Rotation (Z) |
 |---|---|---|---|
-| ESP32-DevKitC | -25 | -8 | 0° |
+| ESP32-S3-Kaluga-1 | -25 | -8 | 0° |
 | GY-521 | 22 | 8 | 0° |
 | RES_220 | -10 | -10 | 30° |
 | RES_10K | -5 | 10 | 60° |

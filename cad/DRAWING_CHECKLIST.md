@@ -14,7 +14,7 @@ For the SLDDRW (SolidWorks) or technical drawing (FreeCAD TechDraw):
   - [ ] Sheet 1 of 1
   - [ ] Scale: 1:1
 - [ ] Component balloons (numbered callouts):
-  - [ ] ESP32-DevKitC
+  - [ ] ESP32-S3-Kaluga-1
   - [ ] GY-521 (MPU6050) ×4
   - [ ] 2N7000
   - [ ] 1N4148
@@ -39,7 +39,7 @@ For the SLDDRW (SolidWorks) or technical drawing (FreeCAD TechDraw):
 ## Optional Sheet 3: BOM
 
 - [ ] Part number, description, quantity, vendor
-- [ ] ESP32-DevKitC x1
+- [ ] ESP32-S3-Kaluga-1 x1
 - [ ] GY-521 x4
 - [ ] 2N7000 x1
 - [ ] 1N4148 x1

@@ -1,4 +1,4 @@
-"""B7 fit — DevKitC-safe: sample PLL + fixed/adaptive gain, no FFT/DNN/CNN.
+"""B7 fit — S3-Kaluga-1-safe: sample PLL + fixed/adaptive gain, no FFT/DNN/CNN.
 
 Pushes included (firmware-only, no hardware change):
   1. Multi-IMU fusion: process_multisample() fuses up to 4 IMU xyz with

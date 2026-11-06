@@ -20,8 +20,8 @@ safety -> sensor -> stationarity -> quality -> bandpass -> fft -> features
 
 ## Hardware
 
-ESP32-DevKitC, up to 4x GY-521 via TCA9548A @0x70 (SDA=GPIO21, SCL=GPIO22),
-LED=GPIO2, LRA=GPIO25 (200 Hz PWM via MOSFET). See `docs/assembly_checklist.md`.
+ESP32-S3-Kaluga-1, up to 4× GY-521 via TCA9548A @0x70 (SDA=GPIO21, SCL=GPIO22),
+LED=GPIO2, LRA=GPIO25 (200 Hz PWM via MOSFET). Size 57 × 28 mm. See `docs/assembly_checklist.md`.
 
 ## When to use Plan A vs Plan B
 

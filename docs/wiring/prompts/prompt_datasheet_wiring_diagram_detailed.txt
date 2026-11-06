@@ -11,7 +11,7 @@ TITLE BLOCK (top of canvas, full width):
 - Position: x=24, y=24 (left-aligned)
 - Title text: "Wiring Diagram — 4-IMU ESP32 Tremor Monitor"
   Font: 'Segoe UI' or 'Helvetica Neue', 18px, weight 600, color #1A1A1A, letter-spacing 0.3px
-- Subtitle text: "ESP32-DevKitC · TCA9548A I²C Mux · 4× GY-521 (MPU6050) · LED Indicator · LRA Deferred"
+- Subtitle text: "ESP32-S3-Kaluga-1 · TCA9548A I²C Mux · 4× GY-521 (MPU6050) · LED Indicator · LRA Deferred"
   Font: 'JetBrains Mono' or 'Consolas', 11px, weight 400, color #666666, y=46
 - Subtitle line 2: "I²C0 @400kHz · 100Hz · 128-sample window · Rev 2026-09-01"
   Font: 'JetBrains Mono' or 'Consolas', 11px, weight 400, color #666666, y=60
@@ -24,10 +24,10 @@ POWER BUSES (bottom of canvas):
 - Label "GND bus (star)": x=40, y=507, font 'JetBrains Mono', 9.5px, color #666666
 - Decoupling note: x=200, y=462, font 'JetBrains Mono', 8.5px, color #666666, text "0.1µF per IC + 10µF bulk"
 
-COMPONENT BOX U1 (ESP32-DevKitC):
+COMPONENT BOX U1 (ESP32-S3-Kaluga-1):
 - Group transform: translate(120, 140)
 - Bounding box: x=0, y=0, width=180, height=160, fill #FFFFFF, stroke #1A1A1A, stroke-width 1.2
-- Title: "U1 · ESP32-DevKitC", x=90, y=16, text-anchor middle, font 'Segoe UI', 11px, weight 700, color #1A1A1A
+- Title: "U1 · ESP32-S3-Kaluga-1", x=90, y=16, text-anchor middle, font 'Segoe UI', 11px, weight 700, color #1A1A1A
 - Subtitle: "I²C0 @400kHz", x=90, y=28, text-anchor middle, font 'JetBrains Mono', 9.5px, color #1A1A1A
 - Pin row 1: "GPIO21 → SDA", x=10, y=50, font 'JetBrains Mono', 8.5px, color #666666
   Pin marker: circle cx=180, cy=47, r=3, fill #1A1A1A

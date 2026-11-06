@@ -57,7 +57,7 @@
             <!-- ESP32 -->
             <g transform="translate(140,170)">
                 <rect x="0" y="0" width="190" height="170" rx="8" class="box"/>
-                <text x="95" y="18" text-anchor="middle" class="label-bold">ESP32-DevKitC</text>
+                <text x="95" y="18" text-anchor="middle" class="label-bold">ESP32-S3-Kaluga-1</text>
                 <text x="95" y="30" text-anchor="middle" class="label" font-size="8">I2C0 400kHz · 100Hz · X30</text>
                 <text x="8" y="52" class="label">21 SDA →</text><circle cx="175" cy="48" r="3.5" fill="#1DBA5A"/>
                 <text x="8" y="70" class="label">22 SCL →</text><circle cx="175" cy="66" r="3.5" fill="#2A6FFF"/>
@@ -181,7 +181,7 @@
     </div>
     <table class="specs-table">
         <tr><th>Block</th><th>Component</th><th>Qty</th><th>Connection</th></tr>
-        <tr><td>MCU</td><td>ESP32-DevKitC</td><td>1</td><td>21 SDA → mux SDA, 22 SCL → mux SCL @400kHz; 2 LED; 3V3/GND buses; 25/18/19/20 NC</td></tr>
+        <tr><td>MCU</td><td>ESP32-S3-Kaluga-1</td><td>1</td><td>21 SDA → mux SDA, 22 SCL → mux SCL @400kHz; 2 LED; 3V3/GND buses; 25/18/19/20 NC</td></tr>
         <tr><td>Mux</td><td>TCA9548A @0x70</td><td>1</td><td>A0-A2 GND, EN 3.3V; select <code>i2c.writeto(0x70, 1&lt;&lt;ch)</code> then <code>readfrom_mem 0x68 0x3B</code></td></tr>
         <tr><td>IMUs</td><td>GY-521 MPU6050 @0x68 AD0→GND</td><td>4</td><td>CH0 blue dorsal wrist, CH1 green thenar volar, CH2 yellow thumb phalanx 20° tilt (pill 4-6Hz), CH3 orange index phalanx (ET 6-8Hz) — each 0.1µF; coherence 0.6 balanced</td></tr>
         <tr><td>Indication</td><td>LED 220Ω</td><td>1</td><td>GPIO2 active high</td></tr>

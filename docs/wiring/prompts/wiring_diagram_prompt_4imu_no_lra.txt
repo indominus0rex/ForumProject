@@ -1,6 +1,6 @@
 Professional vector wiring diagram, white background, top-down isometric view of a left human hand and forearm wearing a wearable Parkinson's tremor monitor. Clean technical illustration, 300 DPI, thin black outlines, sans-serif labels with leader lines. No LRA actuators — this build is 4-IMU only.
 
-ESP32-DevKitC on volar forearm (label: "ESP32-DevKitC, I2C0 SDA=GPIO21, SCL=GPIO22, LED=GPIO2, 3.3V/GND").
+ESP32-S3-Kaluga-1 on volar forearm (label: "ESP32-S3-Kaluga-1, I2C0 SDA=GPIO21, SCL=GPIO22, LED=GPIO2, 3.3V/GND").
 
 TCA9548A multiplexer module beside ESP32 (label: "TCA9548A @0x70, A0/A1/A2->GND, EN->3.3V").
 

@@ -64,7 +64,7 @@
 | OUT+ | → U1 VIN (5V) | 🔴 Red |
 | OUT- | → GND bus | ⚫ Black |
 
-### U1 — ESP32-DevKitC 38-pin
+### U1 — ESP32-S3-Kaluga-1
 | Pin | Connects To | Wire |
 |-----|-------------|------|
 || VIN | ← U8 OUT+ (5V) | 🔴 Red |
@@ -171,7 +171,7 @@
 ## Bill of Materials (BOM)
 | Ref | Part | Package | Qty | Notes |
 |-----|------|---------|-----|-------|
-| U1 | ESP32-DevKitC 38-pin | Module | 1 | Power via VIN (5V from MT3608 boost) |
+| U1 | ESP32-S3-Kaluga-1 | Module | 1 | Power via VIN (5V from MT3608 boost) |
 | U2 | TCA9548A Breakout | TSSOP-24 | 1 | @0x70, A0/A1/A2→GND, EN→3.3V |
 | U3-U6 | GY-521 (MPU6050) | QFN-24 | 4 | @0x68, AD0→GND, 0.1µF each |
 || U7 | TP4056 Module | Module | 1 | 1A charger, DW01 protection, B+/B- |

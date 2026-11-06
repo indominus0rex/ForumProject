@@ -309,7 +309,7 @@ def main():
     make_do35("1N4148")
     make_lra("LRA_COIN")
     print(f"\nAll parts in {OUT_DIR}")
-    print("Vendor parts (ESP32-DevKitC, GY-521): import STEP manually from GrabCAD/TraceParts")
+    print("Vendor parts (ESP32-S3-Kaluga-1, GY-521): import STEP manually from GrabCAD/TraceParts")
 
 
 if __name__ == "__main__":

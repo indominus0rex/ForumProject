@@ -52,7 +52,7 @@ ax.text(6, 49.6, "GND", fontsize=7, color=C["gnd"], fontweight="bold", ha="right
 ax.text(83, 52.6, "0.1µF per IC  ·  10–100µF bulk", fontsize=6, color="#888", ha="left")
 
 # --- ESP32 box ---
-draw_box(ax, 14, 38, 18, 10, "ESP32-DevKitC", "I2C0  SDA=GPIO21  SCL=GPIO22  LED=GPIO2", color="#E8EAF6")
+draw_box(ax, 14, 38, 18, 10, "ESP32-S3-Kaluga-1", "I2C0  SDA=GPIO21  SCL=GPIO22  LED=GPIO2", color="#E8EAF6")
 # ESP32 pins
 pins_esp = [
     (17, 48, "3.3V", C["pwr"]), (19, 48, "GND", C["gnd"]),

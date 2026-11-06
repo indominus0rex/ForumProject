@@ -1,12 +1,12 @@
 net,from_component,from_pin,to_component,to_pin,color,notes
-3V3,ESP32-DevKitC,3V3,perfboard,RAIL_3V3,red,power rail
-GND,ESP32-DevKitC,GND,perfboard,RAIL_GND,black,ground rail star
+3V3,ESP32-S3-Kaluga-1,3V3,perfboard,RAIL_3V3,red,power rail
+GND,ESP32-S3-Kaluga-1,GND,perfboard,RAIL_GND,black,ground rail star
 GND,perfboard,RAIL_GND,TCA9548A,GND,black,mux ground
 3V3,perfboard,RAIL_3V3,TCA9548A,VCC,red,mux VCC 3V3
 3V3,perfboard,RAIL_3V3,CAP_0u1_TCA,top,red,0.1uF decoupling at mux
 GND,perfboard,RAIL_GND,CAP_0u1_TCA,bottom,black,mux decoupling
-SDA_MUX,ESP32-DevKitC,GPIO21,TCA9548A,SDA,blue,I2C master SDA
-SCL_MUX,ESP32-DevKitC,GPIO22,TCA9548A,SCL,blue,I2C master SCL
+SDA_MUX,ESP32-S3-Kaluga-1,GPIO21,TCA9548A,SDA,blue,I2C master SDA
+SCL_MUX,ESP32-S3-Kaluga-1,GPIO22,TCA9548A,SCL,blue,I2C master SCL
 SDA0,TCA9548A,SD0,GY521_0,SDA,blue,IMU0 dorsal wrist proximal (ch0)
 SCL0,TCA9548A,SC0,GY521_0,SCL,blue,ch0
 SDA1,TCA9548A,SD1,GY521_1,SDA,green,IMU1 thenar volar (ch1)
@@ -23,13 +23,13 @@ GND0,perfboard,RAIL_GND,GY521_0,GND,black,GND star per IMU
 GND1,perfboard,RAIL_GND,GY521_1,GND,black,
 GND2,perfboard,RAIL_GND,GY521_2,GND,black,
 GND3,perfboard,RAIL_GND,GY521_3,GND,black,
-LED_SIG,ESP32-DevKitC,GPIO2,RES_220,bottom,yellow,status LED drive
+LED_SIG,ESP32-S3-Kaluga-1,GPIO2,RES_220,bottom,yellow,status LED drive
 RES_LED,RES_220,top,perfboard,RAIL_3V3,red,LED series 220R
 LED_GND,LED,cathode,perfboard,RAIL_GND,black,
-NC_LRA,ESP32-DevKitC,GPIO25,NC,NC,grey,DEFERRED no LRA this build left NC
-NC_LRA1,ESP32-DevKitC,GPIO18,NC,NC,grey,DEFERRED array pins 18/19/20 NC
-NC_LRA2,ESP32-DevKitC,GPIO19,NC,NC,grey,DEFERRED
-NC_LRA3,ESP32-DevKitC,GPIO20,NC,NC,grey,DEFERRED check DevKit exposes
+NC_LRA,ESP32-S3-Kaluga-1,GPIO25,NC,NC,grey,DEFERRED no LRA this build left NC
+NC_LRA1,ESP32-S3-Kaluga-1,GPIO18,NC,NC,grey,DEFERRED array pins 18/19/20 NC
+NC_LRA2,ESP32-S3-Kaluga-1,GPIO19,NC,NC,grey,DEFERRED
+NC_LRA3,ESP32-S3-Kaluga-1,GPIO20,NC,NC,grey,DEFERRED check DevKit exposes
 BULK_CAP,perfboard,RAIL_3V3,CAP_10u,bottom,red,10-100uF bulk 3V3 rail per assembly_checklist.md:44
 BULK_GND,CAP_10u,top,perfboard,RAIL_GND,black,bulk cap ground
 LIPO_POS,LiPo_500mAh,pos,PPTC_900mA,in,red,LiPo 3.7V 500mAh JST2.0 positive -> PPTC 900mA hold (before switch)
@@ -37,7 +37,7 @@ LIPO_NEG,LiPo_500mAh,neg,perfboard,RAIL_GND,black,LiPo negative to star GND comm
 PPTC_OUT,PPTC_900mA,out,SW_3A,COM,red,PPTC 900mA (~1.8A trip) -> 3A slide switch COM (fuse before switch)
 SW_OUT,SW_3A,NO,MT3608,IN+,red,3A slide switch (SS22D07 3A) NO -> MT3608 boost IN+ (switch after PPTC so not bypassed)
 SW_GND,MT3608,GND,perfboard,RAIL_GND,black,boost GND to star GND
-BOOST_OUT,MT3608,OUT_5V,ESP32-DevKitC,5V,red,MT3608 boost 3.0-4.2V->5.0V 1-2A -> ESP32 5V/VIN (use after USB bank validated, assembly_checklist.md:55 5V VIN)
+BOOST_OUT,MT3608,OUT_5V,ESP32-S3-Kaluga-1,5V,red,MT3608 boost 3.0-4.2V->5.0V 1-2A -> ESP32 5V/VIN (use after USB bank validated, assembly_checklist.md:55 5V VIN)
 BOOST_GND,MT3608,GND,perfboard,RAIL_GND,black,boost GND common
 CHRG_IN,TP4056_JST2.0,BAT+,LiPo_500mAh,pos,red,LiPo JST -> TP4056 BAT+ for bench charging (USB 5V -> TP4056 micro-USB -> LiPo, not wired to ESP32 during USB bank tests)
 CHRG_NEG,TP4056_JST2.0,BAT-,LiPo_500mAh,neg,black,charger BAT- to LiPo negative

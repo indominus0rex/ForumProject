@@ -3,7 +3,7 @@
 ## Functional Blocks
 
 1. **Power Management**
-   - Components: Battery (LiPo, 3.7V), MT3608 Boost Converter (3.7V→5V), ESP32-DevKitC 38-pin (onboard AMS1117-3.3 for 3.3V), Power distribution rails (3.3V and GND)
+   - Components: Battery (LiPo, 3.7V), MT3608 Boost Converter (3.7V→5V), ESP32-S3-Kaluga-1 38-pin (onboard AMS1117-3.3 for 3.3V), Power distribution rails (3.3V and GND)
    - Connections: 
      - Battery + → MT3608 IN+
      - Battery - → MT3608 IN- and system GND
@@ -14,7 +14,7 @@
      - GND rail → ESP32 GND, TCA9548A GND, IMUs GND, LRA cathode, LED cathode
 
 2. **Microcontroller (ESP32)**
-   - Component: ESP32-DevKitC 38-pin (ESP32-WROOM-32 module on dev board)
+   - Component: ESP32-S3-Kaluga-1 (S3-MINI/BMOD module on dev board)
    - Key Pins:
      - GPIO2: LED output (active high)
      - GPIO21: I2C SDA

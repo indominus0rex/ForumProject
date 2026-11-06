@@ -8,7 +8,7 @@ STYLE:
 - Macro lens perspective, shallow depth of field on edges
 - 16:9 landscape orientation, 4K resolution
 
-COMPONENT U1 — ESP32-DevKitC V4 (realistic PCB):
+COMPONENT U1 — ESP32-S3-Kaluga-1 V4 (realistic PCB):
 - Physical description: Blue PCB, 52mm × 29mm, 1oz copper, HASL finish
 - Micro-USB connector: Silver metal, centered on short edge (bottom)
 - Voltage regulator: Black SOT-23-5 chip (AMS1117-3.3) near USB connector, labeled "3.3V"
@@ -81,7 +81,7 @@ SENSOR PLACEMENT ON HAND (realistic mounting):
 - CH3 (index proximal phalanx): GY-521 board mounted on dorsal aspect of index finger proximal phalanx, midpoint between MCP and PIP joints, wires running along finger
 
 TECHNICAL LABELS (overlay text, white with black outline for legibility):
-- "U1 · ESP32-DevKitC" — below ESP32 board, 12pt sans-serif
+- "U1 · ESP32-S3-Kaluga-1" — below ESP32 board, 12pt sans-serif
 - "U2 · TCA9548A @0x70" — below TCA9548A board, 12pt sans-serif
 - "U3 · GY-521 · CH0 · dorsal wrist" — below U3, 10pt sans-serif
 - "U4 · GY-521 · CH1 · thenar volar" — below U4, 10pt sans-serif
@@ -94,7 +94,7 @@ TECHNICAL LABELS (overlay text, white with black outline for legibility):
 - "GND" — near black wire, 8pt monospace, black text
 
 LEGEND (top-right corner, semi-transparent white background):
-- ■ Blue PCB = ESP32-DevKitC (U1)
+- ■ Blue PCB = ESP32-S3-Kaluga-1 (U1)
 - ■ Green PCB = TCA9548A Multiplexer (U2)
 - ■ Blue PCB = GY-521 IMU (U3-U6)
 - ■ Green wire = I²C SDA
@@ -105,7 +105,7 @@ LEGEND (top-right corner, semi-transparent white background):
 
 TITLE BLOCK (top-left):
 - "Wiring Diagram — 4-IMU ESP32 Tremor Monitor"
-- Subtitle: "Realistic Component View · ESP32-DevKitC · TCA9548A · 4× GY-521 · LED · I²C0 @400kHz · 100Hz"
+- Subtitle: "Realistic Component View · ESP32-S3-Kaluga-1 · TCA9548A · 4× GY-521 · LED · I²C0 @400kHz · 100Hz"
 
 TECHNICAL NOTES (bottom, small text):
 "VCC 3.3V · I²C 400kHz · Sampling 100Hz · Window 128 samples · TCA9548A @0x70 · All GY-521 @0x68 via mux · Wire length <15cm · 0.1µF per IC · LRA GPIO25/18/19/20 deferred (NC)"

@@ -34,10 +34,10 @@ COLORS_HEX = {
 # Layout: ESP32 left, GY-521 top-right, perfboard center, components around
 
 COMPONENT_POSITIONS = {
-    "ESP32-DevKitC": {
+    "ESP32-S3-Kaluga-1": {
         "pos": (-25, -8, 1.6),   # raised 1.6mm on standoffs
         "rot_z": 0,
-        "step": "parts/_vendor/ESP32-DevKitC.step",  # user must supply
+        "step": "parts/_vendor/ESP32-S3-Kaluga-1.step",  # vendor STEP required
         "color": (0.0, 0.4, 0.7),
         "note": "Vendor STEP required",
     },
@@ -95,7 +95,7 @@ COMPONENT_POSITIONS = {
 # Pin anchor points per component (x, y, z) RELATIVE to component center, in mm
 # Heights are typical lead/pad heights above the part body
 PIN_ANCHORS = {
-    "ESP32-DevKitC": {
+    "ESP32-S3-Kaluga-1": {
         "3V3": (15, -8, 5),
         "GND": (15, 8, 5),
         "GPIO2": (5, -8, 5),

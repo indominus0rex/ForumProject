@@ -1,4 +1,4 @@
-"""tests/test_b7_fit.py — b7_fit combo fits DevKitC: contract + bounds + speed + pushes 1/2/4."""
+"""tests/test_b7_fit.py — b7_fit combo fits S3-Kaluga-1: contract + bounds + speed + pushes 1/2/4."""
 import sys
 import math
 import time

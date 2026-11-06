@@ -53,8 +53,8 @@ Notes:
 
 | ☐ | Item |
 |---|---|
-|| ☐ | ESP32-DevKitC or compatible ESP32 board |
-|| ☐ | 4 × MPU6050 / GY-521 (one per IMU channel) |
+|| ☐ | ESP32-S3 (e.g. S3-Kaluga-1), 57 × 28 mm |
+||| ☐ | 4 × MPU6050 / GY-521 (one per IMU channel) |
 || ☐ | 1 × TCA9548A I2C multiplexer breakout board |
 || ☐ | 1 × PPTC_900mA resettable fuse (900mA hold / ~1.8A trip) |
 || ☐ | 1 × SW_3A slide switch (SS22D07 3A, SPDT) |

@@ -15,7 +15,7 @@ The Wokwi diagram shows the **signal path** and **power distribution**:
 
 | Component | ID | Notes |
 |---|---|---|
-| ESP32-DevKit V1 | `esp` | Represents ESP32-DevKitC 38-pin (Wokwi uses DevKit as proxy) |
+| ESP32-S3-Kaluga-1 | `esp` | Represents ESP32-S3-Kaluga-1 (Wokwi uses S3 as proxy) |
 | TCA9548A | `mux` | I2C multiplexer @0x70, channels CH0-CH3 |
 | MPU6050 #1 | `imu0` | CH0 @0x68 — Dorsal Wrist |
 | MPU6050 #2 | `imu1` | CH1 @0x68 — Thenar Volar |
@@ -38,7 +38,7 @@ ESP32 GPIO2 ──────────── LED anode ────── 22
 
 Wokwi doesn't have TP4056 or MT3608 parts, so the power section is documented here separately.
 
-### Correct Power Topology for ESP32-DevKitC 38-pin
+### Correct Power Topology for ESP32-S3-Kaluga-1
 
 ```
 USB 5V ──── TP4056 VCC ──── TP4056 PROG ──── 1.2kΩ ──── GND

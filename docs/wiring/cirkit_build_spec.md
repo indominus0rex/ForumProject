@@ -5,7 +5,7 @@ Build manually in Cirkit Designer: place parts, then run the nets top to bottom.
 
 ## Parts (Cirkit library search names)
 
-- ESP32-DevKitC 38-pin
+- ESP32-S3-Kaluga-1
 - TCA9548A I2C multiplexer breakout
 - 4x MPU6050 GY-521 breakout
 - MT3608 boost converter module (output pre-trimmed to 5.0V)

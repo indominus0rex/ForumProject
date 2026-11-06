@@ -4,7 +4,7 @@ Plan A is the full pipeline: 12 stages in firmware/stages/, wired by
 firmware/embedded_main_hsp.py via STAGE_ORDER, sharing DSP math in
 firmware/common/. Use Plan A when the board has RAM/CPU headroom and you
 want classification-supervised actuation. Use firmware/plan_b combos when
-you need a smaller fit (e.g. b7_fit on stock ESP32-DevKitC).
+you need a smaller fit (e.g. b7_fit on stock ESP32-S3-Kaluga-1).
 
 Entry: firmware/embedded_main_hsp.py (flash support files first, see README).
 Stages: safety -> sensor -> stationarity -> quality -> bandpass -> fft

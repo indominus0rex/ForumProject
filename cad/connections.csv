@@ -1,17 +1,17 @@
 net,from_component,from_pin,to_component,to_pin,color,notes
-3V3,ESP32-DevKitC,3V3,perfboard,RAIL_3V3,red,power rail
+3V3,ESP32-S3-Kaluga-1,3V3,perfboard,RAIL_3V3,red,power rail
 3V3,perfboard,RAIL_3V3,GY-521,VCC,red,
 3V3,perfboard,RAIL_3V3,LRA,POS,red,LRA positive terminal
 3V3,perfboard,RAIL_3V3,RES_220,top,red,LED series resistor
-GND,ESP32-DevKitC,GND,perfboard,RAIL_GND,black,ground rail
+GND,ESP32-S3-Kaluga-1,GND,perfboard,RAIL_GND,black,ground rail
 GND,perfboard,RAIL_GND,GY-521,GND,black,
 GND,perfboard,RAIL_GND,2N7000,source,black,MOSFET source
 GND,perfboard,RAIL_GND,1N4148,anode,black,flyback return
 GND,perfboard,RAIL_GND,LED,cathode,black,
-SDA,ESP32-DevKitC,GPIO21,GY-521,SDA,blue,I2C data
-SCL,ESP32-DevKitC,GPIO22,GY-521,SCL,blue,I2C clock
-LED_SIG,ESP32-DevKitC,GPIO2,RES_220,bottom,yellow,status LED drive
-PWM_OUT,ESP32-DevKitC,GPIO25,RES_10K,top,yellow,LRA PWM drive
+SDA,ESP32-S3-Kaluga-1,GPIO21,GY-521,SDA,blue,I2C data
+SCL,ESP32-S3-Kaluga-1,GPIO22,GY-521,SCL,blue,I2C clock
+LED_SIG,ESP32-S3-Kaluga-1,GPIO2,RES_220,bottom,yellow,status LED drive
+PWM_OUT,ESP32-S3-Kaluga-1,GPIO25,RES_10K,top,yellow,LRA PWM drive
 PWM_OUT,RES_10K,bottom,2N7000,gate,yellow,gate driver (resistor in series)
 GATE_PD,RES_10K,mid,perfboard,RAIL_GND,black,10k pull-down on MOSFET gate
 LRA_DRIVE,2N7000,drain,LRA,NEG,red,LRA negative terminal (low-side drive)

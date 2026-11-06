@@ -47,7 +47,7 @@ SolidWorks + FreeCAD source for the tremor-detection wiring diagram 3D model.
 
 | Component | X (mm) | Y (mm) | Rotation |
 |---|---|---|---|
-| ESP32-DevKitC | -25 | -8 | 0° |
+| ESP32-S3-Kaluga-1 (57 × 28 mm) | -25 | -8 | 0° |
 | GY-521 (CH0, dorsal wrist) | 22 | 8 | 0° |
 | GY-521 (CH1, thenar volar) | 28 | 12 | 0° |
 | GY-521 (CH2, thumb proximal phalanx) | 34 | 6 | 20° |
@@ -76,6 +76,6 @@ Adjust positions in `COMPONENT_POSITIONS` dict in `build_assembly.py` if your re
 
 - Vendor parts (ESP32, 4× GY-521) not auto-generated — need real STEPs from GrabCAD.
 - FreeCAD wires render as lines (not 3D tubes). SolidWorks sweep gives real 3D wires.
-- ESP32-DevKitC has two form factors (30-pin and 36-pin DevKitC v4). Match your real board.
+- ESP32-S3-Kaluga-1 is the single target board — no multi-form-factor fallback.
 - LRA dimensions vary by manufacturer — current model assumes Ø10mm × 2.7mm coin.
 - 1N4148 cathode band position: in current model, band is on +X end of body. Verify orientation matches your actual diode.

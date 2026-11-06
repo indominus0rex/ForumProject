@@ -27,14 +27,14 @@
       "y": 35,
       "width": 700,
       "height": 18,
-      "text": "ESP32-DevKitC 38-pin · TCA9548A @0x70 · 4× GY-521 · MT3608 Boost · I2C0 @400kHz",
+      "text": "ESP32-S3-Kaluga-1 38-pin · TCA9548A @0x70 · 4× GY-521 · MT3608 Boost · I2C0 @400kHz",
       "fontSize": 14,
       "fontFamily": 1,
       "strokeColor": "#868e96",
       "textAlign": "center",
       "verticalAlign": "top",
       "containerId": null,
-      "originalText": "ESP32-DevKitC 38-pin · TCA9548A @0x70 · 4× GY-521 · MT3608 Boost · I2C0 @400kHz",
+      "originalText": "ESP32-S3-Kaluga-1 38-pin · TCA9548A @0x70 · 4× GY-521 · MT3608 Boost · I2C0 @400kHz",
       "autoResize": true
     },
     {
@@ -467,14 +467,14 @@
       "y": 118,
       "width": 230,
       "height": 164,
-      "text": "U1\nESP32-DevKitC 38-pin\n────────────────\nVIN ← (from MT3608)\n3V3 ← (onboard AMS1117)\nGND ← (ground)\nGPIO21 → I2C0 SDA\nGPIO22 → I2C0 SCL\nGPIO2  → LED",
+      "text": "U1\nESP32-S3-Kaluga-1 38-pin\n────────────────\nVIN ← (from MT3608)\n3V3 ← (onboard AMS1117)\nGND ← (ground)\nGPIO21 → I2C0 SDA\nGPIO22 → I2C0 SCL\nGPIO2  → LED",
       "fontSize": 16,
       "fontFamily": 1,
       "strokeColor": "#1e1e1e",
       "textAlign": "left",
       "verticalAlign": "middle",
       "containerId": "u1",
-      "originalText": "U1\nESP32-DevKitC 38-pin\n────────────────\nVIN ← (from MT3608)\n3V3 ← (onboard AMS1117)\nGND ← (ground)\nGPIO21 → I2C0 SDA\nGPIO22 → I2C0 SCL\nGPIO2  → LED",
+      "originalText": "U1\nESP32-S3-Kaluga-1 38-pin\n────────────────\nVIN ← (from MT3608)\n3V3 ← (onboard AMS1117)\nGND ← (ground)\nGPIO21 → I2C0 SDA\nGPIO22 → I2C0 SCL\nGPIO2  → LED",
       "autoResize": true
     },
     {

@@ -2,7 +2,7 @@ Professional engineering datasheet-style wiring diagram of a 4-IMU ESP32 tremor 
 
 LAYOUT (left to right, orthogonal flow):
 - Power rails (bottom): horizontal 3.3V bus (black, labeled "3.3V bus star") and GND bus (gray, labeled "GND bus star") with decoupling capacitor note ("0.1µF per IC + 10µF bulk")
-- ESP32 box (left, U1): sharp-cornered white box with thin black stroke, labeled "U1 · ESP32-DevKitC" with pin list: "GPIO21 → SDA", "GPIO22 → SCL", "GPIO2 → LED", "3.3V", "GND", dashed grey box "25/18/19/20 NC"
+- ESP32 box (left, U1): sharp-cornered white box with thin black stroke, labeled "U1 · ESP32-S3-Kaluga-1" with pin list: "GPIO21 → SDA", "GPIO22 → SCL", "GPIO2 → LED", "3.3V", "GND", dashed grey box "25/18/19/20 NC"
 - TCA9548A box (center, U2): sharp-cornered white box, labeled "U2 · TCA9548A" with "@0x70 · A0-A2→GND · EN→3.3V" and channel outputs: "SD0/SC0 → CH0", "SD1/SC1 → CH1", "SD2/SC2 → CH2", "SD3/SC3 → CH3"
 - Four IMU boxes (right, U3-U6): stacked vertically, each labeled "U3 · GY-521 (MPU6050) · CH0" through "U6 · GY-521 (MPU6050) · CH3" with "@0x68 · AD0→GND · 0.1µF" and anatomical position: "dorsal wrist proximal · primary", "thenar volar · thumb base", "thumb proximal phalanx · 20° tilt · pill 4-6Hz", "index proximal phalanx · ET 6-8Hz"
 - LED box (below IMUs, D1): labeled "D1 · LED Indicator" with "GPIO2 → 220Ω → GND · active high"
@@ -38,7 +38,7 @@ LEGEND (top-right, 4 items):
 
 TITLE BLOCK (top, bold):
 "Wiring Diagram — 4-IMU ESP32 Tremor Monitor"
-Subtitle: "ESP32-DevKitC · TCA9548A I²C Mux · 4× GY-521 (MPU6050) · LED Indicator · LRA Deferred · I²C0 @400kHz · 100Hz · 128-sample window · Rev 2026-09-01"
+Subtitle: "ESP32-S3-Kaluga-1 · TCA9548A I²C Mux · 4× GY-521 (MPU6050) · LED Indicator · LRA Deferred · I²C0 @400kHz · 100Hz · 128-sample window · Rev 2026-09-01"
 
 TECHNICAL NOTES (bottom, small monospace):
 "VCC 3.3V · I²C 400kHz · Sampling 100Hz (SAMPLE_INTERVAL_US 10000) · Window 128 samples · TCA9548A @0x70 (A0-A2→GND, EN→3.3V) · All GY-521 @0x68 via mux (AD0→GND, channel select via 1<<ch) · Wire length <15cm · 0.1µF decoupling per IC + 10µF bulk · LRA GPIO25/18/19/20 deferred (NC)"
